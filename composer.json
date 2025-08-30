@@ -1,0 +1,44 @@
+{
+    "name": "wordpress/wp-ai-client",
+    "description": "An AI client and API for WordPress to communicate with any generative AI models of various capabilities using a uniform API.",
+    "license": "GPL-2.0-or-later",
+    "type": "library",
+    "keywords": [
+        "ai",
+        "api",
+        "llm",
+        "wordpress"
+    ],
+    "authors": [
+        {
+            "name": "WordPress AI Team",
+            "homepage": "https://make.wordpress.org/ai/"
+        }
+    ],
+    "homepage": "https://github.com/WordPress/wp-ai-client",
+    "support": {
+        "issues": "https://github.com/WordPress/wp-ai-client/issues",
+        "source": "https://github.com/WordPress/wp-ai-client"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wordpress\\WpAiClient\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "wordpress/php-ai-client": "^0.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "php-http/discovery": true
+        },
+        "platform": {
+            "php": "7.4"
+        }
+    }
+}
