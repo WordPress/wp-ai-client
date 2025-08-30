@@ -21,9 +21,9 @@
         "source": "https://github.com/WordPress/wp-ai-client"
     },
     "autoload": {
-        "psr-4": {
-            "Wordpress\\AI_Client\\": "src/"
-        }
+        "files": [
+            "includes/bootstrap.php"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -36,6 +36,8 @@
         "squizlabs/php_codesniffer": "^3.7",
         "wp-coding-standards/wpcs": "^3.0",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "automattic/vipwpcs": "^3.0",
+        "slevomat/coding-standard": "^8.0",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
     },
     "config": {
