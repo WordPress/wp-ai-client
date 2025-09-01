@@ -47,8 +47,8 @@ All code must be properly documented with PHPDoc blocks following these standard
  *
  * @since n.e.x.t
  */
-class Auth_Handler
-{
+class Auth_Handler {
+
     /**
      * Validates user credentials against the database.
      *
