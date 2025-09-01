@@ -2,25 +2,27 @@
 <ruleset name="WordPress AI Client">
 	<description>WordPress Coding Standards for WordPress AI Client</description>
 
-	<!-- What to scan -->
-	<file>.</file>
-	<exclude-pattern>/vendor/</exclude-pattern>
-	<exclude-pattern>/node_modules/</exclude-pattern>
+    <!-- Scan these files -->
+    <file>includes</file>
+    <!-- Uncomment when we have tests. <file>tests</file>-->
 
-	<!-- How to scan -->
-	<arg value="sp"/> <!-- Show sniff and progress -->
-	<arg name="basepath" value="./"/><!-- Strip the file paths down to the relevant bit -->
-	<arg name="colors"/>
-	<arg name="extensions" value="php"/>
-	<arg name="parallel" value="8"/><!-- Enables parallel processing when available for faster results. -->
+    <!-- Ignore vendor directory -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
 
-	<!-- Rules: Check PHP version compatibility -->
-	<config name="testVersion" value="7.4-"/>
-	<rule ref="PHPCompatibilityWP"/>
+    <!-- Show progress, show sniff codes in all reports -->
+    <arg value="sp"/>
 
-	<!-- Rules: WordPress Coding Standards -->
+    <!-- Set minimum supported PHP version -->
+    <config name="testVersion" value="7.4-"/>
+
+    <!-- Enable colors in output -->
+    <arg name="colors"/>
+
+	<!-- WordPress Coding Standards -->
 	<config name="minimum_supported_wp_version" value="6.0"/>
-	<rule ref="WordPress"/>
+	<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName"/>
+	</rule>
 
 	<!-- WordPress text domain -->
 	<rule ref="WordPress.WP.I18n">
@@ -41,4 +43,13 @@
 			</property>
 		</properties>
 	</rule>
+
+    <!-- Check PHP 7.4 compatibility -->
+    <rule ref="PHPCompatibility">
+        <!-- Exclude functions that are polyfilled in WordPress or the PHP AI Client SDK -->
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.array_is_listFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.str_containsFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.str_starts_withFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.str_ends_withFound"/>
+    </rule>
 </ruleset>

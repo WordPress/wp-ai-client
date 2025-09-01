@@ -21,9 +21,9 @@
         "source": "https://github.com/WordPress/wp-ai-client"
     },
     "autoload": {
-        "files": [
-            "includes/bootstrap.php"
-        ]
+        "psr-4": {
+            "Wordpress\\AI_Client\\": "includes/"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
