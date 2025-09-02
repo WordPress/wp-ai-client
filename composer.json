@@ -21,9 +21,9 @@
         "source": "https://github.com/WordPress/wp-ai-client"
     },
     "autoload": {
-        "files": [
-            "includes/bootstrap.php"
-        ]
+        "psr-4": {
+            "WordPress\\AI_Client\\": "includes/"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -33,12 +33,13 @@
         "wordpress/php-ai-client": "^0.1"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.7",
-        "wp-coding-standards/wpcs": "^3.0",
-        "phpcompatibility/phpcompatibility-wp": "^2.1",
         "automattic/vipwpcs": "^3.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "phpstan/phpstan": "~2.1",
         "slevomat/coding-standard": "^8.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+        "squizlabs/php_codesniffer": "^3.7",
+        "wp-coding-standards/wpcs": "^3.0"
     },
     "config": {
         "allow-plugins": {
@@ -51,7 +52,12 @@
         }
     },
     "scripts": {
+        "lint": [
+            "@phpcs",
+            "@phpstan"
+        ],
         "phpcs": "phpcs",
-        "phpcbf": "phpcbf"
+        "phpcbf": "phpcbf",
+        "phpstan": "phpstan analyze --memory-limit=256M"
     }
 }
