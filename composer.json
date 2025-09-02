@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Wordpress\\AI_Client\\": "includes/"
+            "WordPress\\AI_Client\\": "includes/"
         }
     },
     "minimum-stability": "dev",
