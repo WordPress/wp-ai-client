@@ -2,6 +2,7 @@
 ## Vendor
 ############
 
+node_modules/
 vendor/
 
 ############
