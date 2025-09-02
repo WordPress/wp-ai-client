@@ -1,0 +1,10 @@
+{
+	"name": "wp-ai-client",
+	"license": "GPL-2.0-or-later",
+	"devDependencies": {
+		"@wordpress/env": "^10.27.0"
+	},
+	"scripts": {
+		"wp-env": "wp-env"
+	}
+}
