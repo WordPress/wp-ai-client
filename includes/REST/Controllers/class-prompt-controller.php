@@ -368,6 +368,11 @@ class Prompt_Controller extends WP_REST_Controller {
 		// Get prompt content for constructor.
 		$prompt = $request->get_param( 'prompt' );
 		
+		// Validate prompt parameter type.
+		if ( ! is_string( $prompt ) && ! is_array( $prompt ) && ! is_null( $prompt ) ) {
+			$prompt = null;
+		}
+		
 		// Create builder with prompt.
 		$builder = AiClient::prompt( $prompt );
 
