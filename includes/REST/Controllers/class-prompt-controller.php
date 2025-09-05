@@ -53,10 +53,10 @@ class Prompt_Controller extends WP_REST_Controller {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $namespace The REST API namespace.
+	 * @param string $api_namespace The REST API namespace.
 	 */
-	public function __construct( string $namespace ) {
-		$this->namespace = $namespace;
+	public function __construct( string $api_namespace ) {
+		$this->namespace = $api_namespace;
 	}
 
 	/**

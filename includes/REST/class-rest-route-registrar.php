@@ -40,11 +40,11 @@ class REST_Route_Registrar {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string $namespace The REST API namespace (e.g., 'my-plugin/v1').
+	 * @param string $api_namespace The REST API namespace (e.g., 'my-plugin/v1').
 	 * @return void
 	 */
-	public static function register_rest_routes( string $namespace ): void {
-		$controller = new Prompt_Controller( $namespace );
+	public static function register_rest_routes( string $api_namespace ): void {
+		$controller = new Prompt_Controller( $api_namespace );
 		$controller->register_routes();
 	}
 }
