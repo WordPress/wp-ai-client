@@ -364,16 +364,12 @@ class Prompt_Controller extends WP_REST_Controller {
 	 * @param WP_REST_Request $request The REST request object.
 	 * @return PromptBuilder Configured PromptBuilder instance.
 	 */
-	protected function build_prompt_from_request( WP_REST_Request $request ): PromptBuilder {
-		$builder = PromptBuilder::create();
-
-		// Apply prompt content.
+	protected function build_prompt_from_request( WP_REST_Request $request ) {
+		// Get prompt content for constructor.
 		$prompt = $request->get_param( 'prompt' );
-		if ( is_string( $prompt ) ) {
-			$builder->usingPrompt( $prompt );
-		} elseif ( is_array( $prompt ) ) {
-			$builder->usingPrompt( $prompt );
-		}
+		
+		// Create builder with prompt.
+		$builder = AiClient::prompt( $prompt );
 
 		// Apply system instruction if provided.
 		if ( $request->has_param( 'system_instruction' ) ) {
