@@ -484,15 +484,13 @@ class Prompt_Controller extends WP_REST_Controller {
 			$response_data['finish_reason'] = $response_data['candidates'][0]['finish_reason'];
 		}
 
-		// Add token usage information if available.
-		if ( $result->getTokenUsage() ) {
-			$token_usage = $result->getTokenUsage();
-			$response_data['token_usage'] = array(
-				'prompt_tokens' => $token_usage->getPromptTokens(),
-				'completion_tokens' => $token_usage->getCompletionTokens(),
-				'total_tokens' => $token_usage->getTotalTokens(),
-			);
-		}
+		// Add token usage information.
+		$token_usage = $result->getTokenUsage();
+		$response_data['token_usage'] = array(
+			'prompt_tokens' => $token_usage->getPromptTokens(),
+			'completion_tokens' => $token_usage->getCompletionTokens(),
+			'total_tokens' => $token_usage->getTotalTokens(),
+		);
 
 		return $response_data;
 	}
