@@ -20,3 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+// Initialize REST API endpoints
+add_action( 'rest_api_init', function() {
+	\WordPress\AI_Client\REST\REST_Route_Registrar::register_rest_routes( 'wp-ai-client/v1' );
+} );
