@@ -2,15 +2,27 @@ parameters:
     level: max
     paths:
         - includes
-    scanFiles:
-        - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+    bootstrapFiles:
+        - tests/bootstrap.php
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
+        # WordPress classes and functions (mocked in bootstrap)
+        - '#Class WP_REST_Controller not found#'
+        - '#Class WP_REST_Request not found#'
+        - '#Class WP_REST_Response not found#'
+        - '#Class WP_Error not found#'
+        - '#Function register_rest_route not found#'
+        - '#Function current_user_can not found#'
+        - '#Function current_time not found#'
+        
         # WordPress REST API mixed types - expected in this context
         - '#Parameter \#1 \$prompt of static method WordPress\\AiClient\\AiClient::prompt\(\) expects .*, array<mixed, mixed>\|string\|null given\.#'
         - '#Cannot cast mixed to int#'
         - '#Cannot cast mixed to float#'
         - '#Parameter .* expects string, mixed given#'
+        - '#Call to method .* on an unknown class WP_REST_Request#'
+        - '#Instantiated class WP_REST_Response not found#'
+        - '#Instantiated class WP_Error not found#'
         
         # PHPStan strict analysis - acceptable in REST API context  
         - '#Ternary operator condition is always true#'
