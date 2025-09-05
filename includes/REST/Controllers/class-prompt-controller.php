@@ -17,6 +17,7 @@ use WP_REST_Response;
 use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Builders\PromptBuilder;
 use WordPress\AiClient\Files\DTO\File;
+use WordPress\AiClient\Files\Enums\FileTypeEnum;
 use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
 use WordPress\AiClient\Results\DTO\GenerativeAiResult;
 
@@ -437,11 +438,11 @@ class Prompt_Controller extends WP_REST_Controller {
 	 * @return array<string, mixed> Formatted file data.
 	 */
 	private function format_file_response( File $file ): array {
+		$file_type = $file->getFileType();
 		return array(
 			'url'       => $file->getUrl(),
 			'mime_type' => $file->getMimeType(),
-			'file_type' => $file->getFileType()->value,
-			'modality'  => $file->getModality()->value,
+			'file_type' => $file_type instanceof FileTypeEnum ? $file_type->value : 'unknown',
 		);
 	}
 
@@ -460,8 +461,20 @@ class Prompt_Controller extends WP_REST_Controller {
 
 		// Add candidates with their content and metadata.
 		foreach ( $result->getCandidates() as $candidate ) {
+			// Get message content from candidate.
+			$message = $candidate->getMessage();
+			$parts = $message->getParts();
+			
+			// Extract text content from message parts.
+			$content = '';
+			foreach ( $parts as $part ) {
+				if ( method_exists( $part, 'getText' ) ) {
+					$content .= $part->getText();
+				}
+			}
+			
 			$candidate_data = array(
-				'content' => $candidate->getContent(),
+				'content' => $content,
 				'finish_reason' => $candidate->getFinishReason() ? $candidate->getFinishReason()->value : null,
 			);
 			$response_data['candidates'][] = $candidate_data;
