@@ -438,11 +438,10 @@ class Prompt_Controller extends WP_REST_Controller {
 	 * @return array<string, mixed> Formatted file data.
 	 */
 	private function format_file_response( File $file ): array {
-		$file_type = $file->getFileType();
 		return array(
 			'url'       => $file->getUrl(),
 			'mime_type' => $file->getMimeType(),
-			'file_type' => $file_type instanceof FileTypeEnum ? $file_type->value : 'unknown',
+			'file_type' => $file->getFileType()->value,
 		);
 	}
 

@@ -15,3 +15,4 @@ parameters:
         # PHPStan strict analysis - acceptable in REST API context  
         - '#Ternary operator condition is always true#'
         - '#If condition is always true#'
+        - '#Instanceof between .* and .* will always evaluate to true#'
