@@ -150,6 +150,9 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle single text generation → PromptBuilder::generateText()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_text( WP_REST_Request $request ): WP_REST_Response {
 		try {
