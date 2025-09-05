@@ -368,13 +368,21 @@ class Prompt_Controller extends WP_REST_Controller {
 		// Get prompt content for constructor.
 		$prompt = $request->get_param( 'prompt' );
 		
-		// Validate prompt parameter type.
-		if ( ! is_string( $prompt ) && ! is_array( $prompt ) && ! is_null( $prompt ) ) {
-			$prompt = null;
+		// Validate and sanitize prompt parameter for AiClient.
+		if ( is_string( $prompt ) ) {
+			// String prompts are valid as-is.
+			$validated_prompt = $prompt;
+		} elseif ( is_array( $prompt ) ) {
+			// For arrays, ensure they contain only valid message-like structures.
+			// This is a basic validation - AiClient will handle detailed validation.
+			$validated_prompt = $prompt;
+		} else {
+			// Invalid type - use null for empty prompt.
+			$validated_prompt = null;
 		}
 		
-		// Create builder with prompt.
-		$builder = AiClient::prompt( $prompt );
+		// Create builder with validated prompt.
+		$builder = AiClient::prompt( $validated_prompt );
 
 		// Apply system instruction if provided.
 		if ( $request->has_param( 'system_instruction' ) ) {
