@@ -36,7 +36,7 @@
         "automattic/vipwpcs": "^3.0",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "phpstan/phpstan": "^1.10 | ^2.1",
+        "phpstan/phpstan": "^1.10",
         "slevomat/coding-standard": "^8.0",
         "squizlabs/php_codesniffer": "^3.7",
 		"szepeviktor/phpstan-wordpress": "^1.3",

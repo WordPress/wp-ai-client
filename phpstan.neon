@@ -1,13 +1,11 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
 parameters:
     level: max
     paths:
         - includes
-    bootstrapFiles:
-        - tests/bootstrap.php
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
-        # WordPress REST API mixed types - expected in this context
-        - '#Parameter \#1 \$prompt of static method WordPress\\AiClient\\AiClient::prompt\(\) expects .*, array<mixed, mixed>\|string\|null given\.#'
-        - '#Cannot cast mixed to int#'
-        - '#Cannot cast mixed to float#'
-        - '#Parameter .* expects string, mixed given#'
+        # WordPress generic types - REST API doesn't use specific generics
+        - '#Method .* has parameter \$request with generic class WP_REST_Request but does not specify its types: T#'

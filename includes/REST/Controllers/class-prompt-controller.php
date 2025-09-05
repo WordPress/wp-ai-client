@@ -26,7 +26,7 @@ use WordPress\AiClient\Results\DTO\GenerativeAiResult;
  *
  * This controller provides individual REST endpoints for each PromptBuilder terminate method:
  * - /prompt/generate-text → generateText()
- * - /prompt/generate-texts → generateTexts() 
+ * - /prompt/generate-texts → generateTexts()
  * - /prompt/generate-image → generateImage()
  * - /prompt/generate-images → generateImages()
  * - /prompt/generate-speech → generateSpeech()
@@ -41,33 +41,52 @@ use WordPress\AiClient\Results\DTO\GenerativeAiResult;
 class Prompt_Controller extends WP_REST_Controller {
 
 	/**
-	 * Register all routes for PromptBuilder terminate methods.
+	 * The namespace of this controller's route.
+	 *
+	 * @since n.e.x.t
+	 * @var string
+	 */
+	protected $namespace;
+
+	/**
+	 * Constructor.
 	 *
 	 * @since n.e.x.t
 	 *
 	 * @param string $namespace The REST API namespace.
+	 */
+	public function __construct( string $namespace ) {
+		$this->namespace = $namespace;
+	}
+
+	/**
+	 * Register
+	all routes for PromptBuilder terminate methods.
+	 *
+	 * @since n.e.x.t
+	 *
 	 * @return void
 	 */
-	public function register_routes( string $namespace ): void {
+	public function register_routes(): void {
 		$common_args = $this->get_common_args();
 
-		// Register individual route for each PromptBuilder terminate method
-		$routes = [
-			'/prompt/generate-text'         => 'generate_text',
-			'/prompt/generate-texts'        => 'generate_texts',
-			'/prompt/generate-image'        => 'generate_image',
-			'/prompt/generate-images'       => 'generate_images',
-			'/prompt/generate-speech'       => 'generate_speech',
-			'/prompt/generate-speeches'     => 'generate_speeches',
-			'/prompt/generate-result'       => 'generate_result',
-			'/prompt/generate-text-result'  => 'generate_text_result',
-			'/prompt/generate-image-result' => 'generate_image_result',
-			'/prompt/generate-speech-result'=> 'generate_speech_result',
-		];
+		// Register individual route for each PromptBuilder terminate method.
+		$routes = array(
+			'/prompt/generate-text'          => 'generate_text',
+			'/prompt/generate-texts'         => 'generate_texts',
+			'/prompt/generate-image'         => 'generate_image',
+			'/prompt/generate-images'        => 'generate_images',
+			'/prompt/generate-speech'        => 'generate_speech',
+			'/prompt/generate-speeches'      => 'generate_speeches',
+			'/prompt/generate-result'        => 'generate_result',
+			'/prompt/generate-text-result'   => 'generate_text_result',
+			'/prompt/generate-image-result'  => 'generate_image_result',
+			'/prompt/generate-speech-result' => 'generate_speech_result',
+		);
 
 		foreach ( $routes as $route => $callback ) {
 			register_rest_route(
-				$namespace,
+				$this->namespace,
 				$route,
 				array(
 					'methods'             => 'POST',
@@ -161,7 +180,10 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$result,
-				array( 'type' => 'text', 'endpoint' => 'generate-text' )
+				array(
+					'type'     => 'text',
+					'endpoint' => 'generate-text',
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -170,16 +192,23 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle multiple text generation → PromptBuilder::generateTexts()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_texts( WP_REST_Request $request ): WP_REST_Response {
 		try {
-			$builder = $this->build_prompt_from_request( $request );
+			$builder         = $this->build_prompt_from_request( $request );
 			$candidate_count = $request->get_param( 'candidate_count' );
-			$result = $candidate_count ? $builder->generateTexts( (int) $candidate_count ) : $builder->generateTexts();
+			$result          = $candidate_count ? $builder->generateTexts( (int) $candidate_count ) : $builder->generateTexts();
 
 			return $this->format_success_response(
 				$result,
-				array( 'type' => 'texts', 'endpoint' => 'generate-texts', 'count' => count( $result ) )
+				array(
+					'type'     => 'texts',
+					'endpoint' => 'generate-texts',
+					'count'    => count( $result ),
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -188,6 +217,9 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle text result generation → PromptBuilder::generateTextResult()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_text_result( WP_REST_Request $request ): WP_REST_Response {
 		try {
@@ -196,7 +228,10 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$this->format_generative_result( $result ),
-				array( 'type' => 'text-result', 'endpoint' => 'generate-text-result' )
+				array(
+					'type'     => 'text-result',
+					'endpoint' => 'generate-text-result',
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -204,11 +239,14 @@ class Prompt_Controller extends WP_REST_Controller {
 	}
 
 	// =============================================================================
-	// IMAGE GENERATION METHODS  
+	// IMAGE GENERATION METHODS
 	// =============================================================================
 
 	/**
 	 * Handle single image generation → PromptBuilder::generateImage()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_image( WP_REST_Request $request ): WP_REST_Response {
 		try {
@@ -217,7 +255,10 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$this->format_file_response( $result ),
-				array( 'type' => 'image', 'endpoint' => 'generate-image' )
+				array(
+					'type'     => 'image',
+					'endpoint' => 'generate-image',
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -226,12 +267,15 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle multiple image generation → PromptBuilder::generateImages()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_images( WP_REST_Request $request ): WP_REST_Response {
 		try {
-			$builder = $this->build_prompt_from_request( $request );
+			$builder         = $this->build_prompt_from_request( $request );
 			$candidate_count = $request->get_param( 'candidate_count' );
-			$result = $candidate_count ? $builder->generateImages( (int) $candidate_count ) : $builder->generateImages();
+			$result          = $candidate_count ? $builder->generateImages( (int) $candidate_count ) : $builder->generateImages();
 
 			$response_data = array_map(
 				function ( File $file ) {
@@ -242,7 +286,11 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$response_data,
-				array( 'type' => 'images', 'endpoint' => 'generate-images', 'count' => count( $result ) )
+				array(
+					'type'     => 'images',
+					'endpoint' => 'generate-images',
+					'count'    => count( $result ),
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -251,6 +299,9 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle image result generation → PromptBuilder::generateImageResult()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_image_result( WP_REST_Request $request ): WP_REST_Response {
 		try {
@@ -259,7 +310,10 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$this->format_generative_result( $result ),
-				array( 'type' => 'image-result', 'endpoint' => 'generate-image-result' )
+				array(
+					'type'     => 'image-result',
+					'endpoint' => 'generate-image-result',
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -272,6 +326,9 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle single speech generation → PromptBuilder::generateSpeech()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_speech( WP_REST_Request $request ): WP_REST_Response {
 		try {
@@ -280,7 +337,10 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$this->format_file_response( $result ),
-				array( 'type' => 'speech', 'endpoint' => 'generate-speech' )
+				array(
+					'type'     => 'speech',
+					'endpoint' => 'generate-speech',
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -289,12 +349,15 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle multiple speech generation → PromptBuilder::generateSpeeches()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_speeches( WP_REST_Request $request ): WP_REST_Response {
 		try {
-			$builder = $this->build_prompt_from_request( $request );
+			$builder         = $this->build_prompt_from_request( $request );
 			$candidate_count = $request->get_param( 'candidate_count' );
-			$result = $candidate_count ? $builder->generateSpeeches( (int) $candidate_count ) : $builder->generateSpeeches();
+			$result          = $candidate_count ? $builder->generateSpeeches( (int) $candidate_count ) : $builder->generateSpeeches();
 
 			$response_data = array_map(
 				function ( File $file ) {
@@ -305,7 +368,11 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$response_data,
-				array( 'type' => 'speeches', 'endpoint' => 'generate-speeches', 'count' => count( $result ) )
+				array(
+					'type'     => 'speeches',
+					'endpoint' => 'generate-speeches',
+					'count'    => count( $result ),
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -314,6 +381,9 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle speech result generation → PromptBuilder::generateSpeechResult()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_speech_result( WP_REST_Request $request ): WP_REST_Response {
 		try {
@@ -322,7 +392,10 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$this->format_generative_result( $result ),
-				array( 'type' => 'speech-result', 'endpoint' => 'generate-speech-result' )
+				array(
+					'type'     => 'speech-result',
+					'endpoint' => 'generate-speech-result',
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -335,12 +408,15 @@ class Prompt_Controller extends WP_REST_Controller {
 
 	/**
 	 * Handle general result generation → PromptBuilder::generateResult()
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 * @return WP_REST_Response The response object.
 	 */
 	public function generate_result( WP_REST_Request $request ): WP_REST_Response {
 		try {
-			$builder = $this->build_prompt_from_request( $request );
+			$builder    = $this->build_prompt_from_request( $request );
 			$capability = $request->get_param( 'capability' );
-			
+
 			if ( $capability ) {
 				$result = $builder->generateResult( CapabilityEnum::from( $capability ) );
 			} else {
@@ -349,7 +425,10 @@ class Prompt_Controller extends WP_REST_Controller {
 
 			return $this->format_success_response(
 				$this->format_generative_result( $result ),
-				array( 'type' => 'result', 'endpoint' => 'generate-result' )
+				array(
+					'type'     => 'result',
+					'endpoint' => 'generate-result',
+				)
 			);
 		} catch ( \Exception $exception ) {
 			return $this->handle_generation_error( $exception );
@@ -371,7 +450,7 @@ class Prompt_Controller extends WP_REST_Controller {
 	protected function build_prompt_from_request( WP_REST_Request $request ) {
 		// Get prompt content for constructor.
 		$prompt = $request->get_param( 'prompt' );
-		
+
 		// Validate and sanitize prompt parameter for AiClient.
 		if ( is_string( $prompt ) ) {
 			// String prompts are valid as-is.
@@ -384,7 +463,7 @@ class Prompt_Controller extends WP_REST_Controller {
 			// Invalid type - use null for empty prompt.
 			$validated_prompt = null;
 		}
-		
+
 		// Create builder with validated prompt.
 		$builder = AiClient::prompt( $validated_prompt );
 
@@ -456,17 +535,17 @@ class Prompt_Controller extends WP_REST_Controller {
 	 */
 	private function format_generative_result( GenerativeAiResult $result ): array {
 		$response_data = array(
-			'candidates' => array(),
+			'candidates'    => array(),
 			'finish_reason' => null,
-			'created_at' => current_time( 'mysql' ),
+			'created_at'    => current_time( 'mysql' ),
 		);
 
 		// Add candidates with their content and metadata.
 		foreach ( $result->getCandidates() as $candidate ) {
 			// Get message content from candidate.
 			$message = $candidate->getMessage();
-			$parts = $message->getParts();
-			
+			$parts   = $message->getParts();
+
 			// Extract text content from message parts.
 			$content = '';
 			foreach ( $parts as $part ) {
@@ -474,9 +553,9 @@ class Prompt_Controller extends WP_REST_Controller {
 					$content .= $part->getText();
 				}
 			}
-			
-			$candidate_data = array(
-				'content' => $content,
+
+			$candidate_data                = array(
+				'content'       => $content,
 				'finish_reason' => $candidate->getFinishReason() ? $candidate->getFinishReason()->value : null,
 			);
 			$response_data['candidates'][] = $candidate_data;
@@ -488,11 +567,11 @@ class Prompt_Controller extends WP_REST_Controller {
 		}
 
 		// Add token usage information.
-		$token_usage = $result->getTokenUsage();
+		$token_usage                  = $result->getTokenUsage();
 		$response_data['token_usage'] = array(
-			'prompt_tokens' => $token_usage->getPromptTokens(),
+			'prompt_tokens'     => $token_usage->getPromptTokens(),
 			'completion_tokens' => $token_usage->getCompletionTokens(),
-			'total_tokens' => $token_usage->getTotalTokens(),
+			'total_tokens'      => $token_usage->getTotalTokens(),
 		);
 
 		return $response_data;
@@ -501,7 +580,7 @@ class Prompt_Controller extends WP_REST_Controller {
 	/**
 	 * Format success response with consistent structure.
 	 *
-	 * @param mixed $data Response data.
+	 * @param mixed                $data Response data.
 	 * @param array<string, mixed> $metadata Additional metadata.
 	 * @return WP_REST_Response Success response.
 	 */
@@ -538,9 +617,9 @@ class Prompt_Controller extends WP_REST_Controller {
 	/**
 	 * Validate prompt parameter.
 	 *
-	 * @param mixed $value Prompt value to validate.
+	 * @param mixed           $value Prompt value to validate.
 	 * @param WP_REST_Request $request Current request object.
-	 * @param string $param Parameter name.
+	 * @param string          $param Parameter name.
 	 * @return bool|WP_Error True if valid, WP_Error if invalid.
 	 */
 	public function validate_prompt( $value, WP_REST_Request $request, string $param ) {

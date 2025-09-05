@@ -44,7 +44,7 @@ class REST_Route_Registrar {
 	 * @return void
 	 */
 	public static function register_rest_routes( string $namespace ): void {
-		$controller = new Prompt_Controller();
-		$controller->register_routes( $namespace );
+		$controller = new Prompt_Controller( $namespace );
+		$controller->register_routes();
 	}
 }

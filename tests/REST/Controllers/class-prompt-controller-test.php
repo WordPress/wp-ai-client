@@ -32,7 +32,7 @@ class Prompt_Controller_Test extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new Prompt_Controller();
+        $this->controller = new Prompt_Controller('test/v1');
     }
 
     /**
@@ -45,7 +45,8 @@ class Prompt_Controller_Test extends TestCase
         $wp_rest_routes_registered = [];
 
         $namespace = 'test/v1';
-        $this->controller->register_routes($namespace);
+        $test_controller = new Prompt_Controller($namespace);
+        $test_controller->register_routes();
 
         // Verify all 10 expected routes were registered
         $expected_routes = [
@@ -81,6 +82,7 @@ class Prompt_Controller_Test extends TestCase
     {
         // Create a partial mock of the controller to mock the PromptBuilder interaction
         $controller = $this->getMockBuilder(Prompt_Controller::class)
+                          ->setConstructorArgs(['test/v1'])
                           ->onlyMethods(['build_prompt_from_request'])
                           ->getMock();
 
@@ -113,6 +115,7 @@ class Prompt_Controller_Test extends TestCase
     {
         // Create a partial mock that throws an exception
         $controller = $this->getMockBuilder(Prompt_Controller::class)
+                          ->setConstructorArgs(['test/v1'])
                           ->onlyMethods(['build_prompt_from_request'])
                           ->getMock();
 
