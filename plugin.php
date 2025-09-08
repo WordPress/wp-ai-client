@@ -8,8 +8,8 @@
  * Version: n.e.x.t
  * Author: WordPress AI Team
  * Author URI: https://make.wordpress.org/ai/
- * License: GPLv2 or later
- * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * License: GPL-2.0-or-later
+ * License URI: https://spdx.org/licenses/GPL-2.0-or-later.html
  * Text Domain: wp-ai-client
  *
  * @package wp-ai-client
