@@ -44,6 +44,7 @@ class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 	 * @return array<array<string, mixed>>
 	 */
 	public static function getCandidates( $type ) {
+		// PSR-18 HTTP Client.
 		if ( ClientInterface::class === $type ) {
 			return array(
 				array(
@@ -52,6 +53,25 @@ class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 						WP_AI_Client_Client_Adapter::class,
 						Psr17Factory::class,
 					),
+				),
+			);
+		}
+
+		// PSR-17 factories - Nyholm's Psr17Factory implements all of them.
+		$psr17_factories = array(
+			'Psr\Http\Message\RequestFactoryInterface',
+			'Psr\Http\Message\ResponseFactoryInterface',
+			'Psr\Http\Message\ServerRequestFactoryInterface',
+			'Psr\Http\Message\StreamFactoryInterface',
+			'Psr\Http\Message\UploadedFileFactoryInterface',
+			'Psr\Http\Message\UriFactoryInterface',
+		);
+
+		if ( in_array( $type, $psr17_factories, true ) ) {
+			return array(
+				array(
+					'class'     => Psr17Factory::class,
+					'condition' => Psr17Factory::class,
 				),
 			);
 		}
