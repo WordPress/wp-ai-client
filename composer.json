@@ -39,7 +39,8 @@
         "phpstan/phpstan": "~2.1",
         "slevomat/coding-standard": "^8.0",
         "squizlabs/php_codesniffer": "^3.7",
-        "wp-coding-standards/wpcs": "^3.0"
+        "wp-coding-standards/wpcs": "^3.0",
+        "szepeviktor/phpstan-wordpress": "^2.0"
     },
     "config": {
         "allow-plugins": {
@@ -58,6 +59,6 @@
         ],
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
-        "phpstan": "phpstan analyze --memory-limit=256M"
+        "phpstan": "phpstan analyze --memory-limit=512M"
     }
 }
