@@ -3,13 +3,12 @@
  * WordPress AI Client HTTP Client Adapter
  *
  * @package WordPress\AI_Client
- * @since 1.0.0
+ * @since n.e.x.t
  */
 
 namespace WordPress\AI_Client\HTTP;
 
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -21,7 +20,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * This adapter allows WordPress HTTP functions to be used
  * as a PSR-18 compliant HTTP client.
  *
- * @since 1.0.0
+ * @since n.e.x.t
  */
 class WP_AI_Client_Client_Adapter implements ClientInterface {
 
