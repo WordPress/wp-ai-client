@@ -66,10 +66,9 @@ class WP_AI_Client_Client_Adapter implements ClientInterface {
 		$response = \wp_remote_request( $url, $args );
 
 		if ( \is_wp_error( $response ) ) {
-			throw new WP_AI_Client_Network_Exception(
+			// TODO: Update to use PHP AI Client exceptions.
+			throw new \Exception(
 				$response->get_error_message(),
-				$request,
-				null,
 				$response->get_error_code() ? (int) $response->get_error_code() : 0
 			);
 		}
