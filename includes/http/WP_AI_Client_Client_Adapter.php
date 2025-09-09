@@ -57,18 +57,19 @@ class WP_AI_Client_Client_Adapter implements ClientInterface {
 	 *
 	 * @return ResponseInterface The PSR-7 response.
 	 *
-	 * @throws ClientExceptionInterface If an error happens while processing the request.
+	 * @throws \Exception If the WordPress HTTP request fails.
 	 */
 	public function sendRequest( RequestInterface $request ): ResponseInterface {
 		$args = $this->prepare_wp_args( $request );
 		$url  = (string) $request->getUri();
 
+		/** Ignoring PHPStan for WordPress-specific array structure. @phpstan-ignore-next-line */
 		$response = \wp_remote_request( $url, $args );
 
 		if ( \is_wp_error( $response ) ) {
 			// TODO: Update to use PHP AI Client exceptions.
 			throw new \Exception(
-				$response->get_error_message(),
+				$response->get_error_message(), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				$response->get_error_code() ? (int) $response->get_error_code() : 0
 			);
 		}
@@ -81,7 +82,7 @@ class WP_AI_Client_Client_Adapter implements ClientInterface {
 	 *
 	 * @param RequestInterface $request The PSR-7 request.
 	 *
-	 * @return array WordPress HTTP API arguments.
+	 * @return array<string, mixed> WordPress HTTP API arguments.
 	 */
 	private function prepare_wp_args( RequestInterface $request ): array {
 		$args = array(
@@ -108,7 +109,7 @@ class WP_AI_Client_Client_Adapter implements ClientInterface {
 	 *
 	 * @param RequestInterface $request The PSR-7 request.
 	 *
-	 * @return array Headers array for WordPress HTTP API.
+	 * @return array<string, string> Headers array for WordPress HTTP API.
 	 */
 	private function prepare_headers( RequestInterface $request ): array {
 		$headers = array();
@@ -120,7 +121,7 @@ class WP_AI_Client_Client_Adapter implements ClientInterface {
 			}
 
 			// WordPress expects headers as name => value pairs.
-			$headers[ $name ] = implode( ', ', $values );
+			$headers[ (string) $name ] = implode( ', ', $values );
 		}
 
 		return $headers;
@@ -151,7 +152,7 @@ class WP_AI_Client_Client_Adapter implements ClientInterface {
 	/**
 	 * Create PSR-7 response from WordPress HTTP response.
 	 *
-	 * @param array $wp_response WordPress HTTP API response array.
+	 * @param array{headers: \Traversable<string, string|array<string>>|array<string, string|array<string>>, body: string, response: array{code: int|string, message: string}} $wp_response WordPress HTTP API response array.
 	 *
 	 * @return ResponseInterface PSR-7 response.
 	 */
@@ -162,15 +163,21 @@ class WP_AI_Client_Client_Adapter implements ClientInterface {
 		$body          = \wp_remote_retrieve_body( $wp_response );
 
 		// Create the PSR-7 response.
-		$response = $this->response_factory->createResponse( $status_code, $reason_phrase );
+		$response = $this->response_factory->createResponse( (int) $status_code, $reason_phrase );
 
 		// Add headers to response.
 		if ( $headers instanceof \WP_HTTP_Requests_Response ) {
 			$headers = $headers->get_headers();
 		}
 
-		if ( is_array( $headers ) || $headers instanceof \ArrayAccess ) {
+		/**
+		 * Headers from WordPress response.
+		 *
+		 * @var \Traversable<string, string|array<string>>|array<string, string|array<string>> $headers
+		 */
+		if ( is_array( $headers ) || $headers instanceof \Traversable ) {
 			foreach ( $headers as $name => $value ) {
+				// PSR-7 expects string name and string|array value.
 				$response = $response->withHeader( $name, $value );
 			}
 		}
