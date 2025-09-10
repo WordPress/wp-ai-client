@@ -461,15 +461,42 @@ class Prompt_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * Get the required capability for AI operations.
+	 *
+	 * Defaults to 'manage_options' (admin-only) but can be filtered by plugins.
+	 * This ensures only admins can use AI by default (since they configure
+	 * provider credentials), while allowing plugins to customize access control.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return string The capability required for AI operations.
+	 */
+	private function get_ai_capability(): string {
+		/**
+		 * Filters the capability required for AI operations.
+		 *
+		 * @since n.e.x.t
+		 *
+		 * @param string $capability The default capability ('manage_options').
+		 */
+		return apply_filters( 'wp_ai_client_capability', 'manage_options' );
+	}
+
+	/**
 	 * Check permissions for AI generation requests.
+	 *
+	 * Uses a custom capability that defaults to admin-only access but can be
+	 * filtered by plugins to implement their own permission schemes.
 	 *
 	 * @param WP_REST_Request $request The REST request object.
 	 * @return bool|WP_Error True if user has permission, WP_Error if not.
 	 */
 	public function check_permission( WP_REST_Request $request ) {
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		$required_capability = $this->get_ai_capability();
+
+		if ( ! current_user_can( $required_capability ) ) {
 			return new WP_Error(
-				'insufficient_permission',
+				'wp_ai_client_insufficient_permission',
 				'You do not have permission to use AI generation',
 				array( 'status' => 403 )
 			);
