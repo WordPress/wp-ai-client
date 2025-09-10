@@ -26,17 +26,14 @@ class REST_Route_Registrar {
 	/**
 	 * Register all REST routes under the specified namespace.
 	 *
-	 * Creates individual routes for each PromptBuilder terminate method:
-	 * - /prompt/generate-text
-	 * - /prompt/generate-texts
-	 * - /prompt/generate-image
-	 * - /prompt/generate-images
-	 * - /prompt/generate-speech
-	 * - /prompt/generate-speeches
+	 * Creates individual routes for PromptBuilder result methods:
 	 * - /prompt/generate-result
 	 * - /prompt/generate-text-result
 	 * - /prompt/generate-image-result
 	 * - /prompt/generate-speech-result
+	 *
+	 * Shortcut methods (generate-text, generate-texts, etc.) are handled
+	 * on the JavaScript side to avoid API duplication.
 	 *
 	 * @since n.e.x.t
 	 *
