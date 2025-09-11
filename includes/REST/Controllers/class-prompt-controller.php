@@ -105,17 +105,17 @@ class Prompt_Controller extends WP_REST_Controller {
 				'required'    => true,
 				'description' => 'The prompt content as string, message part, message, or array of messages',
 				'oneOf'       => array(
-					// String prompt
+					// String prompt.
 					array(
 						'type'        => 'string',
 						'minLength'   => 1,
 						'description' => 'Simple text prompt',
 					),
-					// Single MessagePart DTO
+					// Single MessagePart DTO.
 					MessagePart::getJsonSchema(),
-					// Single Message DTO
+					// Single Message DTO.
 					Message::getJsonSchema(),
-					// Array of Message DTOs
+					// Array of Message DTOs.
 					array(
 						'type'        => 'array',
 						'items'       => Message::getJsonSchema(),
