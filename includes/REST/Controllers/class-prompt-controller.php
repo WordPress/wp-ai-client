@@ -16,7 +16,9 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Builders\PromptBuilder;
-use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
+use WordPress\AiClient\Messages\DTO\Message;
+use WordPress\AiClient\Messages\DTO\MessagePart;
+use WordPress\AiClient\Providers\Models\DTO\ModelConfig;
 use WordPress\AiClient\Results\DTO\GenerativeAiResult;
 
 /**
@@ -81,6 +83,7 @@ class Prompt_Controller extends WP_REST_Controller {
 					'callback'            => array( $this, $callback ),
 					'args'                => $common_args,
 					'permission_callback' => array( $this, 'check_permission' ),
+					'schema'              => array( $this, 'get_response_schema' ),
 				)
 			);
 		}
@@ -89,65 +92,77 @@ class Prompt_Controller extends WP_REST_Controller {
 	/**
 	 * Get common request arguments for all prompt endpoints.
 	 *
+	 * Leverages schemas from PHP AI Client SDK DTOs to maintain
+	 * consistency with the underlying SDK data structures.
+	 *
 	 * @since n.e.x.t
 	 *
 	 * @return array<string, array<string, mixed>> Request arguments schema.
 	 */
 	protected function get_common_args(): array {
 		return array(
-			'prompt'             => array(
-				'required'          => true,
-				'type'              => array( 'string', 'array' ),
-				'description'       => 'The prompt text, message parts, or array of messages',
-				'validate_callback' => array( $this, 'validate_prompt' ),
-			),
-			'system_instruction' => array(
-				'type'        => 'string',
-				'description' => 'System instruction to guide the AI behavior',
-			),
-			'temperature'        => array(
-				'type'        => 'number',
-				'minimum'     => 0.0,
-				'maximum'     => 2.0,
-				'description' => 'Controls randomness in generation (0.0 = deterministic, 2.0 = very random)',
-			),
-			'max_tokens'         => array(
-				'type'        => 'integer',
-				'minimum'     => 1,
-				'description' => 'Maximum number of tokens to generate',
-			),
-			'top_p'              => array(
-				'type'        => 'number',
-				'minimum'     => 0.0,
-				'maximum'     => 1.0,
-				'description' => 'Nucleus sampling parameter',
-			),
-			'top_k'              => array(
-				'type'        => 'integer',
-				'minimum'     => 1,
-				'description' => 'Top-k sampling parameter',
-			),
-			'provider'           => array(
-				'type'        => 'string',
-				'description' => 'Specific AI provider to use (e.g., "openai", "anthropic")',
-			),
-			'candidate_count'    => array(
-				'type'        => 'integer',
-				'minimum'     => 1,
-				'maximum'     => 10,
-				'description' => 'Number of generation candidates to return (for multi-generation endpoints)',
-			),
-			'stop_sequences'     => array(
-				'type'        => 'array',
-				'items'       => array(
-					'type' => 'string',
+			'prompt' => array(
+				'required'    => true,
+				'description' => 'The prompt content as string, message part, message, or array of messages',
+				'oneOf'       => array(
+					// String prompt
+					array(
+						'type'        => 'string',
+						'minLength'   => 1,
+						'description' => 'Simple text prompt',
+					),
+					// Single MessagePart DTO
+					MessagePart::getJsonSchema(),
+					// Single Message DTO
+					Message::getJsonSchema(),
+					// Array of Message DTOs
+					array(
+						'type'        => 'array',
+						'items'       => Message::getJsonSchema(),
+						'minItems'    => 1,
+						'description' => 'Array of messages for conversation',
+					),
 				),
-				'description' => 'Sequences that will stop generation when encountered',
 			),
-			'capability'         => array(
-				'type'        => 'string',
-				'description' => 'AI capability to use for generation (for generate-result endpoint)',
+			'config' => array_merge(
+				ModelConfig::getJsonSchema(),
+				array(
+					'description' => 'Model configuration options',
+				)
 			),
+		);
+	}
+
+	/**
+	 * Get response schema for all prompt endpoints.
+	 *
+	 * All endpoints return the same response format based on GenerativeAiResult DTO,
+	 * wrapped in a consistent success/error response structure.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, mixed> Response schema.
+	 */
+	public function get_response_schema(): array {
+		return array(
+			'type'       => 'object',
+			'properties' => array(
+				'success'   => array(
+					'type'        => 'boolean',
+					'description' => 'Whether the request was successful',
+				),
+				'data'      => GenerativeAiResult::getJsonSchema(),
+				'timestamp' => array(
+					'type'        => 'string',
+					'description' => 'Response timestamp',
+				),
+				'metadata'  => array(
+					'type'                 => 'object',
+					'description'          => 'Additional response metadata',
+					'additionalProperties' => true,
+				),
+			),
+			'required'   => array( 'success', 'data', 'timestamp' ),
 		);
 	}
 
@@ -236,14 +251,8 @@ class Prompt_Controller extends WP_REST_Controller {
 	 */
 	public function generate_result( WP_REST_Request $request ): WP_REST_Response {
 		try {
-			$builder    = $this->build_prompt_from_request( $request );
-			$capability = $request->get_param( 'capability' );
-
-			if ( $capability ) {
-				$result = $builder->generateResult( CapabilityEnum::from( $capability ) );
-			} else {
-				$result = $builder->generateResult();
-			}
+			$builder = $this->build_prompt_from_request( $request );
+			$result  = $builder->generateResult();
 
 			return $this->format_success_response(
 				$this->format_generative_result( $result ),
@@ -264,72 +273,26 @@ class Prompt_Controller extends WP_REST_Controller {
 	/**
 	 * Build a PromptBuilder instance from the REST request.
 	 *
+	 * Uses the config parameter which maps directly to ModelConfig DTO,
+	 * providing a clean interface between REST API and the SDK.
+	 *
 	 * @since n.e.x.t
 	 *
 	 * @param WP_REST_Request $request The REST request object.
 	 * @return PromptBuilder Configured PromptBuilder instance.
 	 */
 	protected function build_prompt_from_request( WP_REST_Request $request ) {
-		// Get prompt content for constructor.
+		// Get prompt content (string, MessagePart, Message, or Message[]).
 		$prompt = $request->get_param( 'prompt' );
 
-		// Validate and sanitize prompt parameter for AiClient.
-		if ( is_string( $prompt ) ) {
-			// String prompts are valid as-is.
-			$validated_prompt = $prompt;
-		} elseif ( is_array( $prompt ) ) {
-			// For arrays, ensure they contain only valid message-like structures.
-			// This is a basic validation - AiClient will handle detailed validation.
-			$validated_prompt = $prompt;
-		} else {
-			// Invalid type - use null for empty prompt.
-			$validated_prompt = null;
-		}
+		// Create builder with prompt - AiClient handles all prompt types.
+		$builder = AiClient::prompt( $prompt );
 
-		// Create builder with validated prompt.
-		$builder = AiClient::prompt( $validated_prompt );
-
-		// Apply system instruction if provided.
-		if ( $request->has_param( 'system_instruction' ) ) {
-			$builder->usingSystemInstruction( $request->get_param( 'system_instruction' ) );
-		}
-
-		// Apply temperature if provided.
-		if ( $request->has_param( 'temperature' ) ) {
-			$builder->usingTemperature( (float) $request->get_param( 'temperature' ) );
-		}
-
-		// Apply max tokens if provided.
-		if ( $request->has_param( 'max_tokens' ) ) {
-			$builder->usingMaxTokens( (int) $request->get_param( 'max_tokens' ) );
-		}
-
-		// Apply top_p if provided.
-		if ( $request->has_param( 'top_p' ) ) {
-			$builder->usingTopP( (float) $request->get_param( 'top_p' ) );
-		}
-
-		// Apply top_k if provided.
-		if ( $request->has_param( 'top_k' ) ) {
-			$builder->usingTopK( (int) $request->get_param( 'top_k' ) );
-		}
-
-		// Apply stop sequences if provided.
-		if ( $request->has_param( 'stop_sequences' ) ) {
-			$stop_sequences = $request->get_param( 'stop_sequences' );
-			if ( is_array( $stop_sequences ) ) {
-				$builder->usingStopSequences( ...$stop_sequences );
-			}
-		}
-
-		// Apply provider if provided.
-		if ( $request->has_param( 'provider' ) ) {
-			$builder->usingProvider( $request->get_param( 'provider' ) );
-		}
-
-		// Apply candidate count if provided.
-		if ( $request->has_param( 'candidate_count' ) ) {
-			$builder->usingCandidateCount( (int) $request->get_param( 'candidate_count' ) );
+		// Apply configuration if provided - maps directly to ModelConfig DTO.
+		$config = $request->get_param( 'config' );
+		if ( ! empty( $config ) && is_array( $config ) ) {
+			$model_config = ModelConfig::fromArray( $config );
+			$builder->usingModelConfig( $model_config );
 		}
 
 		return $builder;
@@ -422,81 +385,20 @@ class Prompt_Controller extends WP_REST_Controller {
 		return new WP_REST_Response( $error_data, 500 );
 	}
 
-	/**
-	 * Validate prompt parameter.
-	 *
-	 * @param mixed           $value Prompt value to validate.
-	 * @param WP_REST_Request $request Current request object.
-	 * @param string          $param Parameter name.
-	 * @return bool|WP_Error True if valid, WP_Error if invalid.
-	 */
-	public function validate_prompt( $value, WP_REST_Request $request, string $param ) {
-		if ( is_string( $value ) ) {
-			if ( empty( trim( $value ) ) ) {
-				return new WP_Error(
-					'invalid_prompt',
-					'Prompt cannot be empty or contain only whitespace',
-					array( 'status' => 400 )
-				);
-			}
-			return true;
-		}
-
-		if ( is_array( $value ) ) {
-			if ( empty( $value ) ) {
-				return new WP_Error(
-					'invalid_prompt',
-					'Prompt array cannot be empty',
-					array( 'status' => 400 )
-				);
-			}
-			return true;
-		}
-
-		return new WP_Error(
-			'invalid_prompt',
-			'Prompt must be a string or array',
-			array( 'status' => 400 )
-		);
-	}
-
-	/**
-	 * Get the required capability for AI operations.
-	 *
-	 * Defaults to 'manage_options' (admin-only) but can be filtered by plugins.
-	 * This ensures only admins can use AI by default (since they configure
-	 * provider credentials), while allowing plugins to customize access control.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @return string The capability required for AI operations.
-	 */
-	private function get_ai_capability(): string {
-		/**
-		 * Filters the capability required for AI operations.
-		 *
-		 * @since n.e.x.t
-		 *
-		 * @param string $capability The default capability ('manage_options').
-		 */
-		return apply_filters( 'wp_ai_client_capability', 'manage_options' );
-	}
 
 	/**
 	 * Check permissions for AI generation requests.
 	 *
-	 * Uses a custom capability that defaults to admin-only access but can be
-	 * filtered by plugins to implement their own permission schemes.
+	 * Only administrators can use AI generation since they configure
+	 * provider credentials and API keys.
 	 *
 	 * @param WP_REST_Request $request The REST request object.
 	 * @return bool|WP_Error True if user has permission, WP_Error if not.
 	 */
 	public function check_permission( WP_REST_Request $request ) {
-		$required_capability = $this->get_ai_capability();
-
-		if ( ! current_user_can( $required_capability ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return new WP_Error(
-				'wp_ai_client_insufficient_permission',
+				'rest_forbidden',
 				'You do not have permission to use AI generation',
 				array( 'status' => 403 )
 			);
