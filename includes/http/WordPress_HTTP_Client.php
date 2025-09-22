@@ -94,12 +94,6 @@ class WordPress_HTTP_Client implements ClientInterface {
 			'blocking'    => true,
 		);
 
-		// Handle streaming requests if needed.
-		if ( $request->hasHeader( 'X-Stream' ) ) {
-			$args['stream']   = true;
-			$args['filename'] = $request->getHeaderLine( 'X-Stream-Filename' );
-		}
-
 		return $args;
 	}
 
