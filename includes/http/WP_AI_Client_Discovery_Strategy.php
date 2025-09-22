@@ -50,7 +50,7 @@ class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 				array(
 					'class'     => array( __CLASS__, 'createWordPressClient' ),
 					'condition' => array(
-						WP_AI_Client_Client_Adapter::class,
+						WordPress_HTTP_Client::class,
 						Psr17Factory::class,
 					),
 				),
@@ -82,11 +82,11 @@ class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 	/**
 	 * Create an instance of the WordPress HTTP client.
 	 *
-	 * @return WP_AI_Client_Client_Adapter
+	 * @return WordPress_HTTP_Client
 	 */
 	public static function createWordPressClient() {
 		$psr17_factory = new Psr17Factory();
-		return new WP_AI_Client_Client_Adapter(
+		return new WordPress_HTTP_Client(
 			$psr17_factory, // Response factory.
 			$psr17_factory  // Stream factory.
 		);

@@ -22,7 +22,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  *
  * @since n.e.x.t
  */
-class WP_AI_Client_Client_Adapter implements ClientInterface {
+class WordPress_HTTP_Client implements ClientInterface {
 
 	/**
 	 * Response factory instance.
