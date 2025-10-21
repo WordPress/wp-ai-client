@@ -75,11 +75,7 @@ class API_Credentials_Manager {
 
 		$registry = AiClient::defaultRegistry();
 
-		/*
-		 * These are hard-coded since the PHP AI Client SDK does not allow returning a list of all registered providers yet.
-		 * TODO: Fix this, as it is blocking this from functioning properly.
-		 */
-		$provider_ids = array( 'anthropic', 'google', 'openai' );
+		$provider_ids = $registry->getRegisteredProviderIds();
 		foreach ( $provider_ids as $provider_id ) {
 			if ( ! $registry->hasProvider( $provider_id ) ) {
 				continue;
