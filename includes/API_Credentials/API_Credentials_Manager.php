@@ -77,10 +77,6 @@ class API_Credentials_Manager {
 
 		$provider_ids = $registry->getRegisteredProviderIds();
 		foreach ( $provider_ids as $provider_id ) {
-			if ( ! $registry->hasProvider( $provider_id ) ) {
-				continue;
-			}
-
 			// If the provider was already found via another client class, just add this client class name to the list.
 			if ( isset( $wp_ai_client_providers_metadata[ $provider_id ] ) ) {
 				$wp_ai_client_providers_metadata[ $provider_id ]['ai_client_classnames'][ AiClient::class ] = true;
