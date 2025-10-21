@@ -244,7 +244,7 @@ class API_Credentials_Manager {
 		$settings_screen = new API_Credentials_Settings_Screen(
 			$screen_slug,
 			$screen_title,
-			__( 'Paste your API credentials for the different AI providers you would like to use.', 'wp-ai-client' ),
+			__( 'Paste your API credentials for one or more AI providers you would like to use throughout your site.', 'wp-ai-client' ),
 			self::OPTION_GROUP,
 			self::OPTION_PROVIDER_CREDENTIALS,
 			$this->get_all_cloud_providers_metadata()
