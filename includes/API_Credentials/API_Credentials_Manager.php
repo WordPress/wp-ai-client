@@ -123,7 +123,7 @@ class API_Credentials_Manager {
 		}
 
 		return array_map(
-			function ( array $provider_metadata ) {
+			static function ( array $provider_metadata ) {
 				return ProviderMetadata::fromArray( $provider_metadata );
 			},
 			$wp_ai_client_providers_metadata
@@ -142,7 +142,7 @@ class API_Credentials_Manager {
 
 		return array_filter(
 			$all_providers,
-			function ( ProviderMetadata $metadata ) {
+			static function ( ProviderMetadata $metadata ) {
 				return $metadata->getType()->isCloud();
 			}
 		);
