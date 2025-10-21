@@ -13,6 +13,8 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use WordPress\AiClient\Providers\Http\Contracts\ClientWithOptionsInterface;
+use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 
 /**
  * PSR-18 HTTP Client adapter using WordPress HTTP API
@@ -22,7 +24,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  *
  * @since n.e.x.t
  */
-class WordPress_HTTP_Client implements ClientInterface {
+class WordPress_HTTP_Client implements ClientInterface, ClientWithOptionsInterface {
 
 	/**
 	 * Response factory instance.
@@ -77,22 +79,64 @@ class WordPress_HTTP_Client implements ClientInterface {
 	}
 
 	/**
-	 * Prepare WordPress HTTP API arguments from PSR-7 request.
+	 * Sends a PSR-7 request with transport options and returns a PSR-7 response.
+	 *
+	 * @since n.e.x.t
 	 *
 	 * @param RequestInterface $request The PSR-7 request.
+	 * @param RequestOptions   $options Transport options for the request.
+	 *
+	 * @return ResponseInterface The PSR-7 response.
+	 *
+	 * @throws \Exception If the WordPress HTTP request fails.
+	 */
+	public function sendRequestWithOptions( RequestInterface $request, RequestOptions $options ): ResponseInterface {
+		$args = $this->prepare_wp_args( $request, $options );
+		$url  = (string) $request->getUri();
+
+		/** Ignoring PHPStan for WordPress-specific array structure. @phpstan-ignore-next-line */
+		$response = \wp_remote_request( $url, $args );
+
+		if ( \is_wp_error( $response ) ) {
+			// TODO: Update to use PHP AI Client exceptions.
+			throw new \Exception(
+				$response->get_error_message(), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+				$response->get_error_code() ? (int) $response->get_error_code() : 0
+			);
+		}
+
+		return $this->create_psr_response( $response );
+	}
+
+	/**
+	 * Prepare WordPress HTTP API arguments from PSR-7 request.
+	 *
+	 * @param RequestInterface    $request The PSR-7 request.
+	 * @param RequestOptions|null $options Optional transport options for the request.
 	 *
 	 * @return array<string, mixed> WordPress HTTP API arguments.
 	 */
-	private function prepare_wp_args( RequestInterface $request ): array {
+	private function prepare_wp_args( RequestInterface $request, ?RequestOptions $options = null ): array {
 		$args = array(
 			'method'      => $request->getMethod(),
 			'headers'     => $this->prepare_headers( $request ),
 			'body'        => $this->prepare_body( $request ),
-			'timeout'     => 30,
-			'redirection' => 5,
 			'httpversion' => $request->getProtocolVersion(),
 			'blocking'    => true,
 		);
+
+		// Apply options if provided.
+		if ( null !== $options ) {
+			// Set timeout if specified.
+			if ( null !== $options->getTimeout() ) {
+				$args['timeout'] = $options->getTimeout();
+			}
+
+			// Set redirection if specified.
+			if ( null !== $options->getMaxRedirects() ) {
+				$args['redirection'] = $options->getMaxRedirects();
+			}
+		}
 
 		return $args;
 	}
