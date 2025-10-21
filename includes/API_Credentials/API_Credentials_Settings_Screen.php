@@ -103,22 +103,7 @@ class API_Credentials_Settings_Screen {
 			function () {
 				?>
 				<p class="description">
-					<?php
-					// Allow some basic inline HTML.
-					echo wp_kses(
-						$this->screen_description,
-						array(
-							'strong' => array(),
-							'em'     => array(),
-							'br'     => array(),
-							'a'      => array(
-								'href'   => array(),
-								'target' => array(),
-								'rel'    => array(),
-							),
-						)
-					);
-					?>
+					<?php echo wp_kses( $this->screen_description, $this->kses_description_allowed_html() ); ?>
 				</p>
 				<?php
 			},
@@ -129,19 +114,49 @@ class API_Credentials_Settings_Screen {
 			$provider_id   = $provider_metadata->getId();
 			$provider_name = $provider_metadata->getName();
 
-			$field_id = "wp-ai-client-provider-api-key-{$provider_id}";
+			/*
+			 * This is a temporary hard-coded mapping of provider IDs to their API credentials URL.
+			 * Instead, this should become an optional field during provider registration in the PHP AI Client SDK.
+			 *
+			 * TODO: Remove this eventually once the PHP AI Client SDK supports this natively.
+			 */
+			switch ( $provider_id ) {
+				case 'anthropic':
+					$provider_credentials_url = 'https://console.anthropic.com/settings/keys';
+					break;
+				case 'google':
+					$provider_credentials_url = 'https://aistudio.google.com/app/api-keys';
+					break;
+				case 'openai':
+					$provider_credentials_url = 'https://platform.openai.com/api-keys';
+					break;
+				default:
+					$provider_credentials_url = '';
+			}
+
+			$field_id   = "wp-ai-client-provider-api-key-{$provider_id}";
+			$field_args = array(
+				'type'      => 'password',
+				'label_for' => $field_id,
+				'id'        => $field_id,
+				'name'      => $this->option_name . '[' . $provider_id . ']',
+			);
+			if ( $provider_credentials_url ) {
+				$field_args['description'] = sprintf(
+					/* translators: 1: provider name, 2: URL to the provider's API credentials page. */
+					__( 'Create and manage your %1$s API keys in the <a href="%2$s" target="_blank" rel="noopener noreferrer">%1$s account settings<span class="screen-reader-text"> (opens in a new tab)</span></a>.', 'wp-ai-client' ),
+					$provider_name,
+					esc_url( $provider_credentials_url )
+				);
+			}
+
 			add_settings_field(
 				$field_id,
 				$provider_name,
 				array( $this, 'render_field' ),
 				$this->screen_slug,
 				$settings_section,
-				array(
-					'type'      => 'password',
-					'label_for' => $field_id,
-					'id'        => $field_id,
-					'name'      => $this->option_name . '[' . $provider_id . ']',
-				)
+				$field_args
 			);
 		}
 	}
@@ -175,9 +190,11 @@ class API_Credentials_Settings_Screen {
 	 * @param array<string, string> $args Field arguments set up during `add_settings_field()`.
 	 */
 	public function render_field( array $args ): void {
-		$type = $args['type'] ?? 'text';
-		$id   = $args['id'] ?? '';
-		$name = $args['name'] ?? '';
+		$type           = $args['type'] ?? 'text';
+		$id             = $args['id'] ?? '';
+		$name           = $args['name'] ?? '';
+		$description    = $args['description'] ?? '';
+		$description_id = $args['id'] . '_description';
 
 		if ( str_contains( $name, '[' ) ) {
 			$parts  = explode( '[', $name, 2 );
@@ -204,7 +221,42 @@ class API_Credentials_Settings_Screen {
 			name="<?php echo esc_attr( $name ); ?>"
 			value="<?php echo esc_attr( $value ); ?>"
 			class="regular-text"
+			<?php echo $description ? 'aria-describedby="' . esc_attr( $description_id ) . '"' : ''; ?>
 		>
 		<?php
+
+		if ( $description ) {
+			?>
+			<p
+				id="<?php echo esc_attr( $description_id ); ?>"
+				class="description"
+			>
+				<?php echo wp_kses( $description, $this->kses_description_allowed_html() ); ?>
+			</p>
+			<?php
+		}
+	}
+
+	/**
+	 * Returns the allowed HTML tags and attributes for descriptions using wp_kses().
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return array<string, array<string, mixed>> Allowed HTML tags and their attributes.
+	 */
+	private function kses_description_allowed_html(): array {
+		return array(
+			'strong' => array(),
+			'em'     => array(),
+			'span'   => array(
+				'class' => array(),
+			),
+			'a'      => array(
+				'class'  => array(),
+				'href'   => array(),
+				'target' => array(),
+				'rel'    => array(),
+			),
+		);
 	}
 }
