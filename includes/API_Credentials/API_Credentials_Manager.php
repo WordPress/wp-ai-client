@@ -239,7 +239,7 @@ class API_Credentials_Manager {
 			return;
 		}
 
-		$screen_title = __( 'AI Client Settings', 'wp-ai-client' );
+		$screen_title = __( 'AI Client Credentials', 'wp-ai-client' );
 
 		$settings_screen = new API_Credentials_Settings_Screen(
 			$screen_slug,
@@ -252,7 +252,7 @@ class API_Credentials_Manager {
 
 		$hook_suffix = add_options_page(
 			$screen_title,
-			__( 'AI Client', 'wp-ai-client' ),
+			__( 'AI Credentials', 'wp-ai-client' ),
 			'manage_options',
 			$screen_slug,
 			array( $settings_screen, 'render_screen' )
