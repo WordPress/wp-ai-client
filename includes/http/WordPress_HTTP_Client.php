@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use WordPress\AiClient\Providers\Http\Contracts\ClientWithOptionsInterface;
 use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
+use WordPress\AiClient\Providers\Http\Exception\NetworkException;
 
 /**
  * PSR-18 HTTP Client adapter using WordPress HTTP API
@@ -58,7 +59,7 @@ class WordPress_HTTP_Client implements ClientInterface, ClientWithOptionsInterfa
 	 *
 	 * @return ResponseInterface The PSR-7 response.
 	 *
-	 * @throws \Exception If the WordPress HTTP request fails.
+	 * @throws NetworkException If the WordPress HTTP request fails.
 	 */
 	public function sendRequest( RequestInterface $request ): ResponseInterface {
 		$args = $this->prepare_wp_args( $request );
@@ -68,9 +69,14 @@ class WordPress_HTTP_Client implements ClientInterface, ClientWithOptionsInterfa
 		$response = \wp_remote_request( $url, $args );
 
 		if ( \is_wp_error( $response ) ) {
-			// TODO: Update to use PHP AI Client exceptions.
-			throw new \Exception(
-				$response->get_error_message(), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			$message = sprintf(
+				'Network error occurred while sending request to %s: %s',
+				$url,
+				$response->get_error_message()
+			);
+
+			throw new NetworkException(
+				$message, // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				$response->get_error_code() ? (int) $response->get_error_code() : 0
 			);
 		}
@@ -88,7 +94,7 @@ class WordPress_HTTP_Client implements ClientInterface, ClientWithOptionsInterfa
 	 *
 	 * @return ResponseInterface The PSR-7 response.
 	 *
-	 * @throws \Exception If the WordPress HTTP request fails.
+	 * @throws NetworkException If the WordPress HTTP request fails.
 	 */
 	public function sendRequestWithOptions( RequestInterface $request, RequestOptions $options ): ResponseInterface {
 		$args = $this->prepare_wp_args( $request, $options );
@@ -98,9 +104,14 @@ class WordPress_HTTP_Client implements ClientInterface, ClientWithOptionsInterfa
 		$response = \wp_remote_request( $url, $args );
 
 		if ( \is_wp_error( $response ) ) {
-			// TODO: Update to use PHP AI Client exceptions.
-			throw new \Exception(
-				$response->get_error_message(), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			$message = sprintf(
+				'Network error occurred while sending request to %s: %s',
+				$url,
+				$response->get_error_message()
+			);
+
+			throw new NetworkException(
+				$message, // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				$response->get_error_code() ? (int) $response->get_error_code() : 0
 			);
 		}
