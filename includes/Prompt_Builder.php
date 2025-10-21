@@ -1,0 +1,146 @@
+<?php
+/**
+ * WordPress-compatible Prompt Builder.
+ *
+ * Extends the PHP AI Client PromptBuilder with WordPress-style snake_case method naming.
+ *
+ * @since n.e.x.t
+ *
+ * @package WordPress\AI_Client
+ */
+
+declare(strict_types=1);
+
+namespace WordPress\AI_Client;
+
+use WordPress\AiClient\Builders\PromptBuilder;
+use WordPress\AiClient\Files\DTO\File;
+use WordPress\AiClient\Files\Enums\FileTypeEnum;
+use WordPress\AiClient\Messages\DTO\Message;
+use WordPress\AiClient\Messages\DTO\MessagePart;
+use WordPress\AiClient\Messages\Enums\ModalityEnum;
+use WordPress\AiClient\Providers\Models\Contracts\ModelInterface;
+use WordPress\AiClient\Providers\Models\DTO\ModelConfig;
+use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
+use WordPress\AiClient\Results\DTO\GenerativeAiResult;
+use WordPress\AiClient\Tools\DTO\FunctionDeclaration;
+use WordPress\AiClient\Tools\DTO\FunctionResponse;
+use WordPress\AiClient\Tools\DTO\WebSearch;
+
+/**
+ * WordPress-compatible Prompt Builder.
+ *
+ * This class extends the PHP AI Client PromptBuilder and provides WordPress-style
+ * snake_case method aliases for all public methods. This allows developers to use
+ * WordPress coding conventions while leveraging the full power of the PHP AI Client.
+ *
+ * @since n.e.x.t
+ *
+ * @method self with_text(string $text) Adds text to the current message.
+ * @method self with_file($file, ?string $mimeType = null) Adds a file to the current message.
+ * @method self with_function_response(FunctionResponse $functionResponse) Adds a function response to the current message.
+ * @method self with_message_parts(MessagePart ...$parts) Adds message parts to the current message.
+ * @method self with_history(Message ...$messages) Adds conversation history messages.
+ * @method self using_model(ModelInterface $model) Sets the model to use for generation.
+ * @method self using_model_preference(...$preferredModels) Sets preferred models to evaluate in order.
+ * @method self using_model_config(ModelConfig $config) Sets the model configuration.
+ * @method self using_provider(string $providerIdOrClassName) Sets the provider to use for generation.
+ * @method self using_system_instruction(string $systemInstruction) Sets the system instruction.
+ * @method self using_max_tokens(int $maxTokens) Sets the maximum number of tokens to generate.
+ * @method self using_temperature(float $temperature) Sets the temperature for generation.
+ * @method self using_top_p(float $topP) Sets the top-p value for generation.
+ * @method self using_top_k(int $topK) Sets the top-k value for generation.
+ * @method self using_stop_sequences(string ...$stopSequences) Sets stop sequences for generation.
+ * @method self using_candidate_count(int $candidateCount) Sets the number of candidates to generate.
+ * @method self using_function_declarations(FunctionDeclaration ...$functionDeclarations) Sets the function declarations available to the model.
+ * @method self using_presence_penalty(float $presencePenalty) Sets the presence penalty for generation.
+ * @method self using_frequency_penalty(float $frequencyPenalty) Sets the frequency penalty for generation.
+ * @method self using_web_search(WebSearch $webSearch) Sets the web search configuration.
+ * @method self using_top_logprobs(?int $topLogprobs = null) Sets the top log probabilities configuration.
+ * @method self as_output_mime_type(string $mimeType) Sets the output MIME type.
+ * @method self as_output_schema(array<string, mixed> $schema) Sets the output schema.
+ * @method self as_output_modalities(ModalityEnum ...$modalities) Sets the output modalities.
+ * @method self as_output_file_type(FileTypeEnum $fileType) Sets the output file type.
+ * @method self as_json_response(?array<string, mixed> $schema = null) Configures the prompt for JSON response output.
+ * @method bool is_supported_for_text_generation() Checks if the prompt is supported for text generation.
+ * @method bool is_supported_for_image_generation() Checks if the prompt is supported for image generation.
+ * @method bool is_supported_for_text_to_speech_conversion() Checks if the prompt is supported for text to speech conversion.
+ * @method bool is_supported_for_video_generation() Checks if the prompt is supported for video generation.
+ * @method bool is_supported_for_speech_generation() Checks if the prompt is supported for speech generation.
+ * @method bool is_supported_for_music_generation() Checks if the prompt is supported for music generation.
+ * @method bool is_supported_for_embedding_generation() Checks if the prompt is supported for embedding generation.
+ * @method GenerativeAiResult generate_result(?CapabilityEnum $capability = null) Generates a result from the prompt.
+ * @method GenerativeAiResult generate_text_result() Generates a text result from the prompt.
+ * @method GenerativeAiResult generate_image_result() Generates an image result from the prompt.
+ * @method GenerativeAiResult generate_speech_result() Generates a speech result from the prompt.
+ * @method GenerativeAiResult convert_text_to_speech_result() Converts text to speech and returns the result.
+ * @method string generate_text() Generates text from the prompt.
+ * @method list<string> generate_texts(?int $candidateCount = null) Generates multiple text candidates from the prompt.
+ * @method File generate_image() Generates an image from the prompt.
+ * @method list<File> generate_images(?int $candidateCount = null) Generates multiple images from the prompt.
+ * @method File convert_text_to_speech() Converts text to speech.
+ * @method list<File> convert_text_to_speeches(?int $candidateCount = null) Converts text to multiple speech outputs.
+ * @method File generate_speech() Generates speech from the prompt.
+ * @method list<File> generate_speeches(?int $candidateCount = null) Generates multiple speech outputs from the prompt.
+ */
+class Prompt_Builder extends PromptBuilder {
+
+	/**
+	 * Magic method to handle snake_case method calls.
+	 *
+	 * Converts snake_case method names to camelCase and calls the parent method.
+	 * This allows WordPress developers to use snake_case naming conventions while
+	 * maintaining compatibility with the underlying PHP AI Client library.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string            $name      The method name in snake_case.
+	 * @param array<int, mixed> $arguments The method arguments.
+	 *
+	 * @return mixed The result of the parent method call.
+	 *
+	 * @throws \BadMethodCallException If the method does not exist.
+	 */
+	public function __call( string $name, array $arguments ) {
+		// Convert snake_case to camelCase.
+		$camel_case_name = $this->snake_to_camel_case( $name );
+
+		// Check if parent has this method.
+		if ( ! method_exists( parent::class, $camel_case_name ) ) {
+			throw new \BadMethodCallException(
+				sprintf(
+					'Method %s does not exist on %s',
+					$name, // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					static::class
+				)
+			);
+		}
+
+		// Call parent method with the arguments.
+		// Since the method exists in the parent class, PHP will call it directly.
+		return $this->$camel_case_name( ...$arguments );
+	}
+
+	/**
+	 * Converts snake_case to camelCase.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $snake_case The snake_case string.
+	 *
+	 * @return string The camelCase string.
+	 */
+	private function snake_to_camel_case( string $snake_case ): string {
+		// Split by underscore.
+		$parts = explode( '_', $snake_case );
+
+		// Capitalize first letter of each part except the first.
+		$camel_case  = $parts[0];
+		$parts_count = count( $parts );
+		for ( $i = 1; $i < $parts_count; $i++ ) {
+			$camel_case .= ucfirst( $parts[ $i ] );
+		}
+
+		return $camel_case;
+	}
+}
