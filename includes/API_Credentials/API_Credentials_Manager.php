@@ -69,7 +69,7 @@ class API_Credentials_Manager {
 		/**
 		 * The internal global, to collect providers metadata across duplicate clients, including prefixed versions.
 		 *
-		 * @var ?array<string, ProviderExtendedMetadataArrayShape> $wp_ai_client_providers_metadata
+		 * @var array<string, ProviderExtendedMetadataArrayShape>|null $wp_ai_client_providers_metadata
 		 */
 		global $wp_ai_client_providers_metadata;
 
