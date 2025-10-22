@@ -18,6 +18,10 @@ use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
  * @since n.e.x.t
  *
  * @phpstan-import-type ProviderMetadataArrayShape from ProviderMetadata
+ *
+ * @phpstan-type ProviderExtendedMetadataArrayShape ProviderMetadataArrayShape & array{
+ *     ai_client_classnames: array<string, bool>
+ * }
  */
 class API_Credentials_Manager {
 
@@ -65,7 +69,7 @@ class API_Credentials_Manager {
 		/**
 		 * The internal global, to collect providers metadata across duplicate clients, including prefixed versions.
 		 *
-		 * @var ?array<string, ProviderMetadataArrayShape> $wp_ai_client_providers_metadata
+		 * @var ?array<string, ProviderExtendedMetadataArrayShape> $wp_ai_client_providers_metadata
 		 */
 		global $wp_ai_client_providers_metadata;
 
@@ -110,7 +114,7 @@ class API_Credentials_Manager {
 		/**
 		 * The internal global, to collect providers metadata across duplicate clients, including prefixed versions.
 		 *
-		 * @var ?array<string, ProviderMetadataArrayShape> $wp_ai_client_providers_metadata
+		 * @var ?array<string, ProviderExtendedMetadataArrayShape> $wp_ai_client_providers_metadata
 		 */
 		global $wp_ai_client_providers_metadata;
 
