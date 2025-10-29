@@ -18,9 +18,20 @@ use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
  *
  * @since n.e.x.t
  *
- * @phpstan-import-type ProviderMetadataArrayShape from ProviderMetadata
+ * Note about PHPStan: Technically, we want `ProviderExtendedMetadataArrayShape` to be the intersection of
+ * `ProviderMetadataArrayShape` and the additional `ai_client_classnames` field. However, PHPStan does not seem to
+ * support that, so we manually redeclare the entire array shape below. The references to `ProviderMetadataArrayShape`
+ * and `ProviderAiClientMetadataArrayShape` are present for documentation purposes only.
  *
- * @phpstan-type ProviderExtendedMetadataArrayShape ProviderMetadataArrayShape & array{
+ * @phpstan-import-type ProviderMetadataArrayShape from ProviderMetadata
+ * @phpstan-type ProviderAiClientMetadataArrayShape array{
+ *     ai_client_classnames: array<string, bool>
+ * }
+ *
+ * @phpstan-type ProviderExtendedMetadataArrayShape array{
+ *     id: string,
+ *     name: string,
+ *     type: string,
  *     ai_client_classnames: array<string, bool>
  * }
  */
@@ -125,6 +136,7 @@ class API_Credentials_Manager {
 
 		return array_map(
 			static function ( array $provider_metadata ) {
+				unset( $provider_metadata['ai_client_classnames'] );
 				return ProviderMetadata::fromArray( $provider_metadata );
 			},
 			$wp_ai_client_providers_metadata
