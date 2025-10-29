@@ -8,6 +8,7 @@
 
 namespace WordPress\AI_Client\API_Credentials;
 
+use RuntimeException;
 use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Providers\DTO\ProviderMetadata;
 use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
@@ -192,11 +193,13 @@ class API_Credentials_Manager {
 	 * This method should be called on every request, before any API requests are made via the PHP AI Client SDK.
 	 *
 	 * @since n.e.x.t
+	 *
+	 * @throws RuntimeException If the stored credentials option is in an invalid format.
 	 */
 	private function pass_credentials_to_client(): void {
 		$credentials = get_option( self::OPTION_PROVIDER_CREDENTIALS, array() );
 		if ( ! is_array( $credentials ) ) {
-			return;
+			throw new RuntimeException( 'Invalid format for stored provider credentials option.' );
 		}
 
 		$registry = AiClient::defaultRegistry();
