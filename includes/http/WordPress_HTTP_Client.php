@@ -70,15 +70,13 @@ class WordPress_HTTP_Client implements ClientInterface, ClientWithOptionsInterfa
 
 		if ( \is_wp_error( $response ) ) {
 			$message = sprintf(
-				'Network error occurred while sending request to %s: %s',
+				'Network error occurred while sending %s request to %s: %s',
+				$request->getMethod(),
 				$url,
 				$response->get_error_message()
 			);
 
-			throw new NetworkException(
-				$message, // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-				$response->get_error_code() ? (int) $response->get_error_code() : 0
-			);
+			throw new NetworkException( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		return $this->create_psr_response( $response );

@@ -48,11 +48,7 @@ class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 		if ( ClientInterface::class === $type ) {
 			return array(
 				array(
-					'class'     => array( __CLASS__, 'createWordPressClient' ),
-					'condition' => array(
-						WordPress_HTTP_Client::class,
-						Psr17Factory::class,
-					),
+					'class' => self::createWordPressClient(),
 				),
 			);
 		}
@@ -70,8 +66,7 @@ class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 		if ( in_array( $type, $psr17_factories, true ) ) {
 			return array(
 				array(
-					'class'     => Psr17Factory::class,
-					'condition' => Psr17Factory::class,
+					'class' => Psr17Factory::class,
 				),
 			);
 		}
@@ -84,7 +79,7 @@ class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 	 *
 	 * @return WordPress_HTTP_Client
 	 */
-	public static function createWordPressClient() {
+	private static function createWordPressClient() {
 		$psr17_factory = new Psr17Factory();
 		return new WordPress_HTTP_Client(
 			$psr17_factory, // Response factory.
