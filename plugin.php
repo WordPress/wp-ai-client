@@ -20,3 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+add_action(
+	'init',
+	static function () {
+		$api_credentials_manager = new WordPress\AI_Client\API_Credentials\API_Credentials_Manager();
+		$api_credentials_manager->initialize();
+	}
+);
