@@ -48,7 +48,9 @@ class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 		if ( ClientInterface::class === $type ) {
 			return array(
 				array(
-					'class' => self::createWordPressClient(),
+					'class' => static function () {
+						return self::createWordPressClient();
+					},
 				),
 			);
 		}
