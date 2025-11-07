@@ -265,6 +265,7 @@ class API_Credentials_Manager {
 		if (
 			(
 				is_array( $_wp_submenu_nopriv ) &&
+				isset( $_wp_submenu_nopriv[ $parent_slug ] ) &&
 				is_array( $_wp_submenu_nopriv[ $parent_slug ] ) &&
 				isset( $_wp_submenu_nopriv[ $parent_slug ][ $screen_slug ] )
 			) ||
