@@ -13,6 +13,6 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = tab
 
-[*.{yml,yaml}]
+[*.{yml,yaml,neon.dist}]
 indent_style = space
 indent_size = 2

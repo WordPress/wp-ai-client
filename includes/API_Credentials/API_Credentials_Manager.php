@@ -76,6 +76,8 @@ class API_Credentials_Manager {
 	 * is registered in.
 	 *
 	 * @since n.e.x.t
+	 *
+	 * @throws RuntimeException If the collected provider metadata is in an invalid format.
 	 */
 	private function collect_providers(): void {
 		/**
@@ -95,13 +97,22 @@ class API_Credentials_Manager {
 		foreach ( $provider_ids as $provider_id ) {
 			// If the provider was already found via another client class, just add this client class name to the list.
 			if ( isset( $wp_ai_client_providers_metadata[ $provider_id ] ) ) {
+				if ( ! is_array( $wp_ai_client_providers_metadata[ $provider_id ]['ai_client_classnames'] ) ) {
+					throw new RuntimeException( 'Invalid format for collected provider AI client class names.' );
+				}
 				$wp_ai_client_providers_metadata[ $provider_id ]['ai_client_classnames'][ AiClient::class ] = true;
 				continue;
 			}
 
 			// Otherwise, get the provider metadata and add it to the global.
 			$provider_class_name = $registry->getProviderClassName( $provider_id );
-			$provider_metadata   = $provider_class_name::metadata();
+
+			/**
+			 * The provider metadata.
+			 *
+			 * @var ProviderMetadata
+			 */
+			$provider_metadata = $provider_class_name::metadata();
 
 			$wp_ai_client_providers_metadata[ $provider_id ] = array_merge(
 				$provider_metadata->toArray(),
@@ -191,6 +202,10 @@ class API_Credentials_Manager {
 
 					$credentials = array_intersect_key( $credentials, $providers_metadata_keyed_by_ids );
 					foreach ( $credentials as $provider_id => $api_key ) {
+						if ( ! is_string( $api_key ) ) {
+							unset( $credentials[ $provider_id ] );
+							continue;
+						}
 						$credentials[ $provider_id ] = sanitize_text_field( $api_key );
 					}
 					return $credentials;
@@ -218,7 +233,7 @@ class API_Credentials_Manager {
 
 		// Set available API keys for all registered providers.
 		foreach ( $credentials as $provider_id => $api_key ) {
-			if ( '' === $api_key ) {
+			if ( ! is_string( $api_key ) || '' === $api_key ) {
 				continue;
 			}
 
@@ -248,8 +263,16 @@ class API_Credentials_Manager {
 
 		// Bail if the screen was already added (e.g. by another instance of this package).
 		if (
-			isset( $_wp_submenu_nopriv[ $parent_slug ][ $screen_slug ] ) ||
-			isset( $_parent_pages[ $screen_slug ] )
+			(
+				is_array( $_wp_submenu_nopriv ) &&
+				isset( $_wp_submenu_nopriv[ $parent_slug ] ) &&
+				is_array( $_wp_submenu_nopriv[ $parent_slug ] ) &&
+				isset( $_wp_submenu_nopriv[ $parent_slug ][ $screen_slug ] )
+			) ||
+			(
+				is_array( $_parent_pages ) &&
+				isset( $_parent_pages[ $screen_slug ] )
+			)
 		) {
 			return;
 		}
