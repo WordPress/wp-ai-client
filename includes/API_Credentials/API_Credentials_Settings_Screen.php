@@ -201,7 +201,13 @@ class API_Credentials_Settings_Screen {
 			$option = get_option( $parts[0] );
 			$subkey = trim( $parts[1], ']' );
 			if ( is_array( $option ) && isset( $option[ $subkey ] ) ) {
-				$value = $option[ $subkey ];
+				if ( is_string( $option[ $subkey ] ) ) {
+					$value = $option[ $subkey ];
+				} elseif ( is_numeric( $option[ $subkey ] ) ) {
+					$value = (string) $option[ $subkey ];
+				} else {
+					$value = '';
+				}
 			} else {
 				$value = '';
 			}
