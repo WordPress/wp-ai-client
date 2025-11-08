@@ -21,14 +21,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-add_action(
-	'init',
-	static function () {
-		// Wire up the WordPress HTTP client with the PHP AI Client SDK.
-		WordPress\AI_Client\HTTP\WP_AI_Client_Discovery_Strategy::init();
-
-		// Initialize the API credentials manager and settings screen.
-		$api_credentials_manager = new WordPress\AI_Client\API_Credentials\API_Credentials_Manager();
-		$api_credentials_manager->initialize();
-	}
-);
+add_action( 'init', array( WordPress\AI_Client\AI_Client::class, 'init' ) );
