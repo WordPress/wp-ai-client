@@ -129,6 +129,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 	 * @return mixed The result of the parent method call.
 	 */
 	public function __call( string $name, array $arguments ) {
+		// This may throw, which is fine because calls to methods that don't exist always throw.
 		$callable = $this->get_builder_callable( $name );
 
 		/*
