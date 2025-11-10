@@ -100,7 +100,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 	 * @since n.e.x.t
 	 * @var array<string, bool>
 	 */
-	private array $terminate_methods = array(
+	private static array $terminate_methods = array(
 		'generate_result'               => true,
 		'generate_text_result'          => true,
 		'generate_image_result'         => true,
@@ -137,7 +137,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 		 * or return the same instance for other methods to maintain the fluent interface.
 		 */
 		if ( null !== $this->error ) {
-			if ( isset( $this->terminate_methods[ $name ] ) ) {
+			if ( self::is_terminating_method( $name ) ) {
 				return $this->error;
 			}
 			return $this;
@@ -154,10 +154,22 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 				)
 			);
 
-			if ( isset( $this->terminate_methods[ $name ] ) ) {
+			if ( self::is_terminating_method( $name ) ) {
 				return $this->error;
 			}
 			return $this;
 		}
+	}
+
+	/**
+	 * Checks if a method is a terminating method.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $name The method name.
+	 * @return bool True if the method is a terminating method, false otherwise.
+	 */
+	private static function is_terminating_method( string $name ): bool {
+		return isset( self::$terminate_methods[ $name ] );
 	}
 }
