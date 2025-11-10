@@ -144,7 +144,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 		}
 
 		try {
-			return call_user_func_array( $callable, $arguments );
+			return $callable( ...$arguments );
 		} catch ( Exception $e ) {
 			$this->error = new WP_Error(
 				'prompt_builder_error',

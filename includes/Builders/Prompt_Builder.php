@@ -124,7 +124,7 @@ class Prompt_Builder {
 	 */
 	public function __call( string $name, array $arguments ) {
 		$callable = $this->get_builder_callable( $name );
-		return call_user_func_array( $callable, $arguments );
+		return $callable( ...$arguments );
 	}
 
 	/**
