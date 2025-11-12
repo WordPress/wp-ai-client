@@ -1,0 +1,91 @@
+name: PHP Unit Testing
+
+on:
+  push:
+    branches:
+      - trunk
+      - 'feature/**'
+      - 'release/**'
+    # Only run if PHP-related files changed.
+    paths:
+      - '.github/workflows/php-test.yml'
+      - '**.php'
+      - 'phpunit.xml.dist'
+      - 'tests/phpunit/multisite.xml'
+      - 'composer.json'
+      - 'composer.lock'
+  pull_request:
+    # Only run if PHP-related files changed.
+    paths:
+      - '.github/workflows/php-test.yml'
+      - '**.php'
+      - 'phpunit.xml.dist'
+      - 'tests/phpunit/multisite.xml'
+      - 'composer.json'
+      - 'composer.lock'
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  php-lint:
+    name: PHP ${{ matrix.php }} - WP ${{ matrix.wordpress }} - ${{ matrix.multisite && 'Multisite' || 'Single site' }}${{ matrix.experimental && ' (experimental)' || '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: true
+      matrix:
+        php:
+        - '7.4'
+        - '8.0'
+        - '8.4'
+        wordpress: [ 'latest' ]
+        multisite: [ false, true ]
+        experimental: [false]
+        include:
+          - php: '8.4'
+            wordpress: 'trunk'
+            multisite: false
+            experimental: true
+          - php: '8.4'
+            wordpress: 'trunk'
+            multisite: true
+            experimental: true
+    env:
+      WP_ENV_PHP_VERSION: ${{ matrix.php }}
+      WP_ENV_CORE: ${{ matrix.wordpress == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wordpress ) }}
+    continue-on-error: ${{ matrix.experimental == true }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Validate Composer configuration
+        run: composer validate
+
+      - name: Install PHP dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: '--prefer-dist'
+
+      - name: Setup Node.js (.nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: npm install
+        run: npm ci
+
+      - name: Install WordPress
+        run: npm run wp-env start
+
+      - name: Running ${{ matrix.multisite && 'multisite' || 'single site' }} unit tests
+        run: npm run test-php${{ matrix.multisite && '-multisite' || '' }}

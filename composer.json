@@ -25,6 +25,11 @@
             "WordPress\\AI_Client\\": "includes/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "WordPress\\AI_Client\\PHPUnit\\Includes\\": "tests/phpunit/includes"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
@@ -41,7 +46,9 @@
         "slevomat/coding-standard": "^8.0",
         "squizlabs/php_codesniffer": "^3.7",
         "szepeviktor/phpstan-wordpress": "^2.0",
-        "wp-coding-standards/wpcs": "^3.0"
+        "wp-coding-standards/wpcs": "^3.0",
+        "wp-phpunit/wp-phpunit": "^6.8",
+        "yoast/phpunit-polyfills": "^4.0"
     },
     "config": {
         "allow-plugins": {

@@ -4,7 +4,7 @@
 
     <!-- Scan these files -->
     <file>includes</file>
-    <!-- Uncomment when we have tests. <file>tests</file>-->
+    <file>tests</file>
 
     <!-- Ignore vendor directory -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
@@ -20,7 +20,10 @@
 
 	<!-- WordPress Coding Standards -->
 	<config name="minimum_supported_wp_version" value="6.0"/>
-	<rule ref="WordPress">
+	<rule ref="WordPress-Docs">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress-Extra">
 		<exclude name="WordPress.Files.FileName"/>
 	</rule>
 
