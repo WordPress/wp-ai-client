@@ -33,6 +33,7 @@ GEMINI.md
 ############
 
 .phpunit.cache/
+.phpunit.result.cache
 
 ############
 ## IDEs
