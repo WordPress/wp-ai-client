@@ -161,14 +161,14 @@ class Prompt_Builder_Tests extends Test_Case {
 
 		// Test various snake_case patterns.
 		$test_cases = array(
-			'with_text'                 => 'withText',
-			'using_system_instruction'  => 'usingSystemInstruction',
-			'using_max_tokens'          => 'usingMaxTokens',
-			'as_output_mime_type'       => 'asOutputMimeType',
-			'using_model_config'        => 'usingModelConfig',
-			'with_message_parts'        => 'withMessageParts',
-			'using_stop_sequences'      => 'usingStopSequences',
-			'using_candidate_count'     => 'usingCandidateCount',
+			'with_text'                   => 'withText',
+			'using_system_instruction'    => 'usingSystemInstruction',
+			'using_max_tokens'            => 'usingMaxTokens',
+			'as_output_mime_type'         => 'asOutputMimeType',
+			'using_model_config'          => 'usingModelConfig',
+			'with_message_parts'          => 'withMessageParts',
+			'using_stop_sequences'        => 'usingStopSequences',
+			'using_candidate_count'       => 'usingCandidateCount',
 			'using_function_declarations' => 'usingFunctionDeclarations',
 		);
 
