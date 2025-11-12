@@ -2,7 +2,7 @@
 /**
  * Tests for WordPress\AI_Client\AI_Client
  *
- * @package wp-oop-plugin-lib
+ * @package WordPress\AI_Client
  */
 
 namespace WordPress\AI_Client\PHPUnit\Tests;
