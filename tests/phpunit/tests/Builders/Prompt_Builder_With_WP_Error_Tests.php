@@ -260,6 +260,32 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 	}
 
 	/**
+	 * Test that exception in chained method is caught and returned by the terminating method as WP_Error.
+	 */
+	public function test_exception_in_chained_method_caught_and_returned_by_terminating_method(): void {
+		$registry       = AiClient::defaultRegistry();
+		$prompt_builder = new Prompt_Builder_With_WP_Error( $registry );
+
+		$result = $prompt_builder
+			->with_text( 'Start of prompt' )
+			->with_file( 'https://example.com/img.jpg', 'image/jpeg' )
+			// The line below is incorrect: Only provider and model ID must be given.
+			->using_model_preference( array( 'test-provider', 'test-model', 'test-version' ) )
+			->using_system_instruction( 'Be helpful' )
+			->generate_text();
+
+		$this->assertInstanceOf( WP_Error::class, $result, 'generate_text should return WP_Error when exception occurs' );
+		$this->assertSame( 'prompt_builder_error', $result->get_error_code() );
+		$this->assertSame( 'Model preference tuple must contain model identifier and provider ID.', $result->get_error_message() );
+
+		// Check that error data contains exception class.
+		$error_data = $result->get_error_data();
+		$this->assertIsArray( $error_data );
+		$this->assertArrayHasKey( 'exception_class', $error_data );
+		$this->assertNotEmpty( $error_data['exception_class'] );
+	}
+
+	/**
 	 * Test that the wrapped builder is properly configured with the registry.
 	 */
 	public function test_wrapped_builder_has_correct_registry(): void {
