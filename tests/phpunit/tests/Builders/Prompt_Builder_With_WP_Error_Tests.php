@@ -22,8 +22,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 	/**
 	 * Test that Prompt_Builder_With_WP_Error can be instantiated.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_instantiation(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -35,8 +33,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 	/**
 	 * Test that Prompt_Builder_With_WP_Error can be instantiated with initial prompt content.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_instantiation_with_prompt(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -50,8 +46,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 	 *
 	 * This tests the bug fix where methods that return the PromptBuilder instance
 	 * should instead return the Prompt_Builder_With_WP_Error decorator to allow proper chaining.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_method_chaining_returns_decorator(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -107,8 +101,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 	 * Test complex method chaining scenario.
 	 *
 	 * This tests that multiple methods can be chained together fluently.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_complex_method_chaining(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -129,8 +121,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 	/**
 	 * Test that boolean-returning methods do not return the decorator.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_boolean_methods_return_boolean(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -144,8 +134,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 	/**
 	 * Test that calling a non-existent method throws an exception.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_invalid_method_throws_exception(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -159,8 +147,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 	/**
 	 * Test method chaining with with_history.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_method_chaining_with_history(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -194,8 +180,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 	/**
 	 * Test method chaining with using_model_config.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_method_chaining_with_model_config(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -213,8 +197,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 	 *
 	 * This test simulates an error state by directly setting the error property,
 	 * since fluent methods typically don't throw exceptions.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_error_state_fluent_calls_return_same_instance(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -238,8 +220,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 	 * Test that terminating methods return WP_Error when in error state.
 	 *
 	 * This test simulates an error state by directly setting the error property.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_terminating_methods_return_wp_error_in_error_state(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -260,8 +240,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 	/**
 	 * Test that exception in terminating method is caught and returned as WP_Error.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_exception_in_terminating_method_caught_and_returned(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -283,8 +261,6 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 	/**
 	 * Test that the wrapped builder is properly configured with the registry.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_wrapped_builder_has_correct_registry(): void {
 		$registry       = AiClient::defaultRegistry();

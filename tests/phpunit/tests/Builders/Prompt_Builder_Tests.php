@@ -113,8 +113,6 @@ class PromptBuilderTest extends Test_Case {
 
 	/**
 	 * Test that Prompt_Builder can be instantiated.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_instantiation(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -133,8 +131,6 @@ class PromptBuilderTest extends Test_Case {
 
 	/**
 	 * Test that Prompt_Builder can be instantiated with initial prompt content.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_instantiation_with_prompt(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -148,8 +144,6 @@ class PromptBuilderTest extends Test_Case {
 	 *
 	 * This tests the bug fix where methods that return the PromptBuilder instance
 	 * should instead return the Prompt_Builder decorator to allow proper chaining.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_method_chaining_returns_decorator(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -205,8 +199,6 @@ class PromptBuilderTest extends Test_Case {
 	 * Test complex method chaining scenario.
 	 *
 	 * This tests that multiple methods can be chained together fluently.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_complex_method_chaining(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -227,8 +219,6 @@ class PromptBuilderTest extends Test_Case {
 
 	/**
 	 * Test that boolean-returning methods do not return the decorator.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_boolean_methods_return_boolean(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -245,8 +235,6 @@ class PromptBuilderTest extends Test_Case {
 	 *
 	 * This tests that snake_case method names are properly converted to camelCase
 	 * when proxying to the underlying PromptBuilder.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_snake_case_to_camel_case_conversion(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -277,8 +265,6 @@ class PromptBuilderTest extends Test_Case {
 
 	/**
 	 * Test that calling a non-existent method throws an exception.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_invalid_method_throws_exception(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -292,8 +278,6 @@ class PromptBuilderTest extends Test_Case {
 
 	/**
 	 * Test that get_builder_callable returns a valid callable.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_get_builder_callable(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -315,8 +299,6 @@ class PromptBuilderTest extends Test_Case {
 
 	/**
 	 * Test that the wrapped builder is properly configured with the registry.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_wrapped_builder_has_correct_registry(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -336,8 +318,6 @@ class PromptBuilderTest extends Test_Case {
 
 	/**
 	 * Test method chaining with with_history.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_method_chaining_with_history(): void {
 		$registry       = AiClient::defaultRegistry();
@@ -371,8 +351,6 @@ class PromptBuilderTest extends Test_Case {
 
 	/**
 	 * Test method chaining with using_model_config.
-	 *
-	 * @since n.e.x.t
 	 */
 	public function test_method_chaining_with_model_config(): void {
 		$registry       = AiClient::defaultRegistry();
