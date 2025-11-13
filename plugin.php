@@ -12,7 +12,7 @@
  * License URI: https://spdx.org/licenses/GPL-2.0-or-later.html
  * Text Domain: wp-ai-client
  *
- * @package wp-ai-client
+ * @package WordPress\AI_Client
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

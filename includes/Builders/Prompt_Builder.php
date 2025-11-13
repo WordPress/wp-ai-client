@@ -3,7 +3,7 @@
  * Class WordPress\AI_Client\Builders\Prompt_Builder
  *
  * @since 0.1.0
- * @package wp-ai-client
+ * @package WordPress\AI_Client
  */
 
 namespace WordPress\AI_Client\Builders;
