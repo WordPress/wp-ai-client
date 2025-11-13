@@ -124,7 +124,14 @@ class Prompt_Builder {
 	 */
 	public function __call( string $name, array $arguments ) {
 		$callable = $this->get_builder_callable( $name );
-		return $callable( ...$arguments );
+		$result   = $callable( ...$arguments );
+
+		// If the result is a PromptBuilder, return the current instance to allow method chaining.
+		if ( $result instanceof PromptBuilder ) {
+			return $this;
+		}
+
+		return $result;
 	}
 
 	/**
