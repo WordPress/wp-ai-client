@@ -144,7 +144,14 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 		}
 
 		try {
-			return $callable( ...$arguments );
+			$result = $callable( ...$arguments );
+
+			// If the result is a PromptBuilder, return the current instance to allow method chaining.
+			if ( $result instanceof PromptBuilder ) {
+				return $this;
+			}
+
+			return $result;
 		} catch ( Exception $e ) {
 			$this->error = new WP_Error(
 				'prompt_builder_error',
