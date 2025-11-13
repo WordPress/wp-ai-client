@@ -8,7 +8,7 @@ Built on top of the [PHP AI Client](https://github.com/WordPress/php-ai-client),
 
 ## Features
 
-- **WordPress-native Prompt Builder**: Alternative version of `Prompt_Builder` using WordPress Coding Standards and supporting additional WordPress paradigms like `WP_Error`.
+- **WordPress-native Prompt Builder**: Fluent API for building and configuring AI prompts, built directly on top of the PHP AI Client while following WordPress Coding Standards and best practices.
 - **Admin Settings Screen**: Integrated settings screen in WP Admin to provision AI provider API credentials.
 - **Automatic Credential Wiring**: Automatic wiring up of AI provider API credentials based on storage in a WordPress database option.
 - **PSR-compliant HTTP Client**: HTTP client implementation using the WordPress HTTP API, fully compatible with PSR standards.
