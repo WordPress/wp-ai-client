@@ -2,7 +2,7 @@
 /**
  * Class WordPress\AI_Client\API_Credentials\API_Credentials_Manager
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package wp-ai-client
  */
 
@@ -16,7 +16,7 @@ use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
 /**
  * Class for managing the AI API credentials for the various providers.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * Note about PHPStan: Technically, we want `ProviderExtendedMetadataArrayShape` to be the intersection of
  * `ProviderMetadataArrayShape` and the additional `ai_client_classnames` field. However, PHPStan does not seem to
@@ -45,7 +45,7 @@ class API_Credentials_Manager {
 	 *
 	 * This method needs to be called by the consumer of this package, on the WordPress 'init' action hook.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function initialize(): void {
 		$this->collect_providers();
@@ -75,7 +75,7 @@ class API_Credentials_Manager {
 	 * provider ID, and for each provider metadata it also stores a map of the AiClient class names where the provider
 	 * is registered in.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @throws RuntimeException If the collected provider metadata is in an invalid format.
 	 */
@@ -128,7 +128,7 @@ class API_Credentials_Manager {
 	 *
 	 * See {@see API_Credentials_Manager::collect_providers()} for details on how this works and why it uses a global.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @see API_Credentials_Manager::collect_providers()
 	 *
 	 * @return array<string, ProviderMetadata> Array of provider metadata objects, keyed by provider ID.
@@ -157,7 +157,7 @@ class API_Credentials_Manager {
 	/**
 	 * Returns the metadata for all registered cloud providers across all instances of the PHP AI Client SDK.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, ProviderMetadata> Array of cloud provider metadata objects, keyed by provider ID.
 	 */
@@ -177,7 +177,7 @@ class API_Credentials_Manager {
 	 *
 	 * The setting will only be registered once, even if the class is used multiple times.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function register_settings(): void {
 		// Avoid registering the setting multiple times.
@@ -219,7 +219,7 @@ class API_Credentials_Manager {
 	 *
 	 * This method should be called on every request, before any API requests are made via the PHP AI Client SDK.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @throws RuntimeException If the stored credentials option is in an invalid format.
 	 */
@@ -253,7 +253,7 @@ class API_Credentials_Manager {
 	 *
 	 * The screen will only be added once, even if the class is used multiple times.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	private function add_admin_screen(): void {
 		global $_wp_submenu_nopriv, $_parent_pages;

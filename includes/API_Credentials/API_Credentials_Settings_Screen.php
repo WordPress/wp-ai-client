@@ -2,7 +2,7 @@
 /**
  * Class WordPress\AI_Client\API_Credentials\API_Credentials_Settings_Screen
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package wp-ai-client
  */
 
@@ -13,14 +13,14 @@ use WordPress\AiClient\Providers\DTO\ProviderMetadata;
 /**
  * Class for a settings screen which displays AI provider API credentials fields.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class API_Credentials_Settings_Screen {
 
 	/**
 	 * The screen slug.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private string $screen_slug;
@@ -28,7 +28,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * The screen title.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private string $screen_title;
@@ -36,7 +36,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * The screen description.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private string $screen_description;
@@ -44,7 +44,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * The option group for the settings.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private string $option_group;
@@ -52,7 +52,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * The option name for storing the provider credentials.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var string
 	 */
 	private string $option_name;
@@ -60,7 +60,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * The providers metadata collected from the PHP AI Client SDK.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, ProviderMetadata> An array of provider metadata, keyed by provider ID.
 	 */
 	private array $providers_metadata = array();
@@ -68,7 +68,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string                          $screen_slug        The screen slug.
 	 * @param string                          $screen_title       The screen title.
@@ -92,7 +92,7 @@ class API_Credentials_Settings_Screen {
 	 * This method adds a settings section for provider API credentials, including a field for each provider that
 	 * requires API key authentication.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function initialize_screen(): void {
 		$settings_section = 'wp-ai-client-provider-credentials';
@@ -164,7 +164,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * Renders the provider settings screen.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public function render_screen(): void {
 		?>
@@ -185,7 +185,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * Renders a settings field based on the given arguments.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param array<string, string> $args Field arguments set up during `add_settings_field()`.
 	 */
@@ -246,7 +246,7 @@ class API_Credentials_Settings_Screen {
 	/**
 	 * Returns the allowed HTML tags and attributes for descriptions using wp_kses().
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @return array<string, array<string, mixed>> Allowed HTML tags and their attributes.
 	 */

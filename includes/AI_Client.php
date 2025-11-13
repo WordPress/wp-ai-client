@@ -2,7 +2,7 @@
 /**
  * Class WordPress\AI_Client\AI_Client
  *
- * @since n.e.x.t
+ * @since 0.1.0
  * @package wp-ai-client
  */
 
@@ -17,7 +17,7 @@ use WordPress\AiClient\AiClient;
 /**
  * Main AI Client class providing fluent APIs for AI operations.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @phpstan-import-type Prompt from Prompt_Builder
  */
@@ -26,7 +26,7 @@ class AI_Client {
 	/**
 	 * Indicates whether the AI Client package has been initialized.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var bool
 	 */
 	private static bool $initialized = false;
@@ -36,7 +36,7 @@ class AI_Client {
 	 *
 	 * This method needs to be called by the consumer of this package, on the WordPress 'init' action hook.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 */
 	public static function init(): void {
 		if ( self::$initialized ) {
@@ -56,7 +56,7 @@ class AI_Client {
 	/**
 	 * Creates a new prompt builder for fluent API usage.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Prompt $prompt Optional initial prompt content.
 	 * @return Prompt_Builder The prompt builder instance.
@@ -66,7 +66,7 @@ class AI_Client {
 			_doing_it_wrong(
 				__METHOD__,
 				esc_html__( 'You must call AI_Client::init() on the WordPress "init" action hook before using the AI Client.', 'wp-ai-client' ),
-				'n.e.x.t'
+				'0.1.0'
 			);
 		}
 		return new Prompt_Builder( AiClient::defaultRegistry(), $prompt );
@@ -75,7 +75,7 @@ class AI_Client {
 	/**
 	 * Creates a new prompt builder for fluent API usage, returning WP_Error on errors.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param Prompt $prompt Optional initial prompt content.
 	 * @return Prompt_Builder_With_WP_Error The prompt builder instance.
@@ -85,7 +85,7 @@ class AI_Client {
 			_doing_it_wrong(
 				__METHOD__,
 				esc_html__( 'You must call AI_Client::init() on the WordPress "init" action hook before using the AI Client.', 'wp-ai-client' ),
-				'n.e.x.t'
+				'0.1.0'
 			);
 		}
 		return new Prompt_Builder_With_WP_Error( AiClient::defaultRegistry(), $prompt );
