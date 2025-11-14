@@ -3,7 +3,7 @@
  * WordPress AI Client Discovery Strategy
  *
  * @package WordPress\AI_Client
- * @since n.e.x.t
+ * @since 0.1.0
  */
 
 namespace WordPress\AI_Client\HTTP;
@@ -16,14 +16,14 @@ use Psr\Http\Client\ClientInterface;
 /**
  * Discovery strategy for WordPress HTTP client.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class WP_AI_Client_Discovery_Strategy implements DiscoveryStrategy {
 
 	/**
 	 * Initialize and register the discovery strategy.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @return void
 	 */
 	public static function init() {

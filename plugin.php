@@ -5,14 +5,14 @@
  * Description: An AI client and API for WordPress to communicate with any generative AI models of various capabilities using a uniform API.
  * Requires at least: 6.0
  * Requires PHP: 7.4
- * Version: n.e.x.t
+ * Version: 0.1.0
  * Author: WordPress AI Team
  * Author URI: https://make.wordpress.org/ai/
  * License: GPL-2.0-or-later
  * License URI: https://spdx.org/licenses/GPL-2.0-or-later.html
  * Text Domain: wp-ai-client
  *
- * @package wp-ai-client
+ * @package WordPress\AI_Client
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

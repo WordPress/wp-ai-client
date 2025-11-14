@@ -3,7 +3,7 @@
  * WordPress AI Client HTTP Client Adapter
  *
  * @package WordPress\AI_Client
- * @since n.e.x.t
+ * @since 0.1.0
  */
 
 namespace WordPress\AI_Client\HTTP;
@@ -23,7 +23,7 @@ use WordPress\AiClient\Providers\Http\Exception\NetworkException;
  * This adapter allows WordPress HTTP functions to be used
  * as a PSR-18 compliant HTTP client.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  */
 class WordPress_HTTP_Client implements ClientInterface, ClientWithOptionsInterface {
 
@@ -85,7 +85,7 @@ class WordPress_HTTP_Client implements ClientInterface, ClientWithOptionsInterfa
 	/**
 	 * Sends a PSR-7 request with transport options and returns a PSR-7 response.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param RequestInterface $request The PSR-7 request.
 	 * @param RequestOptions   $options Transport options for the request.

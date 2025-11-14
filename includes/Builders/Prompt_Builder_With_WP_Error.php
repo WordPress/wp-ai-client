@@ -2,8 +2,8 @@
 /**
  * Class WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error
  *
- * @since n.e.x.t
- * @package wp-ai-client
+ * @since 0.1.0
+ * @package WordPress\AI_Client
  */
 
 namespace WordPress\AI_Client\Builders;
@@ -33,7 +33,7 @@ use WP_Error;
  * will be no-ops that just return the same error state instance. Only when a terminate method is called, the WP_Error
  * will be returned.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @method self with_text(string $text) Adds text to the current message.
  * @method self with_file($file, ?string $mimeType = null) Adds a file to the current message.
@@ -87,7 +87,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 	/**
 	 * WordPress error instance, if any error occurred during method calls.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var WP_Error|null
 	 */
 	private ?WP_Error $error = null;
@@ -97,7 +97,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 	 *
 	 * Technically a map, simply for faster lookups.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var array<string, bool>
 	 */
 	private static array $terminate_methods = array(
@@ -122,7 +122,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 	 * This allows WordPress developers to use snake_case naming conventions. It also catches any exceptions thrown,
 	 * stores them, and returns a WP_Error when a terminate method is called.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string            $name      The method name in snake_case.
 	 * @param array<int, mixed> $arguments The method arguments.
@@ -171,7 +171,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 	/**
 	 * Checks if a method is a terminating method.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $name The method name.
 	 * @return bool True if the method is a terminating method, false otherwise.

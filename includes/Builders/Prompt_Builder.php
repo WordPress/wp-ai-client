@@ -2,8 +2,8 @@
 /**
  * Class WordPress\AI_Client\Builders\Prompt_Builder
  *
- * @since n.e.x.t
- * @package wp-ai-client
+ * @since 0.1.0
+ * @package WordPress\AI_Client
  */
 
 namespace WordPress\AI_Client\Builders;
@@ -35,7 +35,7 @@ use WordPress\AiClient\Tools\DTO\WebSearch;
  * It adds the necessary WordPress flavoring around it, e.g. follow WordPress Coding Standards, as well as
  * integrate with WordPress specific AI primitives such as the Abilities API.
  *
- * @since n.e.x.t
+ * @since 0.1.0
  *
  * @method self with_text(string $text) Adds text to the current message.
  * @method self with_file($file, ?string $mimeType = null) Adds a file to the current message.
@@ -94,7 +94,7 @@ class Prompt_Builder {
 	/**
 	 * Wrapped prompt builder instance.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 * @var PromptBuilder
 	 */
 	private PromptBuilder $builder;
@@ -102,7 +102,7 @@ class Prompt_Builder {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param ProviderRegistry $registry The provider registry for finding suitable models.
 	 * @param Prompt           $prompt   Optional initial prompt content.
@@ -116,7 +116,7 @@ class Prompt_Builder {
 	 *
 	 * This allows WordPress developers to use snake_case naming conventions.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string            $name      The method name in snake_case.
 	 * @param array<int, mixed> $arguments The method arguments.
@@ -137,7 +137,7 @@ class Prompt_Builder {
 	/**
 	 * Retrieves a callable for a given PHP AI Client SDK prompt builder method name.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $name The method name in snake_case.
 	 * @return callable The callable for the specified method.
@@ -164,7 +164,7 @@ class Prompt_Builder {
 	/**
 	 * Converts snake_case to camelCase.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.1.0
 	 *
 	 * @param string $snake_case The snake_case string.
 	 * @return string The camelCase string.
