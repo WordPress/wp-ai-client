@@ -43,8 +43,6 @@ The SDK provides a fluent `Prompt_Builder` interface to construct and execute AI
 
 ### Text Generation
 
-Basic text generation using the default model:
-
 ```php
 use WordPress\AI_Client\AI_Client;
 
@@ -55,8 +53,6 @@ echo wp_kses_post( $text );
 ```
 
 ### Image Generation
-
-Generating an image and handling the response:
 
 ```php
 use WordPress\AI_Client\AI_Client;
