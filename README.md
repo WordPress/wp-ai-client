@@ -151,16 +151,30 @@ $summary = AI_Client::prompt( 'Summarize the history of the printing press.' )
 	->generate_text();
 ```
 
-### Feature Detection & Specific Models
+### Using a Specific Model
 
-Enforcing a single specific model using `using_model()` restricts your feature to sites that have that specific provider configured. If you must use a specific model, always check if the prompt is supported before execution.
+Enforcing a single specific model using `using_model()` restricts your feature to sites that have that specific provider configured. For most scenarios, this is unnecessarily opinionated. Only use this approach if you really only want to offer the feature in combination with that model.
 
 ```php
 use WordPress\AI_Client\AI_Client;
 use WordPress\AiClient\ProviderImplementations\Anthropic\AnthropicProvider as Anthropic;
 
+$text = AI_Client::prompt( 'Explain quantum computing in simple terms.' )
+	->using_model( Anthropic::model( 'claude-sonnet-4-5' ) )
+	->generate_text();
+```
+
+### Feature Detection
+
+Before actually sending an AI prompt and getting a response, always check if the prompt is supported before execution.
+
+This is always recommended, but especially crucial if you require the use of a specific model.
+
+```php
+use WordPress\AI_Client\AI_Client;
+
 $prompt = AI_Client::prompt( 'Explain quantum computing in simple terms.' )
-	->using_model( Anthropic::model( 'claude-sonnet-4-5' ) );
+	->using_temperature( 0.2 );
 
 if ( $prompt->is_supported_for_text_generation() ) {
 	// Safe to generate.
@@ -170,7 +184,9 @@ if ( $prompt->is_supported_for_text_generation() ) {
 }
 ```
 
-Using `is_supported_for_text_generation()` (or `is_supported_for_image_generation()`, etc.) ensures you only expose AI features that can actually run on the current site configuration.
+The above condition will only evaluate to `true` if the site has one or more providers configured with models that support text generation including a temperature configuration.
+
+Generally, using `is_supported_for_text_generation()` (or `is_supported_for_image_generation()`, etc.) ensures you only expose AI features that can actually run on the current site configuration.
 
 ## Error Handling
 
