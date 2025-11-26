@@ -27,6 +27,15 @@
 		<exclude name="WordPress.Files.FileName"/>
 	</rule>
 
+	<!-- Custom WordPress user capabilities -->
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="prompt_ai"/>
+			</property>
+		</properties>
+	</rule>
+
 	<!-- WordPress text domain -->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
@@ -36,8 +45,7 @@
 		</properties>
 	</rule>
 
-	<!-- Verify that the text_domain is set to the desired text-domain.
-		Multiple valid text domains can be provided as a comma-delimited list. -->
+	<!-- Verify that proper prefixes are used for globals. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
