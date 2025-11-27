@@ -1,4 +1,4 @@
-import { MessagePartChannel } from '../enums';
+import { MessagePartChannel, MessagePartType } from '../enums';
 import type {
 	Candidate,
 	File,
@@ -140,8 +140,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 		for ( const part of message.parts ) {
 			if (
 				part.channel === MessagePartChannel.CONTENT &&
-				part.text !== undefined &&
-				part.text !== null
+				part.type === MessagePartType.TEXT
 			) {
 				return part.text;
 			}
@@ -165,8 +164,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 		for ( const part of message.parts ) {
 			if (
 				part.channel === MessagePartChannel.CONTENT &&
-				part.file !== undefined &&
-				part.file !== null
+				part.type === MessagePartType.FILE
 			) {
 				return part.file;
 			}
@@ -260,8 +258,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 			for ( const part of message.parts ) {
 				if (
 					part.channel === MessagePartChannel.CONTENT &&
-					part.text !== undefined &&
-					part.text !== null
+					part.type === MessagePartType.TEXT
 				) {
 					texts.push( part.text );
 					break;
@@ -285,8 +282,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 			for ( const part of message.parts ) {
 				if (
 					part.channel === MessagePartChannel.CONTENT &&
-					part.file !== undefined &&
-					part.file !== null
+					part.type === MessagePartType.FILE
 				) {
 					files.push( part.file );
 					break;

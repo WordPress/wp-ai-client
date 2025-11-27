@@ -4,11 +4,11 @@
  * This file is auto-generated based on the PHP DTO classes. DO NOT MODIFY IT MANUALLY.
  */
 
+import { MessagePartType } from './enums';
 import type {
 	FileType,
 	FinishReason,
 	MessagePartChannel,
-	MessagePartType,
 	MessageRole,
 	OperationState,
 	ProviderType,
@@ -57,14 +57,27 @@ export type FunctionResponse = {
 	response: unknown;
 };
 
-export type MessagePart = {
-	channel: MessagePartChannel;
-	type: MessagePartType;
-	text?: string;
-	file?: File;
-	functionCall?: FunctionCall;
-	functionResponse?: FunctionResponse;
-};
+export type MessagePart =
+	| {
+			channel: MessagePartChannel;
+			type: typeof MessagePartType.TEXT;
+			text: string;
+	  }
+	| {
+			channel: MessagePartChannel;
+			type: typeof MessagePartType.FILE;
+			file: File;
+	  }
+	| {
+			channel: MessagePartChannel;
+			type: typeof MessagePartType.FUNCTION_CALL;
+			functionCall: FunctionCall;
+	  }
+	| {
+			channel: MessagePartChannel;
+			type: typeof MessagePartType.FUNCTION_RESPONSE;
+			functionResponse: FunctionResponse;
+	  };
 
 export type Message = {
 	role: MessageRole;
