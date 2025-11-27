@@ -112,6 +112,23 @@ class Prompt_Builder {
 	 */
 	public function __construct( ProviderRegistry $registry, $prompt = null ) {
 		$this->builder = new PromptBuilder( $registry, $prompt );
+
+		/**
+		 * Filters the default request timeout in seconds for AI Client HTTP requests.
+		 *
+		 * @since n.e.x.t
+		 *
+		 * @param int $default_timeout The default timeout in seconds.
+		 */
+		$default_timeout = (int) apply_filters( 'wp_ai_client_default_request_timeout', 30 );
+
+		$this->builder->usingRequestOptions(
+			RequestOptions::fromArray(
+				array(
+					RequestOptions::KEY_TIMEOUT => $default_timeout,
+				)
+			)
+		);
 	}
 
 	/**

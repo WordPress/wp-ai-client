@@ -29,6 +29,7 @@ use WordPress\AiClient\Messages\Enums\ModalityEnum;
 use WordPress\AiClient\Providers\DTO\ProviderMetadata;
 use WordPress\AiClient\Providers\DTO\ProviderModelsMetadata;
 use WordPress\AiClient\Providers\Enums\ProviderTypeEnum;
+use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 use WordPress\AiClient\Providers\Models\Contracts\ModelInterface;
 use WordPress\AiClient\Providers\Models\DTO\ModelConfig;
 use WordPress\AiClient\Providers\Models\DTO\ModelMetadata;
@@ -137,6 +138,39 @@ class PromptBuilderTest extends Test_Case {
 		$prompt_builder = new Prompt_Builder( $registry, 'Initial prompt text' );
 
 		$this->assertInstanceOf( Prompt_Builder::class, $prompt_builder );
+	}
+
+	/**
+	 * Test that the constructor sets the default request timeout.
+	 */
+	public function test_constructor_sets_default_request_timeout(): void {
+		$builder = new Prompt_Builder( AiClient::defaultRegistry() );
+
+		/** @var RequestOptions $request_options */
+		$request_options = $this->get_wrapped_prompt_builder_property_value( $builder, 'requestOptions' );
+
+		$this->assertInstanceOf( RequestOptions::class, $request_options );
+		$this->assertEquals( 30, $request_options->getTimeout() );
+	}
+
+	/**
+	 * Test that the constructor allows overriding the default request timeout.
+	 */
+	public function test_constructor_allows_overriding_request_timeout(): void {
+		add_filter(
+			'wp_ai_client_default_request_timeout',
+			static function () {
+				return 45;
+			}
+		);
+
+		$builder = new Prompt_Builder( AiClient::defaultRegistry() );
+
+		/** @var RequestOptions $request_options */
+		$request_options = $this->get_wrapped_prompt_builder_property_value( $builder, 'requestOptions' );
+
+		$this->assertInstanceOf( RequestOptions::class, $request_options );
+		$this->assertEquals( 45, $request_options->getTimeout() );
 	}
 
 	/**
