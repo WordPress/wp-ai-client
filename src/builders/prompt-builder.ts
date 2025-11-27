@@ -16,6 +16,7 @@ import type {
 	Message,
 	MessagePart,
 	ModelConfig,
+	RequestOptions,
 	WebSearch,
 } from '../types';
 
@@ -52,6 +53,11 @@ export class PromptBuilder {
 	 * Ordered list of preference keys to check when selecting a model.
 	 */
 	protected modelPreferences: ( string | [ string, string ] )[] = [];
+
+	/**
+	 * The request options.
+	 */
+	protected requestOptions?: RequestOptions;
 
 	/**
 	 * Constructor.
@@ -363,6 +369,19 @@ export class PromptBuilder {
 	}
 
 	/**
+	 * Sets the request options.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param requestOptions The request options.
+	 * @return this
+	 */
+	public usingRequestOptions( requestOptions: RequestOptions ): this {
+		this.requestOptions = requestOptions;
+		return this;
+	}
+
+	/**
 	 * Sets the top logprobs.
 	 *
 	 * @since n.e.x.t
@@ -449,6 +468,32 @@ export class PromptBuilder {
 	}
 
 	/**
+	 * Checks if the current prompt is supported by the selected model.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param capability Optional capability to check support for.
+	 * @return True if supported, false otherwise.
+	 */
+	public async isSupported( capability?: Capability ): Promise< boolean > {
+		const response = await apiFetch< { supported: boolean } >( {
+			path: '/wp-ai/v1/is-supported',
+			method: 'POST',
+			data: {
+				messages: this.messages,
+				modelConfig: this.modelConfig,
+				providerId: this.providerId,
+				modelId: this.modelId,
+				modelPreferences: this.modelPreferences,
+				capability,
+				requestOptions: this.requestOptions,
+			},
+		} );
+
+		return response.supported;
+	}
+
+	/**
 	 * Checks if the prompt is supported for text generation.
 	 *
 	 * @since n.e.x.t
@@ -456,8 +501,7 @@ export class PromptBuilder {
 	 * @return True if text generation is supported.
 	 */
 	public async isSupportedForTextGeneration(): Promise< boolean > {
-		// TODO: Implement logic.
-		throw new Error( 'Not implemented' );
+		return this.isSupported( Capability.TEXT_GENERATION );
 	}
 
 	/**
@@ -468,8 +512,7 @@ export class PromptBuilder {
 	 * @return True if image generation is supported.
 	 */
 	public async isSupportedForImageGeneration(): Promise< boolean > {
-		// TODO: Implement logic.
-		throw new Error( 'Not implemented' );
+		return this.isSupported( Capability.IMAGE_GENERATION );
 	}
 
 	/**
@@ -480,8 +523,7 @@ export class PromptBuilder {
 	 * @return True if text to speech conversion is supported.
 	 */
 	public async isSupportedForTextToSpeechConversion(): Promise< boolean > {
-		// TODO: Implement logic.
-		throw new Error( 'Not implemented' );
+		return this.isSupported( Capability.TEXT_TO_SPEECH_CONVERSION );
 	}
 
 	/**
@@ -492,8 +534,7 @@ export class PromptBuilder {
 	 * @return True if video generation is supported.
 	 */
 	public async isSupportedForVideoGeneration(): Promise< boolean > {
-		// TODO: Implement logic.
-		throw new Error( 'Not implemented' );
+		return this.isSupported( Capability.VIDEO_GENERATION );
 	}
 
 	/**
@@ -504,8 +545,7 @@ export class PromptBuilder {
 	 * @return True if speech generation is supported.
 	 */
 	public async isSupportedForSpeechGeneration(): Promise< boolean > {
-		// TODO: Implement logic.
-		throw new Error( 'Not implemented' );
+		return this.isSupported( Capability.SPEECH_GENERATION );
 	}
 
 	/**
@@ -516,8 +556,7 @@ export class PromptBuilder {
 	 * @return True if music generation is supported.
 	 */
 	public async isSupportedForMusicGeneration(): Promise< boolean > {
-		// TODO: Implement logic.
-		throw new Error( 'Not implemented' );
+		return this.isSupported( Capability.MUSIC_GENERATION );
 	}
 
 	/**
@@ -528,8 +567,7 @@ export class PromptBuilder {
 	 * @return True if embedding generation is supported.
 	 */
 	public async isSupportedForEmbeddingGeneration(): Promise< boolean > {
-		// TODO: Implement logic.
-		throw new Error( 'Not implemented' );
+		return this.isSupported( Capability.EMBEDDING_GENERATION );
 	}
 
 	/**
@@ -553,6 +591,7 @@ export class PromptBuilder {
 				modelId: this.modelId,
 				modelPreferences: this.modelPreferences,
 				capability,
+				requestOptions: this.requestOptions,
 			},
 		} );
 

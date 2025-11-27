@@ -17,6 +17,7 @@ use WordPress\AI_Client\Builders\Prompt_Builder;
 use WordPress\AI_Client\Capabilities\Capabilities_Manager;
 use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Messages\DTO\Message;
+use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 use WordPress\AiClient\Providers\Models\Contracts\ModelInterface;
 use WordPress\AiClient\Providers\Models\DTO\ModelConfig;
 use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
@@ -29,13 +30,15 @@ use WordPress\AiClient\Results\DTO\GenerativeAiResult;
  *
  * @phpstan-import-type MessageArrayShape from Message
  * @phpstan-import-type ModelConfigArrayShape from ModelConfig
+ * @phpstan-import-type RequestOptionsArrayShape from RequestOptions
  * @phpstan-type GenerationRequestParams array{
  *   messages: list<MessageArrayShape>,
  *   modelConfig?: ModelConfigArrayShape,
  *   providerId?: string,
  *   modelId?: string,
  *   modelPreferences?: list<string|array{0: string, 1: string}>,
- *   capability?: string
+ *   capability?: string,
+ *   requestOptions?: RequestOptionsArrayShape
  * }
  */
 class AI_REST_Controller {
@@ -156,30 +159,12 @@ class AI_REST_Controller {
 					);
 				}
 
-				$supported = false;
-				if ( CapabilityEnum::textGeneration() === $capability ) {
-					$supported = $builder->is_supported_for_text_generation();
-				} elseif ( CapabilityEnum::imageGeneration() === $capability ) {
-					$supported = $builder->is_supported_for_image_generation();
-				} elseif ( CapabilityEnum::speechGeneration() === $capability ) {
-					$supported = $builder->is_supported_for_speech_generation();
-				} elseif ( CapabilityEnum::textToSpeechConversion() === $capability ) {
-					$supported = $builder->is_supported_for_text_to_speech_conversion();
-				} elseif ( CapabilityEnum::videoGeneration() === $capability ) {
-					$supported = $builder->is_supported_for_video_generation();
-				} elseif ( CapabilityEnum::musicGeneration() === $capability ) {
-					$supported = $builder->is_supported_for_music_generation();
-				} elseif ( CapabilityEnum::embeddingGeneration() === $capability ) {
-					$supported = $builder->is_supported_for_embedding_generation();
-				}
-
+				$supported = $builder->is_supported( $capability );
 				return new WP_REST_Response( array( 'supported' => $supported ), 200 );
 			}
 
-			// Default to text generation if no capability specified.
-			$supported = $builder->is_supported_for_text_generation();
+			$supported = $builder->is_supported();
 			return new WP_REST_Response( array( 'supported' => $supported ), 200 );
-
 		} catch ( Exception $e ) {
 			return new WP_Error( 'ai_is_supported_error', $e->getMessage(), array( 'status' => 500 ) );
 		}
@@ -238,6 +223,7 @@ class AI_REST_Controller {
 					'type'        => 'string',
 					'enum'        => CapabilityEnum::getValues(),
 				),
+				'requestOptions'   => $this->convert_json_schema_to_wp_schema( RequestOptions::getJsonSchema() ),
 			),
 		);
 	}
@@ -323,6 +309,11 @@ class AI_REST_Controller {
 
 		if ( ! empty( $params['modelPreferences'] ) && is_array( $params['modelPreferences'] ) ) {
 			$builder->using_model_preference( ...$params['modelPreferences'] );
+		}
+
+		if ( ! empty( $params['requestOptions'] ) && is_array( $params['requestOptions'] ) ) {
+			$request_options = RequestOptions::fromArray( $params['requestOptions'] );
+			$builder->using_request_options( $request_options );
 		}
 
 		return $builder;

@@ -31,6 +31,7 @@ export type ProviderMetadata = {
 	id: string;
 	name: string;
 	type: ProviderType;
+	credentialsUrl?: string;
 };
 
 export type SupportedOption = {
