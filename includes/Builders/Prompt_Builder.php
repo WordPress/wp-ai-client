@@ -15,6 +15,7 @@ use WordPress\AiClient\Files\Enums\FileTypeEnum;
 use WordPress\AiClient\Messages\DTO\Message;
 use WordPress\AiClient\Messages\DTO\MessagePart;
 use WordPress\AiClient\Messages\Enums\ModalityEnum;
+use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 use WordPress\AiClient\Providers\Models\Contracts\ModelInterface;
 use WordPress\AiClient\Providers\Models\DTO\ModelConfig;
 use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
@@ -57,12 +58,14 @@ use WordPress\AiClient\Tools\DTO\WebSearch;
  * @method self using_presence_penalty(float $presencePenalty) Sets the presence penalty for generation.
  * @method self using_frequency_penalty(float $frequencyPenalty) Sets the frequency penalty for generation.
  * @method self using_web_search(WebSearch $webSearch) Sets the web search configuration.
+ * @method self using_request_options(RequestOptions $options) Sets the request options for HTTP transport.
  * @method self using_top_logprobs(?int $topLogprobs = null) Sets the top log probabilities configuration.
  * @method self as_output_mime_type(string $mimeType) Sets the output MIME type.
  * @method self as_output_schema(array<string, mixed> $schema) Sets the output schema.
  * @method self as_output_modalities(ModalityEnum ...$modalities) Sets the output modalities.
  * @method self as_output_file_type(FileTypeEnum $fileType) Sets the output file type.
  * @method self as_json_response(?array<string, mixed> $schema = null) Configures the prompt for JSON response output.
+ * @method bool is_supported(?CapabilityEnum $capability = null) Checks if the prompt is supported for the given capability.
  * @method bool is_supported_for_text_generation() Checks if the prompt is supported for text generation.
  * @method bool is_supported_for_image_generation() Checks if the prompt is supported for image generation.
  * @method bool is_supported_for_text_to_speech_conversion() Checks if the prompt is supported for text to speech conversion.
@@ -109,6 +112,23 @@ class Prompt_Builder {
 	 */
 	public function __construct( ProviderRegistry $registry, $prompt = null ) {
 		$this->builder = new PromptBuilder( $registry, $prompt );
+
+		/**
+		 * Filters the default request timeout in seconds for AI Client HTTP requests.
+		 *
+		 * @since n.e.x.t
+		 *
+		 * @param int $default_timeout The default timeout in seconds.
+		 */
+		$default_timeout = (int) apply_filters( 'wp_ai_client_default_request_timeout', 30 );
+
+		$this->builder->usingRequestOptions(
+			RequestOptions::fromArray(
+				array(
+					RequestOptions::KEY_TIMEOUT => $default_timeout,
+				)
+			)
+		);
 	}
 
 	/**

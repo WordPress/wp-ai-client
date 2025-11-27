@@ -32,6 +32,7 @@ use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
  *     id: string,
  *     name: string,
  *     type: string,
+ *     credentialsUrl?: ?string,
  *     ai_client_classnames: array<string, bool>
  * }
  */
