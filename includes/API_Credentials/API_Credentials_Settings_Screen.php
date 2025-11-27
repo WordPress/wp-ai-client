@@ -111,28 +111,9 @@ class API_Credentials_Settings_Screen {
 		);
 
 		foreach ( $this->providers_metadata as $provider_metadata ) {
-			$provider_id   = $provider_metadata->getId();
-			$provider_name = $provider_metadata->getName();
-
-			/*
-			 * This is a temporary hard-coded mapping of provider IDs to their API credentials URL.
-			 * Instead, this should become an optional field during provider registration in the PHP AI Client SDK.
-			 *
-			 * TODO: Remove this eventually once the PHP AI Client SDK supports this natively.
-			 */
-			switch ( $provider_id ) {
-				case 'anthropic':
-					$provider_credentials_url = 'https://console.anthropic.com/settings/keys';
-					break;
-				case 'google':
-					$provider_credentials_url = 'https://aistudio.google.com/app/api-keys';
-					break;
-				case 'openai':
-					$provider_credentials_url = 'https://platform.openai.com/api-keys';
-					break;
-				default:
-					$provider_credentials_url = '';
-			}
+			$provider_id              = $provider_metadata->getId();
+			$provider_name            = $provider_metadata->getName();
+			$provider_credentials_url = $provider_metadata->getCredentialsUrl();
 
 			$field_id   = "wp-ai-client-provider-api-key-{$provider_id}";
 			$field_args = array(
