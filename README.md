@@ -12,6 +12,9 @@ Built on top of the [PHP AI Client](https://github.com/WordPress/php-ai-client),
 - **Admin Settings Screen**: Integrated settings screen in WP Admin to provision AI provider API credentials.
 - **Automatic Credential Wiring**: Automatic wiring up of AI provider API credentials based on storage in a WordPress database option.
 - **PSR-compliant HTTP Client**: HTTP client implementation using the WordPress HTTP API, fully compatible with PSR standards.
+- **Client-side JavaScript API**: A JavaScript API with a similar prompt builder, using REST endpoints under the hood to connect to the server-side infrastructure.
+
+**Note:** The client-side JavaScript API and REST endpoints are by default limited to only administrators since they allow arbitrary prompts and configuration. A `prompt_ai` capability is used to control access, and sites are able to customize how that capability is granted to users or specific roles.
 
 ## Installation
 
@@ -37,11 +40,26 @@ Before making requests, you need to configure API keys for your desired provider
 2. Enter your API keys for the providers you intend to use.
 3. Save changes.
 
+### 3. Load the JavaScript API (Optional)
+
+To use the client-side JavaScript API, you need to enqueue the script.
+
+```php
+add_action(
+	'admin_enqueue_scripts',
+	static function () {
+		wp_enqueue_script( 'wp-ai-client' );
+	}
+);
+```
+
 ## Usage
 
 The SDK provides a fluent `Prompt_Builder` interface to construct and execute AI requests.
 
 ### Text Generation
+
+**PHP:**
 
 ```php
 use WordPress\AI_Client\AI_Client;
@@ -52,7 +70,18 @@ $text = AI_Client::prompt( 'Write a haiku about WordPress.' )
 echo wp_kses_post( $text );
 ```
 
+**JavaScript:**
+
+```javascript
+text = await wp.aiClient.prompt( 'Write a haiku about WordPress.' )
+	.generateText();
+
+console.log( text );
+```
+
 ### Image Generation
+
+**PHP:**
 
 ```php
 use WordPress\AI_Client\AI_Client;
@@ -65,9 +94,22 @@ $data_uri = $image_file->getDataUri();
 echo '<img src="' . esc_url( $data_uri ) . '" alt="A futuristic WordPress logo in neon style">';
 ```
 
+**JavaScript:**
+
+```javascript
+const imageFile = await wp.aiClient.prompt( 'A futuristic WordPress logo in neon style' )
+	.generateImage();
+
+const dataUri = imageFile.getDataUri();
+
+console.log( `<img src="${ dataUri }" alt="A futuristic WordPress logo in neon style">` );
+```
+
 ### Advanced Usage
 
 #### JSON Output and Temperature
+
+**PHP:**
 
 ```php
 use WordPress\AI_Client\AI_Client;
@@ -93,7 +135,33 @@ $json = AI_Client::prompt( 'List 5 popular WordPress plugins with their primary 
 $data = json_decode( $json, true );
 ```
 
+**JavaScript:**
+
+```javascript
+const schema = {
+	type: 'array',
+	items: {
+		type: 'object',
+		properties: {
+			plugin_name: { type: 'string' },
+			category: { type: 'string' },
+		},
+		required: [ 'plugin_name', 'category' ],
+	},
+};
+
+const json = await wp.aiClient.prompt( 'List 5 popular WordPress plugins with their primary category.' )
+	.usingTemperature( 0.2 ) // Lower temperature for more deterministic result.
+	.asJsonResponse( schema )
+	.generateText();
+
+// Output will be a JSON string adhering to the schema.
+const data = JSON.parse( json );
+```
+
 #### Generating Multiple Image Candidates
+
+**PHP:**
 
 ```php
 use WordPress\AI_Client\AI_Client;
@@ -106,7 +174,20 @@ foreach ( $images as $image_file ) {
 }
 ```
 
+**JavaScript:**
+
+```javascript
+const images = await wp.aiClient.prompt( 'Aerial shot of snowy plains, cinematic.' )
+	.generateImages( 4 );
+
+for ( const imageFile of images ) {
+	console.log( `<img src="${ imageFile.getDataUri() }" alt="Aerial shot of snowy plains">` );
+}
+```
+
 #### Multimodal Output (Text & Image)
+
+**PHP:**
 
 ```php
 use WordPress\AI_Client\AI_Client;
@@ -126,6 +207,25 @@ foreach ( $result->toMessage()->getParts() as $part ) {
 }
 ```
 
+**JavaScript:**
+
+```javascript
+const { Modality, MessagePartType } = wp.aiClient.enums;
+
+const result = await wp.aiClient.prompt( 'Create a recipe for a chocolate cake and include photos for the steps.' )
+	.asOutputModalities( Modality.TEXT, Modality.IMAGE )
+	.generateResult();
+
+// Iterate through the message parts.
+for ( const part of result.toMessage().parts ) {
+	if ( part.type === MessagePartType.TEXT ) {
+		console.log( part.text );
+	} else if ( part.type === MessagePartType.FILE && part.file.isImage() ) {
+		console.log( `<img src="${ part.file.getDataUri() }" alt="">` );
+	}
+}
+```
+
 ## Best Practices
 
 ### Automatic Model Selection
@@ -137,6 +237,8 @@ By default, the SDK automatically chooses a suitable model based on the prompt's
 If you prefer specific models for better performance or capabilities, use `using_model_preference()`. The SDK will try to use the first available model from your list. If none are available (e.g., provider not configured), it falls back to automatic selection.
 
 Pass preferences as an array of `[ provider_id, model_id ]` to ensure the correct provider is targeted.
+
+**PHP:**
 
 ```php
 use WordPress\AI_Client\AI_Client;
@@ -151,9 +253,24 @@ $summary = AI_Client::prompt( 'Summarize the history of the printing press.' )
 	->generate_text();
 ```
 
+**JavaScript:**
+
+```javascript
+const summary = await wp.aiClient.prompt( 'Summarize the history of the printing press.' )
+	.usingTemperature( 0.1 )
+	.usingModelPreference(
+		[ 'anthropic', 'claude-sonnet-4-5' ],
+		[ 'google', 'gemini-3-pro-preview' ],
+		[ 'openai', 'gpt-5.1' ]
+	)
+	.generateText();
+```
+
 ### Using a Specific Model
 
 Enforcing a single specific model using `using_model()` restricts your feature to sites that have that specific provider configured. For most scenarios, this is unnecessarily opinionated. Only use this approach if you really only want to offer the feature in combination with that model.
+
+**PHP:**
 
 ```php
 use WordPress\AI_Client\AI_Client;
@@ -164,11 +281,21 @@ $text = AI_Client::prompt( 'Explain quantum computing in simple terms.' )
 	->generate_text();
 ```
 
+**JavaScript:**
+
+```javascript
+const text = await wp.aiClient.prompt( 'Explain quantum computing in simple terms.' )
+	.usingModel( 'anthropic', 'claude-sonnet-4-5' )
+	.generateText();
+```
+
 ### Feature Detection
 
 Before actually sending an AI prompt and getting a response, always check if the prompt is supported before execution.
 
 This is always recommended, but especially crucial if you require the use of a specific model.
+
+**PHP:**
 
 ```php
 use WordPress\AI_Client\AI_Client;
@@ -184,17 +311,33 @@ if ( $prompt->is_supported_for_text_generation() ) {
 }
 ```
 
+**JavaScript:**
+
+```javascript
+const prompt = wp.aiClient.prompt( 'Explain quantum computing in simple terms.' )
+	.usingTemperature( 0.2 );
+
+if ( await prompt.isSupportedForTextGeneration() ) {
+	// Safe to generate.
+	const text = await prompt.generateText();
+} else {
+	// Fallback: Hide feature or show setup instructions.
+}
+```
+
 The above condition will only evaluate to `true` if the site has one or more providers configured with models that support text generation including a temperature configuration.
 
 Generally, using `is_supported_for_text_generation()` (or `is_supported_for_image_generation()`, etc.) ensures you only expose AI features that can actually run on the current site configuration.
 
 ## Error Handling
 
-The SDK offers two ways to handle errors.
+In PHP, the SDK offers two ways to handle errors.
 
 ### 1. Exception Based
 
 `AI_Client::prompt()` throws exceptions on failure.
+
+**PHP:**
 
 ```php
 try {
