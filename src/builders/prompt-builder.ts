@@ -7,9 +7,9 @@ import {
 	MessageRole,
 	Modality,
 } from '../enums';
+import { File } from '../files/file';
 import { GenerativeAiResult } from '../results/generative-ai-result';
 import type {
-	File,
 	FunctionDeclaration,
 	FunctionResponse,
 	GenerativeAiResult as GenerativeAiResultType,
@@ -644,7 +644,7 @@ export class PromptBuilder {
 	 */
 	public async generateImage(): Promise< File > {
 		const result = await this.generateImageResult();
-		return result.toImageFile();
+		return new File( result.toImageFile() );
 	}
 
 	/**
@@ -660,7 +660,7 @@ export class PromptBuilder {
 			this.usingCandidateCount( candidateCount );
 		}
 		const result = await this.generateImageResult();
-		return result.toImageFiles();
+		return result.toImageFiles().map( ( file ) => new File( file ) );
 	}
 
 	/**
@@ -672,7 +672,7 @@ export class PromptBuilder {
 	 */
 	public async convertTextToSpeech(): Promise< File > {
 		const result = await this.convertTextToSpeechResult();
-		return result.toAudioFile();
+		return new File( result.toAudioFile() );
 	}
 
 	/**
@@ -690,7 +690,7 @@ export class PromptBuilder {
 			this.usingCandidateCount( candidateCount );
 		}
 		const result = await this.convertTextToSpeechResult();
-		return result.toAudioFiles();
+		return result.toAudioFiles().map( ( file ) => new File( file ) );
 	}
 
 	/**
@@ -702,7 +702,7 @@ export class PromptBuilder {
 	 */
 	public async generateSpeech(): Promise< File > {
 		const result = await this.generateSpeechResult();
-		return result.toAudioFile();
+		return new File( result.toAudioFile() );
 	}
 
 	/**
@@ -720,7 +720,7 @@ export class PromptBuilder {
 			this.usingCandidateCount( candidateCount );
 		}
 		const result = await this.generateSpeechResult();
-		return result.toAudioFiles();
+		return result.toAudioFiles().map( ( file ) => new File( file ) );
 	}
 
 	/**
