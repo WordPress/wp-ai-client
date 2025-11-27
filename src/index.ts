@@ -1,4 +1,5 @@
 import { PromptBuilder } from './builders/prompt-builder';
+import * as enums from './enums';
 import type { Message, MessagePart } from './types';
 
 /**
@@ -15,8 +16,10 @@ export function prompt(
 	return new PromptBuilder( promptInput );
 }
 
-// Expose the prompt builder in the global `wp.aiClient` namespace for external use.
-const AiClient = { prompt };
+export { enums };
+
+// Expose the API in the global `wp.aiClient` namespace for external use.
+const AiClient = { prompt, enums };
 
 if (
 	typeof window !== 'undefined' &&
