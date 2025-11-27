@@ -10,7 +10,7 @@ namespace WordPress\AI_Client\Builders\Helpers;
 
 use WordPress\AiClient\Messages\DTO\Message;
 use WordPress\AiClient\Messages\DTO\MessagePart;
-use WordPress\AiClient\Messages\DTO\ModelMessage;
+use WordPress\AiClient\Messages\DTO\UserMessage;
 use WordPress\AiClient\Tools\DTO\FunctionCall;
 use WordPress\AiClient\Tools\DTO\FunctionResponse;
 use WP_Ability;
@@ -154,7 +154,7 @@ class Ability_Function_Resolver {
 			}
 		}
 
-		return new ModelMessage( $response_parts );
+		return new UserMessage( $response_parts );
 	}
 
 	/**
