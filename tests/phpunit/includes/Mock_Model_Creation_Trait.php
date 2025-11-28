@@ -26,7 +26,7 @@ use WordPress\AiClient\Results\DTO\Candidate;
 use WordPress\AiClient\Results\DTO\GenerativeAiResult;
 use WordPress\AiClient\Results\DTO\TokenUsage;
 use WordPress\AiClient\Results\Enums\FinishReasonEnum;
-use WordPress\AiClient\Tests\mocks\MockProvider;
+use WordPress\AI_Client\PHPUnit\Includes\Mock_Provider;
 
 /**
  * Trait providing shared mock model creation methods for testing.

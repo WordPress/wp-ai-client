@@ -46,7 +46,7 @@ use WordPress\AiClient\Tools\DTO\FunctionDeclaration;
 use WordPress\AiClient\Tools\DTO\FunctionResponse;
 use WordPress\AiClient\Tools\DTO\WebSearch;
 
-class PromptBuilderTest extends Test_Case {
+class Prompt_Builder_Tests extends Test_Case {
 	use Mock_Model_Creation_Trait;
 
 	/**
