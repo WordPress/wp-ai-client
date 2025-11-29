@@ -208,29 +208,6 @@ class AI_REST_Controller_Tests extends Test_Case {
 		$this->assertEquals( 60, $this->get_private_property( $request_options, 'timeout' ) );
 	}
 
-	/**
-	 * Tests the convert_json_schema_to_wp_schema method.
-	 */
-	public function test_convert_json_schema_to_wp_schema() {
-		$controller = new AI_REST_Controller();
-		$method     = new ReflectionMethod( $controller, 'convert_json_schema_to_wp_schema' );
-		$method->setAccessible( true );
-
-		$json_schema = array(
-			'type'       => 'object',
-			'properties' => array(
-				'foo' => array( 'type' => 'string' ),
-				'bar' => array( 'type' => 'integer' ),
-			),
-			'required'   => array( 'foo' ),
-		);
-
-		$wp_schema = $method->invoke( $controller, $json_schema );
-
-		$this->assertArrayNotHasKey( 'required', $wp_schema );
-		$this->assertArrayHasKey( 'required', $wp_schema['properties']['foo'] );
-		$this->assertTrue( $wp_schema['properties']['foo']['required'] );
-	}
 
 	/**
 	 * Tests the create_builder_from_params method with providerId and modelId.

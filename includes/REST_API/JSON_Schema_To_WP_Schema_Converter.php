@@ -1,0 +1,79 @@
+<?php
+/**
+ * Class WordPress\AI_Client\REST_API\JSON_Schema_To_WP_Schema_Converter
+ *
+ * @since n.e.x.t
+ * @package WordPress\AI_Client
+ */
+
+namespace WordPress\AI_Client\REST_API;
+
+/**
+ * Converter for JSON Schema to WordPress REST API Schema.
+ *
+ * @since n.e.x.t
+ */
+class JSON_Schema_To_WP_Schema_Converter {
+
+	/**
+	 * Converts a standard JSON Schema to a WordPress REST API compatible schema.
+	 *
+	 * Specifically, this converts the "required" array property to "required" boolean attributes
+	 * on individual properties, as expected by WordPress REST API validation.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param array<string, mixed> $schema The standard JSON schema.
+	 * @return array<string, mixed> The WordPress compatible schema.
+	 */
+	public static function convert( array $schema ): array {
+		if ( isset( $schema['properties'] ) && is_array( $schema['properties'] ) ) {
+			$required_props = isset( $schema['required'] ) && is_array( $schema['required'] )
+				? $schema['required']
+				: array();
+
+			// Remove the required array from the parent object.
+			unset( $schema['required'] );
+
+			foreach ( $schema['properties'] as $prop_name => $prop_schema ) {
+				if ( ! is_array( $prop_schema ) ) {
+					continue;
+				}
+
+				// phpcs:ignore Generic.Commenting.DocComment.MissingShort
+				/** @var array<string, mixed> $prop_schema */
+				$schema['properties'][ $prop_name ] = self::convert( $prop_schema );
+
+				// Set required boolean if property is in required array.
+				if ( in_array( $prop_name, $required_props, true ) ) {
+					$schema['properties'][ $prop_name ]['required'] = true;
+				}
+			}
+		}
+
+		if ( isset( $schema['items'] ) && is_array( $schema['items'] ) ) {
+			// phpcs:ignore Generic.Commenting.DocComment.MissingShort
+			/** @var array<string, mixed> $items */
+			$items = $schema['items'];
+
+			$schema['items'] = self::convert( $items );
+		}
+
+		// Handle oneOf, anyOf, allOf.
+		foreach ( array( 'oneOf', 'anyOf', 'allOf' ) as $combiner ) {
+			if ( isset( $schema[ $combiner ] ) && is_array( $schema[ $combiner ] ) ) {
+				foreach ( $schema[ $combiner ] as $index => $sub_schema ) {
+					if ( ! is_array( $sub_schema ) ) {
+						continue;
+					}
+
+					// phpcs:ignore Generic.Commenting.DocComment.MissingShort
+					/** @var array<string, mixed> $sub_schema */
+					$schema[ $combiner ][ $index ] = self::convert( $sub_schema );
+				}
+			}
+		}
+
+		return $schema;
+	}
+}

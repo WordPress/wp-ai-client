@@ -186,11 +186,11 @@ class AI_REST_Controller {
 				'messages'         => array(
 					'description' => __( 'The messages to generate content from.', 'wp-ai-client' ),
 					'type'        => 'array',
-					'items'       => $this->convert_json_schema_to_wp_schema( Message::getJsonSchema() ),
+					'items'       => JSON_Schema_To_WP_Schema_Converter::convert( Message::getJsonSchema() ),
 					'required'    => true,
 					'minItems'    => 1,
 				),
-				'modelConfig'      => $this->convert_json_schema_to_wp_schema( ModelConfig::getJsonSchema() ),
+				'modelConfig'      => JSON_Schema_To_WP_Schema_Converter::convert( ModelConfig::getJsonSchema() ),
 				'providerId'       => array(
 					'description' => __( 'The provider ID, to enforce using a model from that provider.', 'wp-ai-client' ),
 					'type'        => 'string',
@@ -223,7 +223,7 @@ class AI_REST_Controller {
 					'type'        => 'string',
 					'enum'        => CapabilityEnum::getValues(),
 				),
-				'requestOptions'   => $this->convert_json_schema_to_wp_schema( RequestOptions::getJsonSchema() ),
+				'requestOptions'   => JSON_Schema_To_WP_Schema_Converter::convert( RequestOptions::getJsonSchema() ),
 			),
 		);
 	}
@@ -240,7 +240,7 @@ class AI_REST_Controller {
 		$schema['$schema'] = 'http://json-schema.org/draft-04/schema#';
 		$schema['title']   = 'ai_generation_result';
 
-		return $this->convert_json_schema_to_wp_schema( $schema );
+		return JSON_Schema_To_WP_Schema_Converter::convert( $schema );
 	}
 
 	/**
@@ -317,67 +317,5 @@ class AI_REST_Controller {
 		}
 
 		return $builder;
-	}
-
-	/**
-	 * Converts a standard JSON Schema to a WordPress REST API compatible schema.
-	 *
-	 * Specifically, this converts the "required" array property to "required" boolean attributes
-	 * on individual properties, as expected by WordPress REST API validation.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param array<string, mixed> $schema The standard JSON schema.
-	 * @return array<string, mixed> The WordPress compatible schema.
-	 */
-	private function convert_json_schema_to_wp_schema( array $schema ): array {
-		if ( isset( $schema['properties'] ) && is_array( $schema['properties'] ) ) {
-			$required_props = isset( $schema['required'] ) && is_array( $schema['required'] )
-				? $schema['required']
-				: array();
-
-			// Remove the required array from the parent object.
-			unset( $schema['required'] );
-
-			foreach ( $schema['properties'] as $prop_name => $prop_schema ) {
-				if ( ! is_array( $prop_schema ) ) {
-					continue;
-				}
-
-				// phpcs:ignore Generic.Commenting.DocComment.MissingShort
-				/** @var array<string, mixed> $prop_schema */
-				$schema['properties'][ $prop_name ] = $this->convert_json_schema_to_wp_schema( $prop_schema );
-
-				// Set required boolean if property is in required array.
-				if ( in_array( $prop_name, $required_props, true ) ) {
-					$schema['properties'][ $prop_name ]['required'] = true;
-				}
-			}
-		}
-
-		if ( isset( $schema['items'] ) && is_array( $schema['items'] ) ) {
-			// phpcs:ignore Generic.Commenting.DocComment.MissingShort
-			/** @var array<string, mixed> $items */
-			$items = $schema['items'];
-
-			$schema['items'] = $this->convert_json_schema_to_wp_schema( $items );
-		}
-
-		// Handle oneOf, anyOf, allOf.
-		foreach ( array( 'oneOf', 'anyOf', 'allOf' ) as $combiner ) {
-			if ( isset( $schema[ $combiner ] ) && is_array( $schema[ $combiner ] ) ) {
-				foreach ( $schema[ $combiner ] as $index => $sub_schema ) {
-					if ( ! is_array( $sub_schema ) ) {
-						continue;
-					}
-
-					// phpcs:ignore Generic.Commenting.DocComment.MissingShort
-					/** @var array<string, mixed> $sub_schema */
-					$schema[ $combiner ][ $index ] = $this->convert_json_schema_to_wp_schema( $sub_schema );
-				}
-			}
-		}
-
-		return $schema;
 	}
 }
