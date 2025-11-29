@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for WordPress\AI_Client\REST_API\AI_REST_Controller
+ * Tests for WordPress\AI_Client\REST_API\AI_Prompt_REST_Controller
  *
  * @package WordPress\AI_Client
  */
@@ -11,12 +11,12 @@ use ReflectionClass;
 use ReflectionMethod;
 use WP_REST_Request;
 use WordPress\AiClient\AiClient;
-use WordPress\AI_Client\REST_API\AI_REST_Controller;
+use WordPress\AI_Client\REST_API\AI_Prompt_REST_Controller;
 use WordPress\AI_Client\PHPUnit\Includes\Test_Case;
 use WordPress\AI_Client\PHPUnit\Includes\Mock_Provider;
 use WordPress\AI_Client\PHPUnit\Includes\Mock_Model;
 
-class AI_REST_Controller_Tests extends Test_Case {
+class AI_Prompt_REST_Controller_Tests extends Test_Case {
 	private static $administrator_id;
 
 	public static function set_up_before_class() {
@@ -37,7 +37,7 @@ class AI_REST_Controller_Tests extends Test_Case {
 	 * Tests the permissions_check method.
 	 */
 	public function test_permissions_check() {
-		$controller = new AI_REST_Controller();
+		$controller = new AI_Prompt_REST_Controller();
 
 		// Test as administrator.
 		wp_set_current_user( self::$administrator_id );
@@ -54,7 +54,7 @@ class AI_REST_Controller_Tests extends Test_Case {
 	 * Tests the process_generate_request method.
 	 */
 	public function test_process_generate_request() {
-		$controller = new AI_REST_Controller();
+		$controller = new AI_Prompt_REST_Controller();
 		$request    = new WP_REST_Request( 'POST', '/wp-ai/v1/generate' );
 		$request->set_header( 'Content-Type', 'application/json' );
 		$request->set_body(
@@ -90,7 +90,7 @@ class AI_REST_Controller_Tests extends Test_Case {
 	 * Tests the process_is_supported_request method.
 	 */
 	public function test_process_is_supported_request() {
-		$controller = new AI_REST_Controller();
+		$controller = new AI_Prompt_REST_Controller();
 		$request    = new WP_REST_Request( 'POST', '/wp-ai/v1/is-supported' );
 		$request->set_header( 'Content-Type', 'application/json' );
 		$request->set_body(
@@ -127,7 +127,7 @@ class AI_REST_Controller_Tests extends Test_Case {
 	 * Tests the create_builder_from_params method.
 	 */
 	public function test_create_builder_from_params() {
-		$controller = new AI_REST_Controller();
+		$controller = new AI_Prompt_REST_Controller();
 		$method     = new ReflectionMethod( $controller, 'create_builder_from_params' );
 		$method->setAccessible( true );
 
@@ -168,7 +168,7 @@ class AI_REST_Controller_Tests extends Test_Case {
 	 * Tests the create_builder_from_params method with config and options.
 	 */
 	public function test_create_builder_from_params_with_config_and_options() {
-		$controller = new AI_REST_Controller();
+		$controller = new AI_Prompt_REST_Controller();
 		$method     = new ReflectionMethod( $controller, 'create_builder_from_params' );
 		$method->setAccessible( true );
 
@@ -216,7 +216,7 @@ class AI_REST_Controller_Tests extends Test_Case {
 		// Register mock provider.
 		AiClient::defaultRegistry()->registerProvider( Mock_Provider::class );
 
-		$controller = new AI_REST_Controller();
+		$controller = new AI_Prompt_REST_Controller();
 		$method     = new ReflectionMethod( $controller, 'create_builder_from_params' );
 		$method->setAccessible( true );
 

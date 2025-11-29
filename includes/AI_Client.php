@@ -13,7 +13,7 @@ use WordPress\AI_Client\Builders\Prompt_Builder;
 use WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error;
 use WordPress\AI_Client\Capabilities\Capabilities_Manager;
 use WordPress\AI_Client\HTTP\WP_AI_Client_Discovery_Strategy;
-use WordPress\AI_Client\REST_API\AI_REST_Controller;
+use WordPress\AI_Client\REST_API\AI_Prompt_REST_Controller;
 use WordPress\AiClient\AiClient;
 
 /**
@@ -66,7 +66,7 @@ class AI_Client {
 		add_action(
 			'rest_api_init',
 			function () {
-				( new AI_REST_Controller() )->register_routes();
+				( new AI_Prompt_REST_Controller() )->register_routes();
 			}
 		);
 

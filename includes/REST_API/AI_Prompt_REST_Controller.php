@@ -1,6 +1,6 @@
 <?php
 /**
- * Class WordPress\AI_Client\REST_API\AI_REST_Controller
+ * Class WordPress\AI_Client\REST_API\AI_Prompt_REST_Controller
  *
  * @since n.e.x.t
  * @package WordPress\AI_Client
@@ -41,7 +41,7 @@ use WordPress\AiClient\Results\DTO\GenerativeAiResult;
  *   requestOptions?: RequestOptionsArrayShape
  * }
  */
-class AI_REST_Controller {
+class AI_Prompt_REST_Controller {
 
 	/**
 	 * Registers the REST routes.
