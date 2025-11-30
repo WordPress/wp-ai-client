@@ -2,7 +2,8 @@
 	"name": "wp-ai-client",
 	"license": "GPL-2.0-or-later",
 	"dependencies": {
-		"@wordpress/api-fetch": "^7.35.0"
+		"@wordpress/api-fetch": "^7.35.0",
+		"@wordpress/data": "^10.36.0"
 	},
 	"devDependencies": {
 		"@wordpress/env": "^10.27.0",

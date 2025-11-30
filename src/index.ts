@@ -1,4 +1,11 @@
 import { PromptBuilder } from './builders/prompt-builder';
+import {
+	getProviders,
+	getProvider,
+	getProviderModels,
+	getProviderModel,
+} from './providers/api';
+import { store } from './providers/store';
 import * as enums from './enums';
 import type { Message, MessagePart } from './types';
 
@@ -16,10 +23,25 @@ export function prompt(
 	return new PromptBuilder( promptInput );
 }
 
-export { enums };
+export {
+	getProviders,
+	getProvider,
+	getProviderModels,
+	getProviderModel,
+	store,
+	enums,
+};
 
 // Expose the API in the global `wp.aiClient` namespace for external use.
-const AiClient = { prompt, enums };
+const AiClient = {
+	prompt,
+	getProviders,
+	getProvider,
+	getProviderModels,
+	getProviderModel,
+	store,
+	enums,
+};
 
 if (
 	typeof window !== 'undefined' &&
