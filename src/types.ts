@@ -12,6 +12,8 @@ import type {
 	MessageRole,
 	OperationState,
 	ProviderType,
+	MediaOrientation,
+	Modality,
 } from './enums';
 
 export type File = {
@@ -117,7 +119,7 @@ export type WebSearch = {
 };
 
 export type ModelConfig = {
-	outputModalities?: string[];
+	outputModalities?: Modality[];
 	systemInstruction?: string;
 	candidateCount?: number;
 	maxTokens?: number;
@@ -131,10 +133,10 @@ export type ModelConfig = {
 	topLogprobs?: number;
 	functionDeclarations?: FunctionDeclaration[];
 	webSearch?: WebSearch;
-	outputFileType?: string;
+	outputFileType?: FileType;
 	outputMimeType?: string;
 	outputSchema?: Record< string, unknown >;
-	outputMediaOrientation?: string;
+	outputMediaOrientation?: MediaOrientation;
 	outputMediaAspectRatio?: string;
 	outputSpeechVoice?: string;
 	customOptions?: Record< string, unknown >;
