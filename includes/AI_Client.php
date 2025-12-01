@@ -67,7 +67,7 @@ class AI_Client {
 		// Register REST API routes.
 		add_action(
 			'rest_api_init',
-			function () {
+			static function () {
 				( new AI_Prompt_REST_Controller() )->register_routes();
 				( new AI_Providers_Models_REST_Controller() )->register_routes();
 			}
