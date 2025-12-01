@@ -44,7 +44,7 @@ jobs:
         - '7.4'
         - '8.0'
         - '8.4'
-        wordpress: [ 'latest' ]
+        wordpress: [ 'trunk' ]
         multisite: [ false, true ]
         experimental: [false]
         include:
