@@ -28,30 +28,13 @@ use WordPress\AiClient\Tools\DTO\FunctionResponse;
 class Ability_Function_Resolver_Test extends Test_Case {
 
 	/**
-	 * The resolver instance.
-	 *
-	 * @var Ability_Function_Resolver
-	 */
-	private Ability_Function_Resolver $resolver;
-
-	/**
-	 * Sets up test fixtures.
-	 *
-	 * @return void
-	 */
-	protected function setUp(): void {
-		parent::setUp();
-		$this->resolver = new Ability_Function_Resolver();
-	}
-
-	/**
 	 * Tests is_ability_call returns true for valid ability calls.
 	 *
 	 * @return void
 	 */
 	public function test_is_ability_call_returns_true_for_valid_ability(): void {
 		$call = new FunctionCall( 'func_123', 'wpab__tec__create_event', array( 'title' => 'Test Event' ) );
-		$this->assertTrue( $this->resolver->is_ability_call( $call ) );
+		$this->assertTrue( Ability_Function_Resolver::is_ability_call( $call ) );
 	}
 
 	/**
@@ -61,7 +44,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 	 */
 	public function test_is_ability_call_returns_true_for_nested_namespace(): void {
 		$call = new FunctionCall( 'func_456', 'wpab__tec__v1__create_event', array() );
-		$this->assertTrue( $this->resolver->is_ability_call( $call ) );
+		$this->assertTrue( Ability_Function_Resolver::is_ability_call( $call ) );
 	}
 
 	/**
@@ -71,7 +54,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 	 */
 	public function test_is_ability_call_returns_false_for_non_ability(): void {
 		$call = new FunctionCall( 'func_789', 'regular_function', array() );
-		$this->assertFalse( $this->resolver->is_ability_call( $call ) );
+		$this->assertFalse( Ability_Function_Resolver::is_ability_call( $call ) );
 	}
 
 	/**
@@ -81,7 +64,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 	 */
 	public function test_is_ability_call_returns_false_when_name_is_null(): void {
 		$call = new FunctionCall( 'func_999', null, array() );
-		$this->assertFalse( $this->resolver->is_ability_call( $call ) );
+		$this->assertFalse( Ability_Function_Resolver::is_ability_call( $call ) );
 	}
 
 	/**
@@ -91,7 +74,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 	 */
 	public function test_is_ability_call_returns_false_for_partial_prefix(): void {
 		$call = new FunctionCall( 'func_111', 'wpab_single_underscore', array() );
-		$this->assertFalse( $this->resolver->is_ability_call( $call ) );
+		$this->assertFalse( Ability_Function_Resolver::is_ability_call( $call ) );
 	}
 
 	/**
@@ -101,7 +84,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 	 */
 	public function test_execute_ability_returns_error_for_non_ability_call(): void {
 		$call     = new FunctionCall( 'func_123', 'regular_function', array() );
-		$response = $this->resolver->execute_ability( $call );
+		$response = Ability_Function_Resolver::execute_ability( $call );
 
 		$this->assertInstanceOf( FunctionResponse::class, $response );
 		$this->assertEquals( 'func_123', $response->getId() );
@@ -124,7 +107,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		$this->setExpectedIncorrectUsage( 'WP_Abilities_Registry::get_registered' );
 
 		$call     = new FunctionCall( 'func_456', 'wpab__nonexistent__ability', array() );
-		$response = $this->resolver->execute_ability( $call );
+		$response = Ability_Function_Resolver::execute_ability( $call );
 
 		$this->assertInstanceOf( FunctionResponse::class, $response );
 		$this->assertEquals( 'func_456', $response->getId() );
@@ -147,7 +130,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		$this->setExpectedIncorrectUsage( 'WP_Abilities_Registry::get_registered' );
 
 		$call     = new FunctionCall( null, 'wpab__test__missing', array() );
-		$response = $this->resolver->execute_ability( $call );
+		$response = Ability_Function_Resolver::execute_ability( $call );
 
 		$this->assertInstanceOf( FunctionResponse::class, $response );
 		$this->assertEquals( 'unknown', $response->getId() );
@@ -166,7 +149,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		);
 		$message       = new ModelMessage( $parts );
 
-		$this->assertTrue( $this->resolver->has_ability_calls( $message ) );
+		$this->assertTrue( Ability_Function_Resolver::has_ability_calls( $message ) );
 	}
 
 	/**
@@ -182,7 +165,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		);
 		$message       = new ModelMessage( $parts );
 
-		$this->assertFalse( $this->resolver->has_ability_calls( $message ) );
+		$this->assertFalse( Ability_Function_Resolver::has_ability_calls( $message ) );
 	}
 
 	/**
@@ -194,7 +177,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		$parts   = array( new MessagePart( 'Just text' ) );
 		$message = new UserMessage( $parts );
 
-		$this->assertFalse( $this->resolver->has_ability_calls( $message ) );
+		$this->assertFalse( Ability_Function_Resolver::has_ability_calls( $message ) );
 	}
 
 	/**
@@ -212,7 +195,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		);
 		$message      = new ModelMessage( $parts );
 
-		$this->assertTrue( $this->resolver->has_ability_calls( $message ) );
+		$this->assertTrue( Ability_Function_Resolver::has_ability_calls( $message ) );
 	}
 
 	/**
@@ -222,7 +205,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 	 */
 	public function test_has_ability_calls_with_empty_message(): void {
 		$message = new ModelMessage( array() );
-		$this->assertFalse( $this->resolver->has_ability_calls( $message ) );
+		$this->assertFalse( Ability_Function_Resolver::has_ability_calls( $message ) );
 	}
 
 	/**
@@ -232,7 +215,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 	 */
 	public function test_execute_abilities_with_empty_message(): void {
 		$message = new ModelMessage( array() );
-		$result  = $this->resolver->execute_abilities( $message );
+		$result  = Ability_Function_Resolver::execute_abilities( $message );
 
 		$this->assertInstanceOf( Message::class, $result );
 		$this->assertCount( 0, $result->getParts() );
@@ -251,7 +234,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		$parts   = array( new MessagePart( $call ) );
 		$message = new ModelMessage( $parts );
 
-		$result = $this->resolver->execute_abilities( $message );
+		$result = Ability_Function_Resolver::execute_abilities( $message );
 
 		$this->assertInstanceOf( Message::class, $result );
 		$this->assertInstanceOf( UserMessage::class, $result );
@@ -280,7 +263,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		$parts   = array( new MessagePart( $call ) );
 		$message = new ModelMessage( $parts );
 
-		$result = $this->resolver->execute_abilities( $message );
+		$result = Ability_Function_Resolver::execute_abilities( $message );
 
 		$this->assertInstanceOf( UserMessage::class, $result );
 	}
@@ -302,7 +285,7 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		);
 		$message = new ModelMessage( $parts );
 
-		$result = $this->resolver->execute_abilities( $message );
+		$result = Ability_Function_Resolver::execute_abilities( $message );
 
 		$this->assertInstanceOf( Message::class, $result );
 
@@ -336,11 +319,31 @@ class Ability_Function_Resolver_Test extends Test_Case {
 		);
 		$message = new ModelMessage( $parts );
 
-		$result = $this->resolver->execute_abilities( $message );
+		$result = Ability_Function_Resolver::execute_abilities( $message );
 
 		// Only function calls are processed, not text parts.
 		$result_parts = $result->getParts();
 		$this->assertCount( 1, $result_parts );
 		$this->assertInstanceOf( FunctionResponse::class, $result_parts[0]->getFunctionResponse() );
+	}
+
+	/**
+	 * Tests ability_name_to_function_name converts simple names.
+	 *
+	 * @return void
+	 */
+	public function test_ability_name_to_function_name_simple(): void {
+		$result = Ability_Function_Resolver::ability_name_to_function_name( 'tec/create_event' );
+		$this->assertEquals( 'wpab__tec__create_event', $result );
+	}
+
+	/**
+	 * Tests ability_name_to_function_name converts nested namespaces.
+	 *
+	 * @return void
+	 */
+	public function test_ability_name_to_function_name_nested(): void {
+		$result = Ability_Function_Resolver::ability_name_to_function_name( 'tec/v1/create_event' );
+		$this->assertEquals( 'wpab__tec__v1__create_event', $result );
 	}
 }
