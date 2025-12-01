@@ -37,7 +37,7 @@ class Ability_Function_Resolver {
 	 * @param FunctionCall $call The function call to check.
 	 * @return bool True if the function call is an ability call, false otherwise.
 	 */
-	public function is_ability_call( FunctionCall $call ): bool {
+	public static function is_ability_call( FunctionCall $call ): bool {
 		$name = $call->getName();
 		if ( null === $name ) {
 			return false;
@@ -54,12 +54,12 @@ class Ability_Function_Resolver {
 	 * @param FunctionCall $call The function call to execute.
 	 * @return FunctionResponse The response from executing the ability.
 	 */
-	public function execute_ability( FunctionCall $call ): FunctionResponse {
+	public static function execute_ability( FunctionCall $call ): FunctionResponse {
 		$function_name = $call->getName() ?? 'unknown';
 		$function_id   = $call->getId() ?? 'unknown';
 
 		// Validate that this is an ability call.
-		if ( ! $this->is_ability_call( $call ) ) {
+		if ( ! self::is_ability_call( $call ) ) {
 			return new FunctionResponse(
 				$function_id,
 				$function_name,
@@ -71,7 +71,7 @@ class Ability_Function_Resolver {
 		}
 
 		// Convert function name to ability name.
-		$ability_name = $this->function_name_to_ability_name( $function_name );
+		$ability_name = self::function_name_to_ability_name( $function_name );
 
 		// Get the ability.
 		$ability = wp_get_ability( $ability_name );
@@ -120,11 +120,11 @@ class Ability_Function_Resolver {
 	 * @param Message $message The message to check.
 	 * @return bool True if the message contains ability calls, false otherwise.
 	 */
-	public function has_ability_calls( Message $message ): bool {
+	public static function has_ability_calls( Message $message ): bool {
 		foreach ( $message->getParts() as $part ) {
 			if ( $part->getType()->isFunctionCall() ) {
 				$function_call = $part->getFunctionCall();
-				if ( $function_call instanceof FunctionCall && $this->is_ability_call( $function_call ) ) {
+				if ( $function_call instanceof FunctionCall && self::is_ability_call( $function_call ) ) {
 					return true;
 				}
 			}
@@ -141,20 +141,34 @@ class Ability_Function_Resolver {
 	 * @param Message $message The message containing function calls.
 	 * @return Message A new message with function responses.
 	 */
-	public function execute_abilities( Message $message ): Message {
+	public static function execute_abilities( Message $message ): Message {
 		$response_parts = array();
 
 		foreach ( $message->getParts() as $part ) {
 			if ( $part->getType()->isFunctionCall() ) {
 				$function_call = $part->getFunctionCall();
 				if ( $function_call instanceof FunctionCall ) {
-					$function_response = $this->execute_ability( $function_call );
+					$function_response = self::execute_ability( $function_call );
 					$response_parts[]  = new MessagePart( $function_response );
 				}
 			}
 		}
 
 		return new UserMessage( $response_parts );
+	}
+
+	/**
+	 * Converts an ability name to a function name.
+	 *
+	 * Transforms "tec/create_event" to "wpab__tec__create_event".
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $ability_name The ability name to convert.
+	 * @return string The function name.
+	 */
+	public static function ability_name_to_function_name( string $ability_name ): string {
+		return self::ABILITY_PREFIX . str_replace( '/', '__', $ability_name );
 	}
 
 	/**
@@ -167,7 +181,7 @@ class Ability_Function_Resolver {
 	 * @param string $function_name The function name to convert.
 	 * @return string The ability name.
 	 */
-	private function function_name_to_ability_name( string $function_name ): string {
+	private static function function_name_to_ability_name( string $function_name ): string {
 		// Remove the ability prefix.
 		$without_prefix = substr( $function_name, strlen( self::ABILITY_PREFIX ) );
 
