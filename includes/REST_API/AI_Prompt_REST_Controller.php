@@ -13,6 +13,7 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
+use WordPress\AI_Client\AI_Client;
 use WordPress\AI_Client\Builders\Prompt_Builder;
 use WordPress\AI_Client\Capabilities\Capabilities_Manager;
 use WordPress\AiClient\AiClient;
@@ -281,7 +282,7 @@ class AI_Prompt_REST_Controller {
 			$messages_data
 		);
 
-		$builder = new Prompt_Builder( AiClient::defaultRegistry(), array_values( $messages ) );
+		$builder = AI_Client::prompt( array_values( $messages ) );
 
 		if ( ! empty( $params['modelConfig'] ) && is_array( $params['modelConfig'] ) ) {
 			$model_config_data = $params['modelConfig'];
