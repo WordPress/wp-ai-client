@@ -2021,4 +2021,198 @@ class PromptBuilderTest extends Test_Case {
 		$this->assertSame( $files[1], $speech_files[1] );
 		$this->assertSame( $files[2], $speech_files[2] );
 	}
+
+	/**
+	 * Gets the function declarations from the builder's model config.
+	 *
+	 * @param Prompt_Builder $builder The builder to get declarations from.
+	 * @return list<FunctionDeclaration>|null The function declarations or null if not set.
+	 */
+	private function get_function_declarations( Prompt_Builder $builder ): ?array {
+		/** @var ModelConfig $config */
+		$config = $this->get_wrapped_prompt_builder_property_value( $builder, 'modelConfig' );
+		return $config->getFunctionDeclarations();
+	}
+
+	/**
+	 * Tests using_ability with ability name string.
+	 *
+	 * @return void
+	 */
+	public function test_using_ability_with_string(): void {
+		$builder = new Prompt_Builder( $this->registry );
+		$result  = $builder->using_ability( 'wpaiclienttests/simple' );
+
+		$this->assertSame( $builder, $result );
+
+		$declarations = $this->get_function_declarations( $builder );
+
+		$this->assertNotNull( $declarations );
+		$this->assertCount( 1, $declarations );
+		$this->assertEquals( 'wpab__wpaiclienttests__simple', $declarations[0]->getName() );
+		$this->assertEquals( 'A simple test ability with no parameters.', $declarations[0]->getDescription() );
+	}
+
+	/**
+	 * Tests using_ability with WP_Ability object.
+	 *
+	 * @return void
+	 */
+	public function test_using_ability_with_wp_ability_object(): void {
+		$ability = wp_get_ability( 'wpaiclienttests/with-params' );
+
+		$builder = new Prompt_Builder( $this->registry );
+		$result  = $builder->using_ability( $ability );
+
+		$this->assertSame( $builder, $result );
+
+		$declarations = $this->get_function_declarations( $builder );
+
+		$this->assertNotNull( $declarations );
+		$this->assertCount( 1, $declarations );
+		$this->assertEquals( 'wpab__wpaiclienttests__with-params', $declarations[0]->getName() );
+		$this->assertEquals( 'A test ability that accepts parameters.', $declarations[0]->getDescription() );
+
+		// Verify input schema is passed through.
+		$params = $declarations[0]->getParameters();
+		$this->assertNotNull( $params );
+		$this->assertArrayHasKey( 'properties', $params );
+		$this->assertArrayHasKey( 'title', $params['properties'] );
+	}
+
+	/**
+	 * Tests using_ability with multiple abilities.
+	 *
+	 * @return void
+	 */
+	public function test_using_ability_with_multiple_abilities(): void {
+		$builder = new Prompt_Builder( $this->registry );
+		$result  = $builder->using_ability(
+			'wpaiclienttests/simple',
+			'wpaiclienttests/with-params',
+			'wpaiclienttests/returns-error'
+		);
+
+		$this->assertSame( $builder, $result );
+
+		$declarations = $this->get_function_declarations( $builder );
+
+		$this->assertNotNull( $declarations );
+		$this->assertCount( 3, $declarations );
+		$this->assertEquals( 'wpab__wpaiclienttests__simple', $declarations[0]->getName() );
+		$this->assertEquals( 'wpab__wpaiclienttests__with-params', $declarations[1]->getName() );
+		$this->assertEquals( 'wpab__wpaiclienttests__returns-error', $declarations[2]->getName() );
+	}
+
+	/**
+	 * Tests using_ability skips non-existent abilities.
+	 *
+	 * @return void
+	 */
+	public function test_using_ability_skips_nonexistent_abilities(): void {
+		$this->setExpectedIncorrectUsage( 'WP_Abilities_Registry::get_registered' );
+
+		$builder = new Prompt_Builder( $this->registry );
+		$result  = $builder->using_ability(
+			'wpaiclienttests/simple',
+			'nonexistent/ability',
+			'wpaiclienttests/with-params'
+		);
+
+		$this->assertSame( $builder, $result );
+
+		$declarations = $this->get_function_declarations( $builder );
+
+		// Only 2 valid abilities should be registered.
+		$this->assertNotNull( $declarations );
+		$this->assertCount( 2, $declarations );
+		$this->assertEquals( 'wpab__wpaiclienttests__simple', $declarations[0]->getName() );
+		$this->assertEquals( 'wpab__wpaiclienttests__with-params', $declarations[1]->getName() );
+	}
+
+	/**
+	 * Tests using_ability with empty arguments returns self.
+	 *
+	 * @return void
+	 */
+	public function test_using_ability_with_no_arguments_returns_self(): void {
+		$builder = new Prompt_Builder( $this->registry );
+		$result  = $builder->using_ability();
+
+		$this->assertSame( $builder, $result );
+
+		$declarations = $this->get_function_declarations( $builder );
+
+		$this->assertNull( $declarations );
+	}
+
+	/**
+	 * Tests using_ability with mixed strings and WP_Ability objects.
+	 *
+	 * @return void
+	 */
+	public function test_using_ability_with_mixed_types(): void {
+		$ability = wp_get_ability( 'wpaiclienttests/with-params' );
+
+		$builder = new Prompt_Builder( $this->registry );
+		$result  = $builder->using_ability(
+			'wpaiclienttests/simple',
+			$ability
+		);
+
+		$this->assertSame( $builder, $result );
+
+		$declarations = $this->get_function_declarations( $builder );
+
+		$this->assertNotNull( $declarations );
+		$this->assertCount( 2, $declarations );
+		$this->assertEquals( 'wpab__wpaiclienttests__simple', $declarations[0]->getName() );
+		$this->assertEquals( 'wpab__wpaiclienttests__with-params', $declarations[1]->getName() );
+	}
+
+	/**
+	 * Tests using_ability with hyphenated ability name.
+	 *
+	 * @return void
+	 */
+	public function test_using_ability_with_hyphenated_name(): void {
+		$builder = new Prompt_Builder( $this->registry );
+		$result  = $builder->using_ability( 'wpaiclienttests/hyphen-test' );
+
+		$this->assertSame( $builder, $result );
+
+		$declarations = $this->get_function_declarations( $builder );
+
+		$this->assertNotNull( $declarations );
+		$this->assertCount( 1, $declarations );
+		$this->assertEquals( 'wpab__wpaiclienttests__hyphen-test', $declarations[0]->getName() );
+	}
+
+	/**
+	 * Tests using_ability can be chained with other methods.
+	 *
+	 * @return void
+	 */
+	public function test_using_ability_method_chaining(): void {
+		$builder = new Prompt_Builder( $this->registry );
+		$result  = $builder
+			->with_text( 'Test prompt' )
+			->using_ability( 'wpaiclienttests/simple' )
+			->using_system_instruction( 'You are a helpful assistant' )
+			->using_max_tokens( 500 );
+
+		$this->assertSame( $builder, $result );
+
+		$declarations = $this->get_function_declarations( $builder );
+
+		$this->assertNotNull( $declarations );
+		$this->assertCount( 1, $declarations );
+		$this->assertEquals( 'wpab__wpaiclienttests__simple', $declarations[0]->getName() );
+
+		/** @var ModelConfig $config */
+		$config = $this->get_wrapped_prompt_builder_property_value( $builder, 'modelConfig' );
+
+		$this->assertEquals( 'You are a helpful assistant', $config->getSystemInstruction() );
+		$this->assertEquals( 500, $config->getMaxTokens() );
+	}
 }

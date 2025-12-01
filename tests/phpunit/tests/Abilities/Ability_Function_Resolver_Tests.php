@@ -19,11 +19,11 @@ use WordPress\AiClient\Tools\DTO\FunctionResponse;
 /**
  * Test class for Ability_Function_Resolver.
  *
- * Note: Tests that require actual ability registration are not included here
- * because WordPress 6.9 requires abilities to be registered during specific
- * hooks (wp_abilities_api_categories_init and wp_abilities_api_init) which
- * fire during WordPress bootstrap. Integration tests with registered abilities
- * would need to be set up via a bootstrap file.
+ * Test abilities are registered during bootstrap in tests/phpunit/bootstrap.php:
+ * - wpaiclienttests/simple: No parameters, returns { success: true }
+ * - wpaiclienttests/with-params: Accepts title parameter, returns { success: true, title: ... }
+ * - wpaiclienttests/returns-error: Always returns a WP_Error
+ * - wpaiclienttests/hyphen-test: Tests hyphenated names
  */
 class Ability_Function_Resolver_Test extends Test_Case {
 
@@ -345,5 +345,123 @@ class Ability_Function_Resolver_Test extends Test_Case {
 	public function test_ability_name_to_function_name_nested(): void {
 		$result = Ability_Function_Resolver::ability_name_to_function_name( 'tec/v1/create_event' );
 		$this->assertEquals( 'wpab__tec__v1__create_event', $result );
+	}
+
+	/**
+	 * Tests execute_ability successfully executes a registered ability.
+	 *
+	 * @return void
+	 */
+	public function test_execute_ability_success(): void {
+		$call     = new FunctionCall( 'func_123', 'wpab__wpaiclienttests__simple', array() );
+		$response = Ability_Function_Resolver::execute_ability( $call );
+
+		$this->assertInstanceOf( FunctionResponse::class, $response );
+		$this->assertEquals( 'func_123', $response->getId() );
+		$this->assertEquals( 'wpab__wpaiclienttests__simple', $response->getName() );
+
+		$result = $response->getResponse();
+		$this->assertIsArray( $result );
+		$this->assertArrayHasKey( 'success', $result );
+		$this->assertTrue( $result['success'] );
+	}
+
+	/**
+	 * Tests execute_ability passes parameters to ability.
+	 *
+	 * @return void
+	 */
+	public function test_execute_ability_with_parameters(): void {
+		$call     = new FunctionCall( 'func_456', 'wpab__wpaiclienttests__with-params', array( 'title' => 'Test Title' ) );
+		$response = Ability_Function_Resolver::execute_ability( $call );
+
+		$this->assertInstanceOf( FunctionResponse::class, $response );
+
+		$result = $response->getResponse();
+		$this->assertIsArray( $result );
+		$this->assertArrayHasKey( 'success', $result );
+		$this->assertTrue( $result['success'] );
+		$this->assertArrayHasKey( 'title', $result );
+		$this->assertEquals( 'Test Title', $result['title'] );
+	}
+
+	/**
+	 * Tests execute_ability handles WP_Error from ability.
+	 *
+	 * @return void
+	 */
+	public function test_execute_ability_handles_wp_error(): void {
+		$call     = new FunctionCall( 'func_789', 'wpab__wpaiclienttests__returns-error', array() );
+		$response = Ability_Function_Resolver::execute_ability( $call );
+
+		$this->assertInstanceOf( FunctionResponse::class, $response );
+		$this->assertEquals( 'func_789', $response->getId() );
+
+		$result = $response->getResponse();
+		$this->assertIsArray( $result );
+		$this->assertArrayHasKey( 'error', $result );
+		$this->assertEquals( 'This is a test error message.', $result['error'] );
+		$this->assertArrayHasKey( 'code', $result );
+		$this->assertEquals( 'test_error', $result['code'] );
+	}
+
+	/**
+	 * Tests execute_abilities successfully executes registered abilities.
+	 *
+	 * @return void
+	 */
+	public function test_execute_abilities_success(): void {
+		$call    = new FunctionCall( 'func_1', 'wpab__wpaiclienttests__simple', array() );
+		$parts   = array( new MessagePart( $call ) );
+		$message = new ModelMessage( $parts );
+
+		$result = Ability_Function_Resolver::execute_abilities( $message );
+
+		$this->assertInstanceOf( UserMessage::class, $result );
+
+		$result_parts = $result->getParts();
+		$this->assertCount( 1, $result_parts );
+
+		$response = $result_parts[0]->getFunctionResponse();
+		$this->assertInstanceOf( FunctionResponse::class, $response );
+
+		$response_data = $response->getResponse();
+		$this->assertArrayHasKey( 'success', $response_data );
+		$this->assertTrue( $response_data['success'] );
+	}
+
+	/**
+	 * Tests execute_abilities with multiple registered abilities.
+	 *
+	 * @return void
+	 */
+	public function test_execute_abilities_multiple_success(): void {
+		$call1   = new FunctionCall( 'func_1', 'wpab__wpaiclienttests__simple', array() );
+		$call2   = new FunctionCall( 'func_2', 'wpab__wpaiclienttests__with-params', array( 'title' => 'Test' ) );
+		$parts   = array(
+			new MessagePart( $call1 ),
+			new MessagePart( $call2 ),
+		);
+		$message = new ModelMessage( $parts );
+
+		$result = Ability_Function_Resolver::execute_abilities( $message );
+
+		$result_parts = $result->getParts();
+		$this->assertCount( 2, $result_parts );
+
+		// First ability response.
+		$response1 = $result_parts[0]->getFunctionResponse();
+		$this->assertInstanceOf( FunctionResponse::class, $response1 );
+		$this->assertEquals( 'func_1', $response1->getId() );
+		$response1_data = $response1->getResponse();
+		$this->assertTrue( $response1_data['success'] );
+
+		// Second ability response.
+		$response2 = $result_parts[1]->getFunctionResponse();
+		$this->assertInstanceOf( FunctionResponse::class, $response2 );
+		$this->assertEquals( 'func_2', $response2->getId() );
+		$response2_data = $response2->getResponse();
+		$this->assertTrue( $response2_data['success'] );
+		$this->assertEquals( 'Test', $response2_data['title'] );
 	}
 }
