@@ -121,13 +121,21 @@ class Prompt_Builder {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param WP_Ability ...$abilities The abilities to register.
+	 * @param WP_Ability|string ...$abilities The abilities to register, either as WP_Ability objects or ability name strings.
 	 * @return self The current instance for method chaining.
 	 */
-	public function using_ability( WP_Ability ...$abilities ): self {
+	public function using_ability( ...$abilities ): self {
 		$declarations = array();
 
 		foreach ( $abilities as $ability ) {
+			if ( is_string( $ability ) ) {
+				$ability = wp_get_ability( $ability );
+			}
+
+			if ( ! $ability instanceof WP_Ability ) {
+				continue;
+			}
+
 			$function_name = Ability_Function_Resolver::ability_name_to_function_name( $ability->get_name() );
 			$input_schema  = $ability->get_input_schema();
 
@@ -138,7 +146,9 @@ class Prompt_Builder {
 			);
 		}
 
-		$this->builder->usingFunctionDeclarations( ...$declarations );
+		if ( ! empty( $declarations ) ) {
+			return $this->using_function_declarations( ...$declarations );
+		}
 
 		return $this;
 	}
