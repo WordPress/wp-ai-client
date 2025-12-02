@@ -12,7 +12,7 @@ import type { Message, MessagePart } from './types';
 /**
  * Creates a new prompt builder for fluent API usage.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  *
  * @param promptInput Optional initial prompt content.
  * @return The prompt builder instance.

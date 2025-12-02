@@ -5,5 +5,14 @@ parameters:
   scanFiles:
     - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
   treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    # TEMPORARY: WordPress 6.9 Abilities API functions not yet in stubs
+    - '#Function wp_get_ability not found\.#'
+    - '#Class WP_Ability not found\.#'
+    - '#on an unknown class WP_Ability\.#'
+    - '#has invalid type WP_Ability\.#'
+    -
+      message: '#expects .*, mixed given\.#'
+      path: includes/Builders/Prompt_Builder.php
 includes:
   - vendor/szepeviktor/phpstan-wordpress/extension.neon

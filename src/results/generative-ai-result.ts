@@ -15,7 +15,7 @@ import type {
  * This class wraps the raw result object and provides helper methods
  * for accessing content.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
@@ -26,7 +26,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param result The raw result object.
 	 */
@@ -40,7 +40,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Gets the unique identifier for this result.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The ID.
 	 */
@@ -51,7 +51,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Gets the generated candidates.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The candidates.
 	 */
@@ -62,7 +62,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Gets the token usage statistics.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The token usage.
 	 */
@@ -73,7 +73,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Gets the provider metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The provider metadata.
 	 */
@@ -84,7 +84,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Gets the model metadata.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The model metadata.
 	 */
@@ -95,7 +95,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Gets additional data.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The additional data.
 	 */
@@ -106,7 +106,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Gets the total number of candidates.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The total number of candidates.
 	 */
@@ -117,7 +117,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Checks if the result has multiple candidates.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if there are multiple candidates, false otherwise.
 	 */
@@ -130,7 +130,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	 *
 	 * Only text from the content channel is considered. Text within model thought or reasoning is ignored.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The text content.
 	 * @throws Error If no text content.
@@ -154,7 +154,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	 *
 	 * Only files from the content channel are considered. Files within model thought or reasoning are ignored.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The file.
 	 * @throws Error If no file content.
@@ -176,7 +176,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts the first candidate to an image file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The image file.
 	 * @throws Error If no image content.
@@ -196,7 +196,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts the first candidate to an audio file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The audio file.
 	 * @throws Error If no audio content.
@@ -216,7 +216,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts the first candidate to a video file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The video file.
 	 * @throws Error If no video content.
@@ -236,7 +236,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts the first candidate to a message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The message.
 	 */
@@ -247,7 +247,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts all candidates to text.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return Array of text content.
 	 */
@@ -271,7 +271,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts all candidates to files.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return Array of files.
 	 */
@@ -295,7 +295,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts all candidates to image files.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return Array of image files.
 	 */
@@ -306,7 +306,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts all candidates to audio files.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return Array of audio files.
 	 */
@@ -317,7 +317,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts all candidates to video files.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return Array of video files.
 	 */
@@ -328,7 +328,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Converts all candidates to messages.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return Array of messages.
 	 */
@@ -339,7 +339,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Checks if a file is an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param file The file to check.
 	 * @return True if the file is an image.
@@ -351,7 +351,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Checks if a file is an audio file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param file The file to check.
 	 * @return True if the file is an audio file.
@@ -363,7 +363,7 @@ export class GenerativeAiResult implements GenerativeAiResultType {
 	/**
 	 * Checks if a file is a video file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param file The file to check.
 	 * @return True if the file is a video file.
