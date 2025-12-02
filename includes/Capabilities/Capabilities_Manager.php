@@ -2,7 +2,7 @@
 /**
  * Class WordPress\AI_Client\Capabilities\Capabilities_Manager
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package WordPress\AI_Client
  */
 
@@ -11,14 +11,14 @@ namespace WordPress\AI_Client\Capabilities;
 /**
  * Manages capabilities for the AI Client.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 class Capabilities_Manager {
 
 	/**
 	 * Capability to prompt AI models directly.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 * @var string
 	 */
 	public const PROMPT_AI_CAPABILITY = 'prompt_ai';
@@ -31,7 +31,7 @@ class Capabilities_Manager {
 	 *
 	 * For customization, this filter callback can be removed and replaced with custom logic.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param array<string, bool> $allcaps An array of all the user's capabilities.
 	 * @return array<string, bool> The filtered array of capabilities.

@@ -2,7 +2,7 @@
 /**
  * Class WordPress\AI_Client\REST_API\JSON_Schema_To_WP_Schema_Converter
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package WordPress\AI_Client
  */
 
@@ -11,7 +11,7 @@ namespace WordPress\AI_Client\REST_API;
 /**
  * Converter for JSON Schema to WordPress REST API Schema.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 class JSON_Schema_To_WP_Schema_Converter {
 
@@ -21,7 +21,7 @@ class JSON_Schema_To_WP_Schema_Converter {
 	 * Specifically, this converts the "required" array property to "required" boolean attributes
 	 * on individual properties, as expected by WordPress REST API validation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param array<string, mixed> $schema The standard JSON schema.
 	 * @return array<string, mixed> The WordPress compatible schema.

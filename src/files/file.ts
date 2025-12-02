@@ -7,7 +7,7 @@ import type { File as FileType } from '../types';
  * This class wraps the raw file object and provides helper methods
  * for accessing content.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 export class File implements FileType {
 	/**
@@ -18,7 +18,7 @@ export class File implements FileType {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param file The raw file object.
 	 */
@@ -29,7 +29,7 @@ export class File implements FileType {
 	/**
 	 * Gets the type of file storage.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The file type.
 	 */
@@ -40,7 +40,7 @@ export class File implements FileType {
 	/**
 	 * Gets the MIME type of the file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The MIME type.
 	 */
@@ -51,7 +51,7 @@ export class File implements FileType {
 	/**
 	 * Gets the URL for remote files.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The URL.
 	 */
@@ -62,7 +62,7 @@ export class File implements FileType {
 	/**
 	 * Gets the base64 data for inline files.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The base64 data.
 	 */
@@ -73,7 +73,7 @@ export class File implements FileType {
 	/**
 	 * Checks if the file is an inline file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if the file is inline (base64/data URI).
 	 */
@@ -84,7 +84,7 @@ export class File implements FileType {
 	/**
 	 * Checks if the file is a remote file.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if the file is remote (URL).
 	 */
@@ -95,7 +95,7 @@ export class File implements FileType {
 	/**
 	 * Gets the data as a data URI for inline files.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The data URI in format: data:[mimeType];base64,[data], or undefined if not an inline file.
 	 */
@@ -110,7 +110,7 @@ export class File implements FileType {
 	/**
 	 * Checks if the file is a video.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if the file is a video.
 	 */
@@ -121,7 +121,7 @@ export class File implements FileType {
 	/**
 	 * Checks if the file is an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if the file is an image.
 	 */
@@ -132,7 +132,7 @@ export class File implements FileType {
 	/**
 	 * Checks if the file is audio.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if the file is audio.
 	 */
@@ -143,7 +143,7 @@ export class File implements FileType {
 	/**
 	 * Checks if the file is text.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if the file is text.
 	 */
@@ -154,7 +154,7 @@ export class File implements FileType {
 	/**
 	 * Checks if the file is a document.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if the file is a document.
 	 */
@@ -173,7 +173,7 @@ export class File implements FileType {
 	/**
 	 * Checks if the file is a specific MIME type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param type The mime type to check (e.g. 'image', 'text', 'video', 'audio').
 	 *
