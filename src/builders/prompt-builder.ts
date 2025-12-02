@@ -447,7 +447,7 @@ export class PromptBuilder {
 	 * @return this
 	 */
 	public asOutputFileType( fileType: FileType ): this {
-		this.modelConfig.outputFileType = fileType as string;
+		this.modelConfig.outputFileType = fileType;
 		return this;
 	}
 
@@ -871,10 +871,7 @@ export class PromptBuilder {
 	 */
 	private includeOutputModalities( ...modalities: Modality[] ): void {
 		const current = this.modelConfig.outputModalities || [];
-		const newModalities = modalities.map( ( m ) => m as string );
-		const merged = Array.from(
-			new Set( [ ...current, ...newModalities ] )
-		);
+		const merged = Array.from( new Set( [ ...current, ...modalities ] ) );
 		this.modelConfig.outputModalities = merged;
 	}
 }
