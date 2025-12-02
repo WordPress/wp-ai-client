@@ -26,7 +26,7 @@ import type {
  * This class provides a fluent interface for building prompts with various
  * content types and model configurations.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  */
 export class PromptBuilder {
 	/**
@@ -62,7 +62,7 @@ export class PromptBuilder {
 	/**
 	 * Constructor.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param prompt Optional initial prompt content.
 	 */
@@ -83,7 +83,7 @@ export class PromptBuilder {
 	/**
 	 * Adds text to the current message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param text The text to add.
 	 * @return this
@@ -101,7 +101,7 @@ export class PromptBuilder {
 	/**
 	 * Adds a file to the current message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param file The file object.
 	 * @return this
@@ -119,7 +119,7 @@ export class PromptBuilder {
 	/**
 	 * Adds a function response to the current message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param functionResponse The function response.
 	 * @return this
@@ -137,7 +137,7 @@ export class PromptBuilder {
 	/**
 	 * Adds message parts to the current message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param parts The message parts to add.
 	 * @return this
@@ -152,7 +152,7 @@ export class PromptBuilder {
 	/**
 	 * Adds history messages to the conversation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param messages The messages to add.
 	 * @return this
@@ -165,7 +165,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the model to use.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param providerId The provider ID.
 	 * @param modelId    The model ID.
@@ -180,7 +180,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the model preferences.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param preferredModels The preferred models.
 	 * @return this
@@ -195,7 +195,7 @@ export class PromptBuilder {
 	/**
 	 * Merges the provided model configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param config The model configuration to merge.
 	 * @return this
@@ -208,7 +208,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the provider to use.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param providerId The provider ID.
 	 * @return this
@@ -221,7 +221,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the system instruction.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param systemInstruction The system instruction.
 	 * @return this
@@ -234,7 +234,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the max tokens.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param maxTokens The max tokens.
 	 * @return this
@@ -247,7 +247,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the temperature.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param temperature The temperature.
 	 * @return this
@@ -260,7 +260,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the top P.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param topP The top P.
 	 * @return this
@@ -273,7 +273,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the top K.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param topK The top K.
 	 * @return this
@@ -286,7 +286,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the stop sequences.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param stopSequences The stop sequences.
 	 * @return this
@@ -300,7 +300,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the candidate count.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param candidateCount The candidate count.
 	 * @return this
@@ -313,7 +313,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the function declarations.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param functionDeclarations The function declarations.
 	 * @return this
@@ -332,7 +332,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the presence penalty.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param presencePenalty The presence penalty.
 	 * @return this
@@ -345,7 +345,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the frequency penalty.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param frequencyPenalty The frequency penalty.
 	 * @return this
@@ -358,7 +358,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the web search configuration.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param webSearch The web search configuration.
 	 * @return this
@@ -371,7 +371,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the request options.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param requestOptions The request options.
 	 * @return this
@@ -384,7 +384,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the top logprobs.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param topLogprobs The top logprobs.
 	 * @return this
@@ -402,7 +402,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the output MIME type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param mimeType The MIME type.
 	 * @return this
@@ -415,7 +415,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the output schema.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param schema The output schema.
 	 * @return this
@@ -428,7 +428,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the output modalities.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param modalities The output modalities.
 	 * @return this
@@ -441,7 +441,7 @@ export class PromptBuilder {
 	/**
 	 * Sets the output file type.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param fileType The output file type.
 	 * @return this
@@ -454,7 +454,7 @@ export class PromptBuilder {
 	/**
 	 * Configures the response as JSON.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param schema Optional schema for the JSON response.
 	 * @return this
@@ -470,7 +470,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the current prompt is supported by the selected model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param capability Optional capability to check support for.
 	 * @return True if supported, false otherwise.
@@ -496,7 +496,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the prompt is supported for text generation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if text generation is supported.
 	 */
@@ -507,7 +507,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the prompt is supported for image generation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if image generation is supported.
 	 */
@@ -518,7 +518,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the prompt is supported for text to speech conversion.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if text to speech conversion is supported.
 	 */
@@ -529,7 +529,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the prompt is supported for video generation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if video generation is supported.
 	 */
@@ -540,7 +540,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the prompt is supported for speech generation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if speech generation is supported.
 	 */
@@ -551,7 +551,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the prompt is supported for music generation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if music generation is supported.
 	 */
@@ -562,7 +562,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the prompt is supported for embedding generation.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return True if embedding generation is supported.
 	 */
@@ -573,7 +573,7 @@ export class PromptBuilder {
 	/**
 	 * Generates a result using the configured model and prompt.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param capability Optional capability to use.
 	 * @return The generation result.
@@ -601,7 +601,7 @@ export class PromptBuilder {
 	/**
 	 * Generates a text result.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The generation result.
 	 */
@@ -613,7 +613,7 @@ export class PromptBuilder {
 	/**
 	 * Generates an image result.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The generation result.
 	 */
@@ -625,7 +625,7 @@ export class PromptBuilder {
 	/**
 	 * Generates a speech result.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The generation result.
 	 */
@@ -637,7 +637,7 @@ export class PromptBuilder {
 	/**
 	 * Converts text to speech result.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The generation result.
 	 */
@@ -649,7 +649,7 @@ export class PromptBuilder {
 	/**
 	 * Generates text.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The generated text.
 	 */
@@ -661,7 +661,7 @@ export class PromptBuilder {
 	/**
 	 * Generates multiple texts.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param candidateCount Optional candidate count.
 	 * @return The generated texts.
@@ -677,7 +677,7 @@ export class PromptBuilder {
 	/**
 	 * Generates an image.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The generated image file.
 	 */
@@ -689,7 +689,7 @@ export class PromptBuilder {
 	/**
 	 * Generates multiple images.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param candidateCount Optional candidate count.
 	 * @return The generated image files.
@@ -705,7 +705,7 @@ export class PromptBuilder {
 	/**
 	 * Converts text to speech.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The generated speech file.
 	 */
@@ -717,7 +717,7 @@ export class PromptBuilder {
 	/**
 	 * Converts text to multiple speeches.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param candidateCount Optional candidate count.
 	 * @return The generated speech files.
@@ -735,7 +735,7 @@ export class PromptBuilder {
 	/**
 	 * Generates speech.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return The generated speech file.
 	 */
@@ -747,7 +747,7 @@ export class PromptBuilder {
 	/**
 	 * Generates multiple speeches.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param candidateCount Optional candidate count.
 	 * @return The generated speech files.
@@ -765,7 +765,7 @@ export class PromptBuilder {
 	/**
 	 * Appends a MessagePart to the messages array.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param part The part to append.
 	 */
@@ -786,7 +786,7 @@ export class PromptBuilder {
 	/**
 	 * Parses input into a Message.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param input       The input to parse.
 	 * @param defaultRole The default role.
@@ -849,7 +849,7 @@ export class PromptBuilder {
 	/**
 	 * Checks if the value is a list of Message objects.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param value The value to check.
 	 * @return True if the value is a list of Message objects.
@@ -865,7 +865,7 @@ export class PromptBuilder {
 	/**
 	 * Includes output modalities if not already present.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param modalities The modalities to include.
 	 */

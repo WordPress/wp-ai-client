@@ -118,7 +118,7 @@ class Prompt_Builder {
 		/**
 		 * Filters the default request timeout in seconds for AI Client HTTP requests.
 		 *
-		 * @since n.e.x.t
+		 * @since 0.2.0
 		 *
 		 * @param int $default_timeout The default timeout in seconds.
 		 */
@@ -139,7 +139,7 @@ class Prompt_Builder {
 	 * Converts each WP_Ability to a FunctionDeclaration using the wpab__ prefix
 	 * naming convention and passes them to the underlying prompt builder.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param WP_Ability|string ...$abilities The abilities to register, either as WP_Ability objects or ability name strings.
 	 * @return self The current instance for method chaining.

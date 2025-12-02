@@ -2,7 +2,7 @@
 /**
  * Class WordPress\AI_Client\REST_API\AI_Prompt_REST_Controller
  *
- * @since n.e.x.t
+ * @since 0.2.0
  * @package WordPress\AI_Client
  */
 
@@ -27,7 +27,7 @@ use WordPress\AiClient\Results\DTO\GenerativeAiResult;
 /**
  * REST Controller for AI operations.
  *
- * @since n.e.x.t
+ * @since 0.2.0
  *
  * @phpstan-import-type MessageArrayShape from Message
  * @phpstan-import-type ModelConfigArrayShape from ModelConfig
@@ -47,7 +47,7 @@ class AI_Prompt_REST_Controller {
 	/**
 	 * Registers the REST routes.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 */
 	public function register_routes(): void {
 		$generation_request_schema = $this->get_generation_request_schema();
@@ -84,7 +84,7 @@ class AI_Prompt_REST_Controller {
 	/**
 	 * Checks if the user has permission to prompt AI models.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return bool|WP_Error True if authorized, WP_Error otherwise.
 	 */
@@ -103,7 +103,7 @@ class AI_Prompt_REST_Controller {
 	/**
 	 * Generates content using an AI model.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_REST_Response|WP_Error The response object or error.
@@ -134,7 +134,7 @@ class AI_Prompt_REST_Controller {
 	/**
 	 * Checks if the prompt and its configuration is supported by any available AI models.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_REST_Response|WP_Error The response object or error.
@@ -174,7 +174,7 @@ class AI_Prompt_REST_Controller {
 	/**
 	 * Retrieves the generation request schema.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The request schema.
 	 */
@@ -232,7 +232,7 @@ class AI_Prompt_REST_Controller {
 	/**
 	 * Retrieves the generation result schema.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The result schema.
 	 */
@@ -247,7 +247,7 @@ class AI_Prompt_REST_Controller {
 	/**
 	 * Retrieves the supported check schema.
 	 *
-	 * @since n.e.x.t
+	 * @since 0.2.0
 	 *
 	 * @return array<string, mixed> The supported check schema.
 	 */
