@@ -24,6 +24,8 @@ use WordPress\AiClient\Results\DTO\GenerativeAiResult;
 use WordPress\AiClient\Tools\DTO\FunctionDeclaration;
 use WordPress\AiClient\Tools\DTO\FunctionResponse;
 use WordPress\AiClient\Tools\DTO\WebSearch;
+use WordPress\AI_Client\Builders\Helpers\Ability_Function_Resolver;
+use WP_Ability;
 
 /**
  * Fluent builder for constructing AI prompts.
@@ -129,6 +131,46 @@ class Prompt_Builder {
 				)
 			)
 		);
+	}
+
+	/**
+	 * Registers WordPress abilities as function declarations for the AI model.
+	 *
+	 * Converts each WP_Ability to a FunctionDeclaration using the wpab__ prefix
+	 * naming convention and passes them to the underlying prompt builder.
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param WP_Ability|string ...$abilities The abilities to register, either as WP_Ability objects or ability name strings.
+	 * @return self The current instance for method chaining.
+	 */
+	public function using_ability( ...$abilities ): self {
+		$declarations = array();
+
+		foreach ( $abilities as $ability ) {
+			if ( is_string( $ability ) ) {
+				$ability = wp_get_ability( $ability );
+			}
+
+			if ( ! $ability instanceof WP_Ability ) {
+				continue;
+			}
+
+			$function_name = Ability_Function_Resolver::ability_name_to_function_name( $ability->get_name() );
+			$input_schema  = $ability->get_input_schema();
+
+			$declarations[] = new FunctionDeclaration(
+				$function_name,
+				$ability->get_description(),
+				! empty( $input_schema ) ? $input_schema : null
+			);
+		}
+
+		if ( ! empty( $declarations ) ) {
+			return $this->using_function_declarations( ...$declarations );
+		}
+
+		return $this;
 	}
 
 	/**
