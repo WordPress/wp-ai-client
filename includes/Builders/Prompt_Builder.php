@@ -139,8 +139,8 @@ class Prompt_Builder {
 	 * Converts each WP_Ability to a FunctionDeclaration using the wpab__ prefix
 	 * naming convention and passes them to the underlying prompt builder.
 	 *
-	 * @since 0.2.1 Renamed from `using_ability` to `using_abilities`.
 	 * @since 0.2.0
+	 * @since 0.2.1 Renamed from `using_ability` to `using_abilities`.
 	 *
 	 * @param WP_Ability|string ...$abilities The abilities to register, either as WP_Ability objects or ability name strings.
 	 * @return self The current instance for method chaining.
