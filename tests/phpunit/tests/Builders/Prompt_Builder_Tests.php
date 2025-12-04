@@ -2075,7 +2075,7 @@ class Prompt_Builder_Tests extends Test_Case {
 	 */
 	public function test_using_ability_with_string(): void {
 		$builder = new Prompt_Builder( $this->registry );
-		$result  = $builder->using_ability( 'wpaiclienttests/simple' );
+		$result  = $builder->using_abilities( 'wpaiclienttests/simple' );
 
 		$this->assertSame( $builder, $result );
 
@@ -2096,7 +2096,7 @@ class Prompt_Builder_Tests extends Test_Case {
 		$ability = wp_get_ability( 'wpaiclienttests/with-params' );
 
 		$builder = new Prompt_Builder( $this->registry );
-		$result  = $builder->using_ability( $ability );
+		$result  = $builder->using_abilities( $ability );
 
 		$this->assertSame( $builder, $result );
 
@@ -2121,7 +2121,7 @@ class Prompt_Builder_Tests extends Test_Case {
 	 */
 	public function test_using_ability_with_multiple_abilities(): void {
 		$builder = new Prompt_Builder( $this->registry );
-		$result  = $builder->using_ability(
+		$result  = $builder->using_abilities(
 			'wpaiclienttests/simple',
 			'wpaiclienttests/with-params',
 			'wpaiclienttests/returns-error'
@@ -2147,7 +2147,7 @@ class Prompt_Builder_Tests extends Test_Case {
 		$this->setExpectedIncorrectUsage( 'WP_Abilities_Registry::get_registered' );
 
 		$builder = new Prompt_Builder( $this->registry );
-		$result  = $builder->using_ability(
+		$result  = $builder->using_abilities(
 			'wpaiclienttests/simple',
 			'nonexistent/ability',
 			'wpaiclienttests/with-params'
@@ -2171,7 +2171,7 @@ class Prompt_Builder_Tests extends Test_Case {
 	 */
 	public function test_using_ability_with_no_arguments_returns_self(): void {
 		$builder = new Prompt_Builder( $this->registry );
-		$result  = $builder->using_ability();
+		$result  = $builder->using_abilities();
 
 		$this->assertSame( $builder, $result );
 
@@ -2189,7 +2189,7 @@ class Prompt_Builder_Tests extends Test_Case {
 		$ability = wp_get_ability( 'wpaiclienttests/with-params' );
 
 		$builder = new Prompt_Builder( $this->registry );
-		$result  = $builder->using_ability(
+		$result  = $builder->using_abilities(
 			'wpaiclienttests/simple',
 			$ability
 		);
@@ -2211,7 +2211,7 @@ class Prompt_Builder_Tests extends Test_Case {
 	 */
 	public function test_using_ability_with_hyphenated_name(): void {
 		$builder = new Prompt_Builder( $this->registry );
-		$result  = $builder->using_ability( 'wpaiclienttests/hyphen-test' );
+		$result  = $builder->using_abilities( 'wpaiclienttests/hyphen-test' );
 
 		$this->assertSame( $builder, $result );
 
@@ -2231,7 +2231,7 @@ class Prompt_Builder_Tests extends Test_Case {
 		$builder = new Prompt_Builder( $this->registry );
 		$result  = $builder
 			->with_text( 'Test prompt' )
-			->using_ability( 'wpaiclienttests/simple' )
+			->using_abilities( 'wpaiclienttests/simple' )
 			->using_system_instruction( 'You are a helpful assistant' )
 			->using_max_tokens( 500 );
 

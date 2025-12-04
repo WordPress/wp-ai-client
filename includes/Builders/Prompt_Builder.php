@@ -144,7 +144,7 @@ class Prompt_Builder {
 	 * @param WP_Ability|string ...$abilities The abilities to register, either as WP_Ability objects or ability name strings.
 	 * @return self The current instance for method chaining.
 	 */
-	public function using_ability( ...$abilities ): self {
+	public function using_abilities( ...$abilities ): self {
 		$declarations = array();
 
 		foreach ( $abilities as $ability ) {
