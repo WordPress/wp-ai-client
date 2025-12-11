@@ -7,7 +7,7 @@ import { receiveProviders, receiveProviderModels } from './actions';
  *
  * @since n.e.x.t
  *
- * @return Thunk function.
+ * @return Action function to resolve the selector.
  */
 export function getProviders() {
 	// @ts-expect-error - registry types are not yet available
@@ -27,7 +27,7 @@ export function getProviders() {
  *
  * @since n.e.x.t
  *
- * @return Thunk function.
+ * @return Action function to resolve the selector.
  */
 export function getProvider() {
 	// @ts-expect-error - registry types are not yet available
@@ -42,7 +42,7 @@ export function getProvider() {
  * @since n.e.x.t
  *
  * @param providerId Provider ID.
- * @return Thunk function.
+ * @return Action function to resolve the selector.
  */
 export function getProviderModels( providerId: string ) {
 	// @ts-expect-error - registry types are not yet available
@@ -78,7 +78,7 @@ export function getProviderModels( providerId: string ) {
  * @since n.e.x.t
  *
  * @param providerId Provider ID.
- * @return Thunk function.
+ * @return Action function to resolve the selector.
  */
 export function getProviderModel( providerId: string ) {
 	// @ts-expect-error - registry types are not yet available
