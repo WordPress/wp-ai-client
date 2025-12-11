@@ -30,6 +30,7 @@ use WordPress\AiClient\AiClient;
  * }
  */
 class AI_Client {
+	const REST_NAMESPACE = 'wp-ai/v1';
 
 	/**
 	 * Indicates whether the AI Client package has been initialized.

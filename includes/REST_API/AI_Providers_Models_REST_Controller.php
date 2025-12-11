@@ -43,7 +43,7 @@ class AI_Providers_Models_REST_Controller {
 	 */
 	public function register_routes(): void {
 		register_rest_route(
-			'wp-ai/v1',
+			AI_Client::REST_NAMESPACE,
 			'/providers',
 			array(
 				array(
@@ -56,7 +56,7 @@ class AI_Providers_Models_REST_Controller {
 		);
 
 		register_rest_route(
-			'wp-ai/v1',
+			AI_Client::REST_NAMESPACE,
 			'/providers/(?P<providerId>[^/]+)',
 			array(
 				array(
@@ -75,7 +75,7 @@ class AI_Providers_Models_REST_Controller {
 		);
 
 		register_rest_route(
-			'wp-ai/v1',
+			AI_Client::REST_NAMESPACE,
 			'/providers/(?P<providerId>[^/]+)/models',
 			array(
 				array(
@@ -88,7 +88,7 @@ class AI_Providers_Models_REST_Controller {
 		);
 
 		register_rest_route(
-			'wp-ai/v1',
+			AI_Client::REST_NAMESPACE,
 			'/providers/(?P<providerId>[^/]+)/models/(?P<modelId>[^/]+)',
 			array(
 				array(
