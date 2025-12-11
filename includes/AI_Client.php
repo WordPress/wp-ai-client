@@ -13,6 +13,7 @@ use WordPress\AI_Client\Builders\Prompt_Builder;
 use WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error;
 use WordPress\AI_Client\Capabilities\Capabilities_Manager;
 use WordPress\AI_Client\HTTP\WP_AI_Client_Discovery_Strategy;
+use WordPress\AI_Client\REST_API\AI_Providers_Models_REST_Controller;
 use WordPress\AI_Client\REST_API\AI_Prompt_REST_Controller;
 use WordPress\AiClient\AiClient;
 
@@ -29,6 +30,7 @@ use WordPress\AiClient\AiClient;
  * }
  */
 class AI_Client {
+	const REST_NAMESPACE = 'wp-ai/v1';
 
 	/**
 	 * Indicates whether the AI Client package has been initialized.
@@ -55,6 +57,7 @@ class AI_Client {
 
 		// Initialize capabilities.
 		add_filter( 'user_has_cap', array( Capabilities_Manager::class, 'grant_prompt_ai_to_administrators' ) );
+		add_filter( 'user_has_cap', array( Capabilities_Manager::class, 'grant_list_ai_providers_models_to_administrators' ) );
 
 		// Register client-side API script.
 		self::register_client_side_api_script();
@@ -67,6 +70,7 @@ class AI_Client {
 			'rest_api_init',
 			static function () {
 				( new AI_Prompt_REST_Controller() )->register_routes();
+				( new AI_Providers_Models_REST_Controller() )->register_routes();
 			}
 		);
 

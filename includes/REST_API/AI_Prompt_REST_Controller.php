@@ -53,7 +53,7 @@ class AI_Prompt_REST_Controller {
 		$generation_request_schema = $this->get_generation_request_schema();
 
 		register_rest_route(
-			'wp-ai/v1',
+			AI_Client::REST_NAMESPACE,
 			'/generate',
 			array(
 				array(
@@ -67,7 +67,7 @@ class AI_Prompt_REST_Controller {
 		);
 
 		register_rest_route(
-			'wp-ai/v1',
+			AI_Client::REST_NAMESPACE,
 			'/is-supported',
 			array(
 				array(
