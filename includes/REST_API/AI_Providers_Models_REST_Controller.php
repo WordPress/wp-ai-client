@@ -13,6 +13,7 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
+use WordPress\AI_Client\AI_Client;
 use WordPress\AI_Client\Capabilities\Capabilities_Manager;
 use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Providers\Contracts\ModelMetadataDirectoryInterface;
