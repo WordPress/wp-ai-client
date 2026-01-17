@@ -215,7 +215,7 @@ class API_Credentials_Manager {
 					 * Allows implementers to store credentials in custom storage systems
 					 * (e.g., encrypted tables, network options, external services).
 					 *
-					 * @since 0.2.0
+					 * @since 0.2.1
 					 *
 					 * @param array  $credentials The sanitized credentials array.
 					 * @param string $option_name The option name being updated.
@@ -247,7 +247,7 @@ class API_Credentials_Manager {
 		 * Returning a non-null value from this filter will bypass default
 		 * get_option() behavior and use the returned value directly.
 		 *
-		 * @since 0.2.0
+		 * @since 0.2.1
 		 *
 		 * @param array|null $credentials The credentials array, or null to use default storage.
 		 * @param string      $option_name The option name being retrieved.
