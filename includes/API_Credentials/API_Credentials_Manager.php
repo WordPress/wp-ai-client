@@ -209,6 +209,22 @@ class API_Credentials_Manager {
 						}
 						$credentials[ $provider_id ] = sanitize_text_field( $api_key );
 					}
+					/**
+					 * Fires when AI provider credentials are updated.
+					 *
+					 * Allows implementers to store credentials in custom storage systems
+					 * (e.g., encrypted tables, network options, external services).
+					 *
+					 * @since 0.2.0
+					 *
+					 * @param array  $credentials The sanitized credentials array.
+					 * @param string $option_name The option name being updated.
+					 */
+					do_action( 
+						'wp_ai_client_update_credentials', 
+						$credentials, 
+						self::OPTION_PROVIDER_CREDENTIALS 
+					);
 					return $credentials;
 				},
 			)
@@ -225,7 +241,27 @@ class API_Credentials_Manager {
 	 * @throws RuntimeException If the stored credentials option is in an invalid format.
 	 */
 	private function pass_credentials_to_client(): void {
-		$credentials = get_option( self::OPTION_PROVIDER_CREDENTIALS, array() );
+		/**
+		 * Filters AI provider credentials storage.
+		 *
+		 * Returning a non-null value from this filter will bypass default
+		 * get_option() behavior and use the returned value directly.
+		 *
+		 * @since 0.2.0
+		 *
+		 * @param array|null $credentials The credentials array, or null to use default storage.
+		 * @param string      $option_name The option name being retrieved.
+		 */
+		$credentials = apply_filters( 
+			'wp_ai_client_credentials', 
+			null, 
+			self::OPTION_PROVIDER_CREDENTIALS 
+		);
+
+		if ( $credentials === null ) {
+			$credentials = get_option( self::OPTION_PROVIDER_CREDENTIALS, array() );
+		}
+
 		if ( ! is_array( $credentials ) ) {
 			throw new RuntimeException( 'Invalid format for stored provider credentials option.' );
 		}
