@@ -220,10 +220,10 @@ class API_Credentials_Manager {
 					 * @param array  $credentials The sanitized credentials array.
 					 * @param string $option_name The option name being updated.
 					 */
-					do_action( 
-						'wp_ai_client_update_credentials', 
-						$credentials, 
-						self::OPTION_PROVIDER_CREDENTIALS 
+					do_action(
+						'wp_ai_client_update_credentials',
+						$credentials,
+						self::OPTION_PROVIDER_CREDENTIALS
 					);
 					return $credentials;
 				},
@@ -252,13 +252,13 @@ class API_Credentials_Manager {
 		 * @param array|null $credentials The credentials array, or null to use default storage.
 		 * @param string      $option_name The option name being retrieved.
 		 */
-		$credentials = apply_filters( 
-			'wp_ai_client_credentials', 
-			null, 
-			self::OPTION_PROVIDER_CREDENTIALS 
+		$credentials = apply_filters(
+			'wp_ai_client_credentials',
+			null,
+			self::OPTION_PROVIDER_CREDENTIALS
 		);
 
-		if ( $credentials === null ) {
+		if ( null === $credentials ) {
 			$credentials = get_option( self::OPTION_PROVIDER_CREDENTIALS, array() );
 		}
 
