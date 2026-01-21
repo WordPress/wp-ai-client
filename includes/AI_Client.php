@@ -11,6 +11,7 @@ namespace WordPress\AI_Client;
 use WordPress\AI_Client\API_Credentials\API_Credentials_Manager;
 use WordPress\AI_Client\Builders\Prompt_Builder;
 use WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error;
+use WordPress\AI_Client\Cache\WordPress_Cache;
 use WordPress\AI_Client\Capabilities\Capabilities_Manager;
 use WordPress\AI_Client\Events\WordPress_Event_Dispatcher;
 use WordPress\AI_Client\HTTP\WP_AI_Client_Discovery_Strategy;
@@ -58,6 +59,9 @@ class AI_Client {
 
 		// Wire up the WordPress event dispatcher with the PHP AI Client SDK.
 		AiClient::setEventDispatcher( new WordPress_Event_Dispatcher() );
+
+		// Wire up the WordPress cache with the PHP AI Client SDK.
+		AiClient::setCache( new WordPress_Cache() );
 
 		// Initialize capabilities.
 		add_filter( 'user_has_cap', array( Capabilities_Manager::class, 'grant_prompt_ai_to_administrators' ) );
