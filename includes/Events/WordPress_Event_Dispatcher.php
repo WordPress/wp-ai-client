@@ -42,6 +42,11 @@ class WordPress_Event_Dispatcher implements EventDispatcherInterface {
 		 * For example, an event class named `BeforeGenerateResultEvent` will fire the
 		 * `wp_ai_client_before_generate_result` action hook.
 		 *
+		 * In practice, the available action hook names are:
+		 *
+		 * - wp_ai_client_before_generate_result
+		 * - wp_ai_client_after_generate_result
+		 *
 		 * @since n.e.x.t
 		 *
 		 * @param object $event The event object.
