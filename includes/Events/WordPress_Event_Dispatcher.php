@@ -39,6 +39,9 @@ class WordPress_Event_Dispatcher implements EventDispatcherInterface {
 		 * The dynamic portion of the hook name, `$event_name`, refers to the
 		 * snake_case version of the event class name, without the `_event` suffix.
 		 *
+		 * For example, an event class named `BeforeGenerateResultEvent` will fire the
+		 * `wp_ai_client_before_generate_result` action hook.
+		 *
 		 * @since n.e.x.t
 		 *
 		 * @param object $event The event object.
