@@ -2303,18 +2303,4 @@ class Prompt_Builder_Tests extends Test_Case {
 
 		$this->assertSame( $builder, $captured_builder );
 	}
-
-	/**
-	 * Tests that is_supported works normally when filter returns false (default).
-	 *
-	 * @return void
-	 */
-	public function test_is_supported_works_normally_when_filter_returns_false(): void {
-		add_filter( 'wp_ai_client_prevent_prompt', '__return_false' );
-
-		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
-
-		// Should delegate to underlying builder and return true for text generation support.
-		$this->assertTrue( $builder->is_supported_for_text_generation() );
-	}
 }

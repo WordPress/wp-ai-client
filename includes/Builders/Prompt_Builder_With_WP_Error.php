@@ -161,7 +161,7 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 				return $this->error;
 			}
 			return $this;
-		} catch ( Exception $e ) { // @phpstan-ignore catch.neverThrown (BadMethodCallException and others can be thrown by parent)
+		} catch ( Exception $e ) { // @phpstan-ignore catch.neverThrown (Other exceptions can be thrown by underlying builder)
 			$this->error = new WP_Error(
 				'prompt_builder_error',
 				$e->getMessage(),

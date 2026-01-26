@@ -133,16 +133,21 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 	}
 
 	/**
-	 * Test that calling a non-existent method throws an exception.
+	 * Test that calling a non-existent method returns WP_Error.
 	 */
-	public function test_invalid_method_throws_exception(): void {
+	public function test_invalid_method_returns_wp_error(): void {
 		$registry       = AiClient::defaultRegistry();
 		$prompt_builder = new Prompt_Builder_With_WP_Error( $registry );
 
-		$this->expectException( BadMethodCallException::class );
-		$this->expectExceptionMessage( 'Method non_existent_method does not exist' );
+		// Invalid method call should store error but return $this for chaining.
+		$result = $prompt_builder->non_existent_method();
+		$this->assertSame( $prompt_builder, $result );
 
-		$prompt_builder->non_existent_method();
+		// Calling a terminate method should return the stored WP_Error.
+		$result = $prompt_builder->generate_text();
+		$this->assertInstanceOf( WP_Error::class, $result );
+		$this->assertSame( 'prompt_builder_error', $result->get_error_code() );
+		$this->assertStringContainsString( 'non_existent_method does not exist', $result->get_error_message() );
 	}
 
 	/**
