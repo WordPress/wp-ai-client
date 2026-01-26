@@ -303,4 +303,53 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 
 		$this->assertSame( $registry, $registry_property->getValue( $wrapped_builder ), 'Wrapped builder should have the same registry' );
 	}
+
+	/**
+	 * Test that generate_result returns WP_Error when prevent prompt filter returns true.
+	 */
+	public function test_generate_result_returns_wp_error_when_filter_prevents_prompt(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_true' );
+
+		$prompt_builder = new Prompt_Builder_With_WP_Error( AiClient::defaultRegistry(), 'Test prompt' );
+
+		$result = $prompt_builder->generate_result();
+
+		$this->assertInstanceOf( WP_Error::class, $result );
+		$this->assertSame( 'prompt_prevented', $result->get_error_code() );
+		$this->assertSame( 'Prompt execution was prevented by a filter.', $result->get_error_message() );
+	}
+
+	/**
+	 * Test that is_supported returns false when prevent prompt filter returns true.
+	 */
+	public function test_is_supported_returns_false_when_filter_prevents_prompt(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_true' );
+
+		$prompt_builder = new Prompt_Builder_With_WP_Error( AiClient::defaultRegistry(), 'Test prompt' );
+
+		$this->assertFalse( $prompt_builder->is_supported() );
+	}
+
+	/**
+	 * Test that prevent prompt filter receives the correct builder instance.
+	 */
+	public function test_prevent_prompt_filter_receives_wp_error_builder_instance(): void {
+		$captured_builder = null;
+
+		add_filter(
+			'wp_ai_client_prevent_prompt',
+			static function ( $prevent, $builder ) use ( &$captured_builder ) {
+				$captured_builder = $builder;
+				return $prevent;
+			},
+			10,
+			2
+		);
+
+		$prompt_builder = new Prompt_Builder_With_WP_Error( AiClient::defaultRegistry(), 'Test prompt' );
+		$prompt_builder->generate_result();
+
+		$this->assertSame( $prompt_builder, $captured_builder );
+		$this->assertInstanceOf( Prompt_Builder_With_WP_Error::class, $captured_builder );
+	}
 }

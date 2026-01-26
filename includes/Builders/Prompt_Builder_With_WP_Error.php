@@ -18,7 +18,6 @@ use WordPress\AiClient\Messages\Enums\ModalityEnum;
 use WordPress\AiClient\Providers\Models\Contracts\ModelInterface;
 use WordPress\AiClient\Providers\Models\DTO\ModelConfig;
 use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
-use WordPress\AiClient\Providers\ProviderRegistry;
 use WordPress\AiClient\Results\DTO\GenerativeAiResult;
 use WordPress\AiClient\Tools\DTO\FunctionDeclaration;
 use WordPress\AiClient\Tools\DTO\FunctionResponse;
@@ -141,6 +140,25 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 				return $this->error;
 			}
 			return $this;
+		}
+
+		// Check if the prompt should be prevented for is_supported* and generate_*/convert_text_to_speech* methods.
+		if ( $this->is_support_check_method( $name ) || $this->is_generating_method( $name ) ) {
+			/** This filter is documented in includes/Builders/Prompt_Builder.php */
+			$prevent = (bool) apply_filters( 'wp_ai_client_prevent_prompt', false, $this );
+
+			if ( $prevent ) {
+				// For is_supported* methods, return false.
+				if ( $this->is_support_check_method( $name ) ) {
+					return false;
+				}
+
+				// For generate_* and convert_text_to_speech* methods, return WP_Error.
+				return new WP_Error(
+					'prompt_prevented',
+					'Prompt execution was prevented by a filter.'
+				);
+			}
 		}
 
 		try {

@@ -2249,4 +2249,71 @@ class Prompt_Builder_Tests extends Test_Case {
 		$this->assertEquals( 'You are a helpful assistant', $config->getSystemInstruction() );
 		$this->assertEquals( 500, $config->getMaxTokens() );
 	}
+
+	/**
+	 * Tests that is_supported returns false when prevent prompt filter returns true.
+	 *
+	 * @return void
+	 */
+	public function test_is_supported_returns_false_when_filter_prevents_prompt(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_true' );
+
+		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
+
+		$this->assertFalse( $builder->is_supported() );
+	}
+
+	/**
+	 * Tests that generate_result throws RuntimeException when prevent prompt filter returns true.
+	 *
+	 * @return void
+	 */
+	public function test_generate_result_throws_exception_when_filter_prevents_prompt(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_true' );
+
+		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
+
+		$this->expectException( RuntimeException::class );
+		$this->expectExceptionMessage( 'Prompt execution was prevented by a filter.' );
+
+		$builder->generate_result();
+	}
+
+	/**
+	 * Tests that prevent prompt filter receives the builder instance.
+	 *
+	 * @return void
+	 */
+	public function test_prevent_prompt_filter_receives_builder_instance(): void {
+		$captured_builder = null;
+
+		add_filter(
+			'wp_ai_client_prevent_prompt',
+			static function ( $prevent, $builder ) use ( &$captured_builder ) {
+				$captured_builder = $builder;
+				return $prevent;
+			},
+			10,
+			2
+		);
+
+		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
+		$builder->is_supported();
+
+		$this->assertSame( $builder, $captured_builder );
+	}
+
+	/**
+	 * Tests that is_supported works normally when filter returns false (default).
+	 *
+	 * @return void
+	 */
+	public function test_is_supported_works_normally_when_filter_returns_false(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_false' );
+
+		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
+
+		// Should delegate to underlying builder and return true for text generation support.
+		$this->assertTrue( $builder->is_supported_for_text_generation() );
+	}
 }
