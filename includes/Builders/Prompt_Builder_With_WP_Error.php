@@ -9,7 +9,7 @@
 namespace WordPress\AI_Client\Builders;
 
 use Exception;
-use WordPress\AiClient\Builders\PromptBuilder;
+use WordPress\AI_Client\Builders\Exception\Prompt_Prevented_Exception;
 use WordPress\AiClient\Files\DTO\File;
 use WordPress\AiClient\Files\Enums\FileTypeEnum;
 use WordPress\AiClient\Messages\DTO\Message;
@@ -128,9 +128,6 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 	 * @return mixed The result of the parent method call.
 	 */
 	public function __call( string $name, array $arguments ) {
-		// This may throw, which is fine because calls to methods that don't exist always throw.
-		$callable = $this->get_builder_callable( $name );
-
 		/*
 		 * If an error occurred in a previous method call, either return the error for terminate methods,
 		 * or return the same instance for other methods to maintain the fluent interface.
@@ -142,35 +139,29 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 			return $this;
 		}
 
-		// Check if the prompt should be prevented for is_supported* and generate_*/convert_text_to_speech* methods.
-		if ( $this->is_support_check_method( $name ) || $this->is_generating_method( $name ) ) {
-			/** This filter is documented in includes/Builders/Prompt_Builder.php */
-			$prevent = (bool) apply_filters( 'wp_ai_client_prevent_prompt', false, $this );
-
-			if ( $prevent ) {
-				// For is_supported* methods, return false.
-				if ( $this->is_support_check_method( $name ) ) {
-					return false;
-				}
-
-				// For generate_* and convert_text_to_speech* methods, return WP_Error.
-				return new WP_Error(
-					'prompt_prevented',
-					'Prompt execution was prevented by a filter.'
-				);
-			}
-		}
-
 		try {
-			$result = $callable( ...$arguments );
+			$result = parent::__call( $name, $arguments );
 
-			// If the result is a PromptBuilder, return the current instance to allow method chaining.
-			if ( $result instanceof PromptBuilder ) {
+			// If the result is $this from parent (for chaining), return $this child instance instead.
+			if ( $result instanceof self ) {
 				return $this;
 			}
 
 			return $result;
-		} catch ( Exception $e ) {
+		} catch ( Prompt_Prevented_Exception $e ) {
+			$this->error = new WP_Error(
+				'prompt_prevented',
+				$e->getMessage(),
+				array(
+					'exception_class' => get_class( $e ),
+				)
+			);
+
+			if ( self::is_terminating_method( $name ) ) {
+				return $this->error;
+			}
+			return $this;
+		} catch ( Exception $e ) { // @phpstan-ignore catch.neverThrown (BadMethodCallException and others can be thrown by parent)
 			$this->error = new WP_Error(
 				'prompt_builder_error',
 				$e->getMessage(),

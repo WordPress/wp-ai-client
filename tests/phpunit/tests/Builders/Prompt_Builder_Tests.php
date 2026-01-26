@@ -13,6 +13,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use RuntimeException;
+use WordPress\AI_Client\Builders\Exception\Prompt_Prevented_Exception;
 use WordPress\AI_Client\Builders\Prompt_Builder;
 use WordPress\AI_Client\PHPUnit\Includes\Mock_Model_Creation_Trait;
 use WordPress\AI_Client\PHPUnit\Includes\Test_Case;
@@ -2264,7 +2265,7 @@ class Prompt_Builder_Tests extends Test_Case {
 	}
 
 	/**
-	 * Tests that generate_result throws RuntimeException when prevent prompt filter returns true.
+	 * Tests that generate_result throws Prompt_Prevented_Exception when prevent prompt filter returns true.
 	 *
 	 * @return void
 	 */
@@ -2273,7 +2274,7 @@ class Prompt_Builder_Tests extends Test_Case {
 
 		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
 
-		$this->expectException( RuntimeException::class );
+		$this->expectException( Prompt_Prevented_Exception::class );
 		$this->expectExceptionMessage( 'Prompt execution was prevented by a filter.' );
 
 		$builder->generate_result();

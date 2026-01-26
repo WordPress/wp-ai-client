@@ -9,7 +9,7 @@
 namespace WordPress\AI_Client\Builders;
 
 use BadMethodCallException;
-use RuntimeException;
+use WordPress\AI_Client\Builders\Exception\Prompt_Prevented_Exception;
 use WordPress\AiClient\Builders\PromptBuilder;
 use WordPress\AiClient\Files\DTO\File;
 use WordPress\AiClient\Files\Enums\FileTypeEnum;
@@ -186,7 +186,7 @@ class Prompt_Builder {
 	 * @param array<int, mixed> $arguments The method arguments.
 	 * @return mixed The result of the parent method call.
 	 *
-	 * @throws RuntimeException If a generation method is called and the prompt was prevented by filter.
+	 * @throws Prompt_Prevented_Exception If a generation method is called and the prompt was prevented by filter.
 	 */
 	public function __call( string $name, array $arguments ) {
 		// Check if the prompt should be prevented for is_supported* and generate_*/convert_text_to_speech* methods.
@@ -208,7 +208,7 @@ class Prompt_Builder {
 				}
 
 				// For generate_* and convert_text_to_speech* methods, throw an exception.
-				throw new RuntimeException( 'Prompt execution was prevented by a filter.' );
+				throw new Prompt_Prevented_Exception( 'Prompt execution was prevented by a filter.' );
 			}
 		}
 
