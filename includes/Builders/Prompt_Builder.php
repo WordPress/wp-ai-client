@@ -191,6 +191,8 @@ class Prompt_Builder {
 	public function __call( string $name, array $arguments ) {
 		// Check if the prompt should be prevented for is_supported* and generate_*/convert_text_to_speech* methods.
 		if ( $this->is_support_check_method( $name ) || $this->is_generating_method( $name ) ) {
+			$builder = $this;
+
 			/**
 			 * Filters whether to prevent the prompt from being executed.
 			 *
@@ -199,7 +201,7 @@ class Prompt_Builder {
 			 * @param bool           $prevent Whether to prevent the prompt. Default false.
 			 * @param Prompt_Builder $builder The prompt builder instance.
 			 */
-			$prevent = (bool) apply_filters( 'wp_ai_client_prevent_prompt', false, $this );
+			$prevent = (bool) apply_filters( 'wp_ai_client_prevent_prompt', false, $builder );
 
 			if ( $prevent ) {
 				// For is_supported* methods, return false.
