@@ -590,16 +590,16 @@
         },
         {
             "name": "wordpress/php-ai-client",
-            "version": "0.4.1",
+            "version": "0.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/php-ai-client.git",
-                "reference": "daef4f632320cf5e715cf595101e93ebd05803a6"
+                "reference": "be2521e08a590ab4098d73bbc3b3bfc45cdab5d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/php-ai-client/zipball/daef4f632320cf5e715cf595101e93ebd05803a6",
-                "reference": "daef4f632320cf5e715cf595101e93ebd05803a6",
+                "url": "https://api.github.com/repos/WordPress/php-ai-client/zipball/be2521e08a590ab4098d73bbc3b3bfc45cdab5d2",
+                "reference": "be2521e08a590ab4098d73bbc3b3bfc45cdab5d2",
                 "shasum": ""
             },
             "require": {
@@ -656,7 +656,7 @@
                 "issues": "https://github.com/WordPress/php-ai-client/issues",
                 "source": "https://github.com/WordPress/php-ai-client"
             },
-            "time": "2026-01-27T16:33:23+00:00"
+            "time": "2026-01-31T21:20:57+00:00"
         }
     ],
     "packages-dev": [
