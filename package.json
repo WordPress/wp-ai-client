@@ -17,7 +17,7 @@
 		"test-php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) vendor/bin/phpunit -c phpunit.xml.dist --verbose",
 		"test-php-coverage": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) vendor/bin/phpunit -c phpunit.xml.dist --verbose --coverage-clover build/logs/php-coverage.xml",
 		"test-php-multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) vendor/bin/phpunit -c tests/phpunit/multisite.xml --verbose",
-		"test-php-multisite-coverage": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) vendor/bin/phpunit -c tests/phpunit/multisite.xml --verbosei --coverage-clover build/logs/php-coverage.xml",
+		"test-php-multisite-coverage": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename $(pwd)) vendor/bin/phpunit -c tests/phpunit/multisite.xml --verbose --coverage-clover build/logs/php-coverage.xml",
 		"wp-env": "wp-env"
 	}
 }
