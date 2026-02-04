@@ -336,9 +336,9 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 	}
 
 	/**
-	 * Test that prevent prompt filter receives the correct builder instance.
+	 * Test that prevent prompt filter receives a clone of the builder instance.
 	 */
-	public function test_prevent_prompt_filter_receives_wp_error_builder_instance(): void {
+	public function test_prevent_prompt_filter_receives_cloned_wp_error_builder_instance(): void {
 		$captured_builder = null;
 
 		add_filter(
@@ -354,7 +354,7 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 		$prompt_builder = new Prompt_Builder_With_WP_Error( AiClient::defaultRegistry(), 'Test prompt' );
 		$prompt_builder->generate_result();
 
-		$this->assertSame( $prompt_builder, $captured_builder );
+		$this->assertNotSame( $prompt_builder, $captured_builder, 'Filter should receive a clone, not the same instance' );
 		$this->assertInstanceOf( Prompt_Builder_With_WP_Error::class, $captured_builder );
 	}
 }

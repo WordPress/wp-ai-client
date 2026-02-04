@@ -2281,11 +2281,11 @@ class Prompt_Builder_Tests extends Test_Case {
 	}
 
 	/**
-	 * Tests that prevent prompt filter receives the builder instance.
+	 * Tests that prevent prompt filter receives a clone of the builder instance.
 	 *
 	 * @return void
 	 */
-	public function test_prevent_prompt_filter_receives_builder_instance(): void {
+	public function test_prevent_prompt_filter_receives_cloned_builder_instance(): void {
 		$captured_builder = null;
 
 		add_filter(
@@ -2301,6 +2301,7 @@ class Prompt_Builder_Tests extends Test_Case {
 		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
 		$builder->is_supported();
 
-		$this->assertSame( $builder, $captured_builder );
+		$this->assertNotSame( $builder, $captured_builder, 'Filter should receive a clone, not the same instance' );
+		$this->assertInstanceOf( Prompt_Builder::class, $captured_builder );
 	}
 }
