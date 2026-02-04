@@ -47,6 +47,7 @@ jobs:
         wordpress: [ 'trunk' ]
         multisite: [ false, true ]
         experimental: [false]
+        coverage: [false]
         include:
           - php: '8.4'
             wordpress: 'trunk'
@@ -56,6 +57,16 @@ jobs:
             wordpress: 'trunk'
             multisite: true
             experimental: true
+          - php: '8.4'
+            wordpress: 'trunk'
+            multisite: false
+            experimental: false
+            coverage: true
+          - php: '8.4'
+            wordpress: 'trunk'
+            multisite: true
+            experimental: false
+            coverage: true
     env:
       WP_ENV_PHP_VERSION: ${{ matrix.php }}
       WP_ENV_CORE: ${{ matrix.wordpress == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wordpress ) }}
@@ -85,7 +96,20 @@ jobs:
         run: npm ci
 
       - name: Install WordPress
-        run: npm run wp-env start
+        run: |
+          if [[ ${{ matrix.coverage == true }} == true ]]; then
+            npm run wp-env start -- --xdebug=coverage
+          else
+            npm run wp-env start
+          fi
 
       - name: Running ${{ matrix.multisite && 'multisite' || 'single site' }} unit tests
-        run: npm run test-php${{ matrix.multisite && '-multisite' || '' }}
+        run: npm run test-php${{ matrix.multisite && '-multisite' || '' }}${{ matrix.coverage && '-coverage' || '' }}
+
+      - name: Upload code coverage report
+        if: ${{ matrix.coverage }}
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
+        with:
+          file: build/logs/*.xml
+          flags: unit
+          token: ${{ secrets.CODECOV_TOKEN }}
