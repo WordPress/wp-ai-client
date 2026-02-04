@@ -110,6 +110,6 @@ jobs:
         if: ${{ matrix.coverage }}
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
         with:
-          file: build/logs/*.xml
+          files: build/logs/*.xml
           flags: unit
           token: ${{ secrets.CODECOV_TOKEN }}
