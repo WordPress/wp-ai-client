@@ -34,7 +34,7 @@ concurrency:
 
 jobs:
   php-lint:
-    name: PHP ${{ matrix.php }} - WP ${{ matrix.wordpress }} - ${{ matrix.multisite && 'Multisite' || 'Single site' }}${{ matrix.experimental && ' (experimental)' || '' }}
+    name: PHP ${{ matrix.php }} - WP ${{ matrix.wordpress }} - ${{ matrix.multisite && 'Multisite' || 'Single site' }}${{ matrix.experimental && ' (experimental)' || '' }} ${{ matrix.coverage && ' (coverage)' || '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
