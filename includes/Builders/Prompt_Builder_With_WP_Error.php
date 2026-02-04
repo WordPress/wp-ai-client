@@ -9,7 +9,7 @@
 namespace WordPress\AI_Client\Builders;
 
 use Exception;
-use WordPress\AiClient\Builders\PromptBuilder;
+use WordPress\AI_Client\Builders\Exception\Prompt_Prevented_Exception;
 use WordPress\AiClient\Files\DTO\File;
 use WordPress\AiClient\Files\Enums\FileTypeEnum;
 use WordPress\AiClient\Messages\DTO\Message;
@@ -18,7 +18,6 @@ use WordPress\AiClient\Messages\Enums\ModalityEnum;
 use WordPress\AiClient\Providers\Models\Contracts\ModelInterface;
 use WordPress\AiClient\Providers\Models\DTO\ModelConfig;
 use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
-use WordPress\AiClient\Providers\ProviderRegistry;
 use WordPress\AiClient\Results\DTO\GenerativeAiResult;
 use WordPress\AiClient\Tools\DTO\FunctionDeclaration;
 use WordPress\AiClient\Tools\DTO\FunctionResponse;
@@ -129,9 +128,6 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 	 * @return mixed The result of the parent method call.
 	 */
 	public function __call( string $name, array $arguments ) {
-		// This may throw, which is fine because calls to methods that don't exist always throw.
-		$callable = $this->get_builder_callable( $name );
-
 		/*
 		 * If an error occurred in a previous method call, either return the error for terminate methods,
 		 * or return the same instance for other methods to maintain the fluent interface.
@@ -144,15 +140,28 @@ class Prompt_Builder_With_WP_Error extends Prompt_Builder {
 		}
 
 		try {
-			$result = $callable( ...$arguments );
+			$result = parent::__call( $name, $arguments );
 
-			// If the result is a PromptBuilder, return the current instance to allow method chaining.
-			if ( $result instanceof PromptBuilder ) {
+			// If the result is $this from parent (for chaining), return $this child instance instead.
+			if ( $result instanceof self ) {
 				return $this;
 			}
 
 			return $result;
-		} catch ( Exception $e ) {
+		} catch ( Prompt_Prevented_Exception $e ) {
+			$this->error = new WP_Error(
+				'prompt_prevented',
+				$e->getMessage(),
+				array(
+					'exception_class' => get_class( $e ),
+				)
+			);
+
+			if ( self::is_terminating_method( $name ) ) {
+				return $this->error;
+			}
+			return $this;
+		} catch ( Exception $e ) { // @phpstan-ignore catch.neverThrown (Other exceptions can be thrown by underlying builder)
 			$this->error = new WP_Error(
 				'prompt_builder_error',
 				$e->getMessage(),

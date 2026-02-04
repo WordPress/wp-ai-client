@@ -133,16 +133,21 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 	}
 
 	/**
-	 * Test that calling a non-existent method throws an exception.
+	 * Test that calling a non-existent method returns WP_Error.
 	 */
-	public function test_invalid_method_throws_exception(): void {
+	public function test_invalid_method_returns_wp_error(): void {
 		$registry       = AiClient::defaultRegistry();
 		$prompt_builder = new Prompt_Builder_With_WP_Error( $registry );
 
-		$this->expectException( BadMethodCallException::class );
-		$this->expectExceptionMessage( 'Method non_existent_method does not exist' );
+		// Invalid method call should store error but return $this for chaining.
+		$result = $prompt_builder->non_existent_method();
+		$this->assertSame( $prompt_builder, $result );
 
-		$prompt_builder->non_existent_method();
+		// Calling a terminate method should return the stored WP_Error.
+		$result = $prompt_builder->generate_text();
+		$this->assertInstanceOf( WP_Error::class, $result );
+		$this->assertSame( 'prompt_builder_error', $result->get_error_code() );
+		$this->assertStringContainsString( 'non_existent_method does not exist', $result->get_error_message() );
 	}
 
 	/**
@@ -302,5 +307,54 @@ class Prompt_Builder_With_WP_Error_Tests extends Test_Case {
 		$registry_property->setAccessible( true );
 
 		$this->assertSame( $registry, $registry_property->getValue( $wrapped_builder ), 'Wrapped builder should have the same registry' );
+	}
+
+	/**
+	 * Test that generate_result returns WP_Error when prevent prompt filter returns true.
+	 */
+	public function test_generate_result_returns_wp_error_when_filter_prevents_prompt(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_true' );
+
+		$prompt_builder = new Prompt_Builder_With_WP_Error( AiClient::defaultRegistry(), 'Test prompt' );
+
+		$result = $prompt_builder->generate_result();
+
+		$this->assertInstanceOf( WP_Error::class, $result );
+		$this->assertSame( 'prompt_prevented', $result->get_error_code() );
+		$this->assertSame( 'Prompt execution was prevented by a filter.', $result->get_error_message() );
+	}
+
+	/**
+	 * Test that is_supported returns false when prevent prompt filter returns true.
+	 */
+	public function test_is_supported_returns_false_when_filter_prevents_prompt(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_true' );
+
+		$prompt_builder = new Prompt_Builder_With_WP_Error( AiClient::defaultRegistry(), 'Test prompt' );
+
+		$this->assertFalse( $prompt_builder->is_supported() );
+	}
+
+	/**
+	 * Test that prevent prompt filter receives a clone of the builder instance.
+	 */
+	public function test_prevent_prompt_filter_receives_cloned_wp_error_builder_instance(): void {
+		$captured_builder = null;
+
+		add_filter(
+			'wp_ai_client_prevent_prompt',
+			static function ( $prevent, $builder ) use ( &$captured_builder ) {
+				$captured_builder = $builder;
+				return $prevent;
+			},
+			10,
+			2
+		);
+
+		$prompt_builder = new Prompt_Builder_With_WP_Error( AiClient::defaultRegistry(), 'Test prompt' );
+		$prompt_builder->generate_result();
+
+		$this->assertNotSame( $prompt_builder, $captured_builder, 'Filter should receive a clone, not the same instance' );
+		$this->assertInstanceOf( Prompt_Builder_With_WP_Error::class, $captured_builder );
 	}
 }

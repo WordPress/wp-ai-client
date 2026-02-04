@@ -13,6 +13,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use RuntimeException;
+use WordPress\AI_Client\Builders\Exception\Prompt_Prevented_Exception;
 use WordPress\AI_Client\Builders\Prompt_Builder;
 use WordPress\AI_Client\PHPUnit\Includes\Mock_Model_Creation_Trait;
 use WordPress\AI_Client\PHPUnit\Includes\Test_Case;
@@ -2248,5 +2249,59 @@ class Prompt_Builder_Tests extends Test_Case {
 
 		$this->assertEquals( 'You are a helpful assistant', $config->getSystemInstruction() );
 		$this->assertEquals( 500, $config->getMaxTokens() );
+	}
+
+	/**
+	 * Tests that is_supported returns false when prevent prompt filter returns true.
+	 *
+	 * @return void
+	 */
+	public function test_is_supported_returns_false_when_filter_prevents_prompt(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_true' );
+
+		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
+
+		$this->assertFalse( $builder->is_supported() );
+	}
+
+	/**
+	 * Tests that generate_result throws Prompt_Prevented_Exception when prevent prompt filter returns true.
+	 *
+	 * @return void
+	 */
+	public function test_generate_result_throws_exception_when_filter_prevents_prompt(): void {
+		add_filter( 'wp_ai_client_prevent_prompt', '__return_true' );
+
+		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
+
+		$this->expectException( Prompt_Prevented_Exception::class );
+		$this->expectExceptionMessage( 'Prompt execution was prevented by a filter.' );
+
+		$builder->generate_result();
+	}
+
+	/**
+	 * Tests that prevent prompt filter receives a clone of the builder instance.
+	 *
+	 * @return void
+	 */
+	public function test_prevent_prompt_filter_receives_cloned_builder_instance(): void {
+		$captured_builder = null;
+
+		add_filter(
+			'wp_ai_client_prevent_prompt',
+			static function ( $prevent, $builder ) use ( &$captured_builder ) {
+				$captured_builder = $builder;
+				return $prevent;
+			},
+			10,
+			2
+		);
+
+		$builder = new Prompt_Builder( AiClient::defaultRegistry(), 'Test prompt' );
+		$builder->is_supported();
+
+		$this->assertNotSame( $builder, $captured_builder, 'Filter should receive a clone, not the same instance' );
+		$this->assertInstanceOf( Prompt_Builder::class, $captured_builder );
 	}
 }

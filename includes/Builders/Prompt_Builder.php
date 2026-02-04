@@ -9,6 +9,7 @@
 namespace WordPress\AI_Client\Builders;
 
 use BadMethodCallException;
+use WordPress\AI_Client\Builders\Exception\Prompt_Prevented_Exception;
 use WordPress\AiClient\Builders\PromptBuilder;
 use WordPress\AiClient\Files\DTO\File;
 use WordPress\AiClient\Files\Enums\FileTypeEnum;
@@ -184,8 +185,33 @@ class Prompt_Builder {
 	 * @param string            $name      The method name in snake_case.
 	 * @param array<int, mixed> $arguments The method arguments.
 	 * @return mixed The result of the parent method call.
+	 *
+	 * @throws Prompt_Prevented_Exception If a generation method is called and the prompt was prevented by filter.
 	 */
 	public function __call( string $name, array $arguments ) {
+		// Check if the prompt should be prevented for is_supported* and generate_*/convert_text_to_speech* methods.
+		if ( $this->is_support_check_method( $name ) || $this->is_generating_method( $name ) ) {
+			/**
+			 * Filters whether to prevent the prompt from being executed.
+			 *
+			 * @since n.e.x.t
+			 *
+			 * @param bool           $prevent Whether to prevent the prompt. Default false.
+			 * @param Prompt_Builder $builder A clone of the prompt builder instance (read-only).
+			 */
+			$prevent = (bool) apply_filters( 'wp_ai_client_prevent_prompt', false, clone $this );
+
+			if ( $prevent ) {
+				// For is_supported* methods, return false.
+				if ( $this->is_support_check_method( $name ) ) {
+					return false;
+				}
+
+				// For generate_* and convert_text_to_speech* methods, throw an exception.
+				throw new Prompt_Prevented_Exception( 'Prompt execution was prevented by a filter.' );
+			}
+		}
+
 		$callable = $this->get_builder_callable( $name );
 		$result   = $callable( ...$arguments );
 
@@ -195,6 +221,31 @@ class Prompt_Builder {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Checks if a method name is a support check method (is_supported*).
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $name The method name.
+	 * @return bool True if the method is a support check method, false otherwise.
+	 */
+	protected function is_support_check_method( string $name ): bool {
+		return str_starts_with( $name, 'is_supported' );
+	}
+
+	/**
+	 * Checks if a method name is a generating method (generate_*, convert_text_to_speech*).
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @param string $name The method name.
+	 * @return bool True if the method is a generating method, false otherwise.
+	 */
+	protected function is_generating_method( string $name ): bool {
+		return str_starts_with( $name, 'generate_' )
+			|| str_starts_with( $name, 'convert_text_to_speech' );
 	}
 
 	/**
