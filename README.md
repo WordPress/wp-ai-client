@@ -236,7 +236,7 @@ By default, the SDK automatically chooses a suitable model based on the prompt's
 
 If you prefer specific models for better performance or capabilities, use `using_model_preference()`. The SDK will try to use the first available model from your list. If none are available (e.g., provider not configured), it falls back to automatic selection.
 
-Pass preferences as an array of `[ provider_id, model_id ]` to ensure the correct provider is targeted.
+Pass preferences as either a model ID string, or as an array of `[ provider_id, model_id ]`. For broader compatibility, it is recommended to pass only the model ID string, since there can be different providers offering the same model - e.g. many AI cloud services proxy through calls to models from third party model labs. Only pass the array of provider ID and model ID if you (for whichever reason) _only_ want to allow the model to be served from the specific provider.
 
 **PHP:**
 
@@ -246,9 +246,9 @@ use WordPress\AI_Client\AI_Client;
 $summary = AI_Client::prompt( 'Summarize the history of the printing press.' )
 	->using_temperature( 0.1 )
 	->using_model_preference(
-		array( 'anthropic', 'claude-sonnet-4-5' ),
-		array( 'google', 'gemini-3-pro-preview' ),
-		array( 'openai', 'gpt-5.1' )
+		'claude-sonnet-4-5',
+		'gemini-3-pro-preview',
+		'gpt-5.1'
 	)
 	->generate_text();
 ```
