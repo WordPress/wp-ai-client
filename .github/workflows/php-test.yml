@@ -58,13 +58,8 @@ jobs:
             multisite: true
             experimental: true
           - php: '8.4'
-            wordpress: 'trunk'
-            multisite: false
             coverage: true
-          - php: '8.4'
-            wordpress: 'trunk'
-            multisite: true
-            coverage: true
+
     env:
       WP_ENV_PHP_VERSION: ${{ matrix.php }}
       WP_ENV_CORE: ${{ matrix.wordpress == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wordpress ) }}
