@@ -63,6 +63,18 @@ class AI_Client {
 		// Wire up the WordPress cache with the PHP AI Client SDK.
 		AiClient::setCache( new WordPress_Cache() );
 
+		// Register available AI providers from separate packages.
+		$registry = AiClient::defaultRegistry();
+		foreach ( array(
+			'WordPress\OpenAiAiProvider\Provider\OpenAiProvider',
+			'WordPress\GoogleAiProvider\Provider\GoogleProvider',
+			'WordPress\AnthropicAiProvider\Provider\AnthropicProvider',
+		) as $provider_class ) {
+			if ( class_exists( $provider_class ) ) {
+				$registry->registerProvider( $provider_class );
+			}
+		}
+
 		// Initialize capabilities.
 		add_filter( 'user_has_cap', array( Capabilities_Manager::class, 'grant_prompt_ai_to_administrators' ) );
 		add_filter( 'user_has_cap', array( Capabilities_Manager::class, 'grant_list_ai_providers_models_to_administrators' ) );

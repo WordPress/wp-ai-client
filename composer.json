@@ -1,73 +1,76 @@
 {
-    "name": "wordpress/wp-ai-client",
-    "description": "An AI client and API for WordPress to communicate with any generative AI models of various capabilities using a uniform API.",
-    "license": "GPL-2.0-or-later",
-    "type": "library",
-    "keywords": [
-        "ai",
-        "api",
-        "llm",
-        "wordpress"
-    ],
-    "authors": [
-        {
-            "name": "WordPress AI Team",
-            "homepage": "https://make.wordpress.org/ai/"
-        }
-    ],
-    "homepage": "https://github.com/WordPress/wp-ai-client",
-    "support": {
-        "issues": "https://github.com/WordPress/wp-ai-client/issues",
-        "source": "https://github.com/WordPress/wp-ai-client"
-    },
-    "autoload": {
-        "psr-4": {
-            "WordPress\\AI_Client\\": "includes/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "WordPress\\AI_Client\\PHPUnit\\Includes\\": "tests/phpunit/includes"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "require": {
-        "php": ">=7.4",
-        "ext-json": "*",
-        "nyholm/psr7": "^1.5",
-        "psr/simple-cache": "^1.0",
-        "wordpress/php-ai-client": "^1.0"
-    },
-    "require-dev": {
-        "automattic/vipwpcs": "^3.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-        "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "phpstan/phpstan": "^1.10 | ^2.1",
-        "slevomat/coding-standard": "^8.0",
-        "squizlabs/php_codesniffer": "^3.7",
-        "szepeviktor/phpstan-wordpress": "^2.0",
-        "wp-coding-standards/wpcs": "^3.0",
-        "wp-phpunit/wp-phpunit": "^6.8",
-        "yoast/phpunit-polyfills": "^4.0"
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/installers": true,
-            "php-http/discovery": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        },
-        "platform": {
-            "php": "7.4"
-        }
-    },
-    "scripts": {
-        "lint": [
-            "@phpcs",
-            "@phpstan"
-        ],
-        "phpcs": "phpcs",
-        "phpcbf": "phpcbf",
-        "phpstan": "phpstan analyze --memory-limit=1024M"
-    }
+	"name": "wordpress/wp-ai-client",
+	"description": "An AI client and API for WordPress to communicate with any generative AI models of various capabilities using a uniform API.",
+	"license": "GPL-2.0-or-later",
+	"type": "library",
+	"keywords": [
+		"ai",
+		"api",
+		"llm",
+		"wordpress"
+	],
+	"authors": [
+		{
+			"name": "WordPress AI Team",
+			"homepage": "https://make.wordpress.org/ai/"
+		}
+	],
+	"homepage": "https://github.com/WordPress/wp-ai-client",
+	"support": {
+		"issues": "https://github.com/WordPress/wp-ai-client/issues",
+		"source": "https://github.com/WordPress/wp-ai-client"
+	},
+	"autoload": {
+		"psr-4": {
+			"WordPress\\AI_Client\\": "includes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"WordPress\\AI_Client\\PHPUnit\\Includes\\": "tests/phpunit/includes"
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"require": {
+		"php": ">=7.4",
+		"ext-json": "*",
+		"nyholm/psr7": "^1.5",
+		"psr/simple-cache": "^1.0",
+		"wordpress/php-ai-client": "^1.0",
+		"wordpress/openai-ai-provider": "^1.0",
+		"wordpress/google-ai-provider": "^1.0",
+		"wordpress/anthropic-ai-provider": "^1.0"
+	},
+	"require-dev": {
+		"automattic/vipwpcs": "^3.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpstan/phpstan": "^1.10 | ^2.1",
+		"slevomat/coding-standard": "^8.0",
+		"squizlabs/php_codesniffer": "^3.7",
+		"szepeviktor/phpstan-wordpress": "^2.0",
+		"wp-coding-standards/wpcs": "^3.0",
+		"wp-phpunit/wp-phpunit": "^6.8",
+		"yoast/phpunit-polyfills": "^4.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true,
+			"php-http/discovery": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"platform": {
+			"php": "7.4"
+		}
+	},
+	"scripts": {
+		"lint": [
+			"@phpcs",
+			"@phpstan"
+		],
+		"phpcs": "phpcs",
+		"phpcbf": "phpcbf",
+		"phpstan": "phpstan analyze --memory-limit=1024M"
+	}
 }
