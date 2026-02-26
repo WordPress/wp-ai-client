@@ -21,6 +21,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // When WordPress 7.0+ is present, the AI client is provided natively by core.
 if ( function_exists( 'wp_get_wp_version' ) && version_compare( wp_get_wp_version(), '7.0-alpha', '>=' ) ) {
+	add_action(
+		'admin_notices',
+		static function () {
+			if ( ! current_user_can( 'deactivate_plugins' ) ) {
+				return;
+			}
+
+			$deactivate_url = wp_nonce_url(
+				admin_url( 'plugins.php?action=deactivate&plugin=' . rawurlencode( plugin_basename( __FILE__ ) ) ),
+				'deactivate-plugin_' . plugin_basename( __FILE__ )
+			);
+
+			printf(
+				'<div class="notice notice-info"><p>%s</p><p><a href="%s" class="button">%s</a></p></div>',
+				esc_html__( 'The AI Client plugin is no longer needed. WordPress now includes the AI client natively.', 'wp-ai-client' ),
+				esc_url( $deactivate_url ),
+				esc_html__( 'Deactivate AI Client plugin', 'wp-ai-client' )
+			);
+		}
+	);
 	return;
 }
 
