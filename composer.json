@@ -35,9 +35,8 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "nyholm/psr7": "^1.5",
         "psr/simple-cache": "^1.0",
-        "wordpress/php-ai-client": "^1.0"
+        "wordpress/php-ai-client": "^1.1"
     },
     "require-dev": {
         "automattic/vipwpcs": "^3.0",
