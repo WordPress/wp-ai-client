@@ -19,8 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 // When WordPress 7.0+ is present, the AI client is provided natively by core.
-if ( function_exists( 'wp_get_wp_version' ) && version_compare( wp_get_wp_version(), '7.0-alpha', '>=' ) ) {
+if ( wp_has_ai_client() ) {
 	add_action(
 		'admin_notices',
 		static function () {
@@ -43,7 +45,5 @@ if ( function_exists( 'wp_get_wp_version' ) && version_compare( wp_get_wp_versio
 	);
 	return;
 }
-
-require_once __DIR__ . '/vendor/autoload.php';
 
 add_action( 'init', array( WordPress\AI_Client\AI_Client::class, 'init' ) );
