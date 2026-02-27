@@ -14,7 +14,7 @@
  * @return bool True if WordPress 7.0+ is present with a native AI client.
  */
 function wp_has_ai_client() {
-	return function_exists( 'wp_ai_client_prompt' );
+	return function_exists( 'wp_get_wp_version' ) && version_compare( wp_get_wp_version(), '7.0-alpha', '>=' );
 }
 
 if ( ! wp_has_ai_client() ) {
