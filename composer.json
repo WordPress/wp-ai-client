@@ -21,6 +21,9 @@
         "source": "https://github.com/WordPress/wp-ai-client"
     },
     "autoload": {
+        "files": [
+            "functions.php"
+        ],
         "psr-4": {
             "WordPress\\AI_Client\\": "includes/"
         }

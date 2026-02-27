@@ -46,21 +46,4 @@ if ( function_exists( 'wp_get_wp_version' ) && version_compare( wp_get_wp_versio
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
-	/**
-	 * Creates a new AI prompt builder for fluent API usage, returning WP_Error on errors.
-	 *
-	 * This is the standard entry point for the WordPress AI Client API. It mirrors
-	 * core's wp_ai_client_prompt() available in WordPress 7.0+.
-	 *
-	 * @since n.e.x.t
-	 *
-	 * @param string|null $prompt Optional initial prompt content.
-	 * @return WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error The prompt builder instance.
-	 */
-	function wp_ai_client_prompt( $prompt = null ) {
-		return new WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error( WordPress\AiClient\AiClient::defaultRegistry(), $prompt );
-	}
-}
-
 add_action( 'init', array( WordPress\AI_Client\AI_Client::class, 'init' ) );
