@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0e9bc6106da8532d1a1e9c3cc1bda1bc",
+    "content-hash": "ea0b9bca312692e9f6490b19cab2244c",
     "packages": [
         {
             "name": "nyholm/psr7",
@@ -535,20 +535,21 @@
         },
         {
             "name": "wordpress/php-ai-client",
-            "version": "1.0.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/php-ai-client.git",
-                "reference": "0d688a1bbc27ae2675c8ed1c020af453d559bac5"
+                "reference": "eb1241fa10e580726e49ae800afd18da16864ec0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/php-ai-client/zipball/0d688a1bbc27ae2675c8ed1c020af453d559bac5",
-                "reference": "0d688a1bbc27ae2675c8ed1c020af453d559bac5",
+                "url": "https://api.github.com/repos/WordPress/php-ai-client/zipball/eb1241fa10e580726e49ae800afd18da16864ec0",
+                "reference": "eb1241fa10e580726e49ae800afd18da16864ec0",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+                "nyholm/psr7": "^1.8",
                 "php": ">=7.4",
                 "php-http/discovery": "^1.0",
                 "php-http/httplug": "^2.0",
@@ -608,7 +609,7 @@
                 "issues": "https://github.com/WordPress/php-ai-client/issues",
                 "source": "https://github.com/WordPress/php-ai-client"
             },
-            "time": "2026-02-16T22:56:42+00:00"
+            "time": "2026-02-27T02:45:23+00:00"
         }
     ],
     "packages-dev": [
