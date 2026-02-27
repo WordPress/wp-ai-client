@@ -177,11 +177,12 @@ class Ability_Function_Resolver {
 	 * Transforms "wpab__tec__create_event" to "tec/create_event".
 	 *
 	 * @since 0.2.0
+	 * @since n.e.x.t Made public, for parity with Core implementation.
 	 *
 	 * @param string $function_name The function name to convert.
 	 * @return string The ability name.
 	 */
-	private static function function_name_to_ability_name( string $function_name ): string {
+	public static function function_name_to_ability_name( string $function_name ): string {
 		// Remove the ability prefix.
 		$without_prefix = substr( $function_name, strlen( self::ABILITY_PREFIX ) );
 
