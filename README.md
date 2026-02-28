@@ -1,6 +1,6 @@
 # WordPress AI Client
 
-> **Deprecated:** This package is deprecated in favor of the built-in AI client in WordPress 7.0+. If you are running WordPress 7.0 or later, the AI client is provided natively by core and this plugin is a no-op. See [UPGRADE.md](./UPGRADE.md) for migration details.
+> **Deprecated:** This package is deprecated in favor of the built-in AI client in WordPress 7.0+. On 7.0+, the PHP SDK infrastructure is disabled (core handles it natively), but the REST API endpoints and JavaScript API remain active since they are not yet in core. See [UPGRADE.md](./UPGRADE.md) for migration details.
 
 [_Part of the **AI Building Blocks for WordPress** initiative_](https://make.wordpress.org/ai/2025/07/17/ai-building-blocks)
 

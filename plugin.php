@@ -21,29 +21,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// When WordPress 7.0+ is present, the AI client is provided natively by core.
-if ( wp_has_ai_client() ) {
-	add_action(
-		'admin_notices',
-		static function () {
-			if ( ! current_user_can( 'deactivate_plugins' ) ) {
-				return;
-			}
-
-			$deactivate_url = wp_nonce_url(
-				admin_url( 'plugins.php?action=deactivate&plugin=' . rawurlencode( plugin_basename( __FILE__ ) ) ),
-				'deactivate-plugin_' . plugin_basename( __FILE__ )
-			);
-
-			printf(
-				'<div class="notice notice-info"><p>%s</p><p><a href="%s" class="button">%s</a></p></div>',
-				esc_html__( 'The AI Client plugin is no longer needed. WordPress now includes the AI client natively.', 'wp-ai-client' ),
-				esc_url( $deactivate_url ),
-				esc_html__( 'Deactivate AI Client plugin', 'wp-ai-client' )
-			);
-		}
-	);
-	return;
-}
-
 add_action( 'init', array( WordPress\AI_Client\AI_Client::class, 'init' ) );

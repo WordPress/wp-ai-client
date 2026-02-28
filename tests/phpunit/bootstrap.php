@@ -7,8 +7,6 @@
 
 define( 'WP_AI_CLIENT_PROJECT_DIR', dirname( dirname( __DIR__ ) ) );
 
-require_once WP_AI_CLIENT_PROJECT_DIR . '/vendor/autoload.php';
-
 // Detect where to load the WordPress tests environment from.
 if ( false !== getenv( 'WP_TESTS_DIR' ) ) {
 	$wp_ai_client_test_root = getenv( 'WP_TESTS_DIR' );
@@ -18,6 +16,26 @@ if ( false !== getenv( 'WP_TESTS_DIR' ) ) {
 	$wp_ai_client_test_root = getenv( 'WP_PHPUNIT__DIR' );
 } else { // Fallback.
 	$wp_ai_client_test_root = '/tmp/wordpress-tests-lib';
+}
+
+/*
+ * Only load the vendor autoloader when running tests against WP < 7.0.
+ *
+ * At runtime, plugin.php always loads the autoloader — that's safe because
+ * Composer autoloading is lazy and AI_Client::init() guards the code paths
+ * that would trigger PSR scoping conflicts with core's scoped dependencies.
+ *
+ * The test environment is different: test code directly references SDK classes
+ * (e.g. via reflection, assertions, mock providers), which forces them to load
+ * eagerly. On WP 7.0+, this would cause fatal declaration-compatibility errors
+ * between the plugin's unscoped Psr\* types and core's scoped versions.
+ */
+$wp_ai_client_version_file = dirname( dirname( $wp_ai_client_test_root ) ) . '/wp-includes/version.php';
+if ( file_exists( $wp_ai_client_version_file ) ) {
+	require $wp_ai_client_version_file;
+}
+if ( ! isset( $wp_version ) || version_compare( $wp_version, '7.0-alpha', '<' ) ) {
+	require_once WP_AI_CLIENT_PROJECT_DIR . '/vendor/autoload.php';
 }
 
 // Force empty test plugin containing the library to be active.

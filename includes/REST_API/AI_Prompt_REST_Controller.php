@@ -14,7 +14,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 use WordPress\AI_Client\AI_Client;
-use WordPress\AI_Client\Builders\Prompt_Builder;
+use WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error;
 use WordPress\AI_Client\Capabilities\Capabilities_Manager;
 use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Messages\DTO\Message;
@@ -124,6 +124,10 @@ class AI_Prompt_REST_Controller {
 			}
 
 			$result = $builder->generate_result( $capability );
+
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
 
 			return new WP_REST_Response( $result, 200 );
 		} catch ( Exception $e ) {
@@ -267,13 +271,15 @@ class AI_Prompt_REST_Controller {
 	}
 
 	/**
-	 * Helper to create builder from params.
+	 * Creates a prompt builder from request parameters.
+	 *
+	 * @since 0.2.0
 	 *
 	 * @param array<string, mixed> $params The parameters.
 	 * @phpstan-param GenerationRequestParams $params
-	 * @return Prompt_Builder The builder instance.
+	 * @return Prompt_Builder_With_WP_Error The builder instance.
 	 */
-	private function create_builder_from_params( array $params ): Prompt_Builder {
+	private function create_builder_from_params( array $params ): Prompt_Builder_With_WP_Error {
 		// Messages are required by schema.
 		$messages_data = $params['messages'];
 
@@ -282,7 +288,7 @@ class AI_Prompt_REST_Controller {
 			$messages_data
 		);
 
-		$builder = AI_Client::prompt( array_values( $messages ) );
+		$builder = wp_ai_client_prompt( array_values( $messages ) );
 
 		if ( ! empty( $params['modelConfig'] ) && is_array( $params['modelConfig'] ) ) {
 			$model_config_data = $params['modelConfig'];

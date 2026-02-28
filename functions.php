@@ -26,7 +26,7 @@ if ( ! wp_has_ai_client() ) {
 	 *
 	 * @since n.e.x.t
 	 *
-	 * @param string|null $prompt Optional initial prompt content.
+	 * @param string|array<int, mixed>|null $prompt Optional initial prompt content.
 	 * @return WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error The prompt builder instance.
 	 */
 	function wp_ai_client_prompt( $prompt = null ) {
