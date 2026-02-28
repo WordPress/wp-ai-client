@@ -19,6 +19,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/functions.php';
+
+if ( ! wp_has_ai_client() ) {
+	// On < 7.0, load the full Composer autoloader (PHP AI Client SDK, PSR
+	// packages, and this plugin's own classes).
+	require_once __DIR__ . '/vendor/autoload.php';
+} else {
+	// On 7.0+, only autoload this plugin's own classes. Core provides the
+	// AI client SDK natively with scoped PSR dependencies; loading this
+	// plugin's vendor autoloader would cause fatal declaration-compatibility
+	// errors between unscoped Psr\* types and core's scoped versions.
+	spl_autoload_register(
+		static function ( $class ) {
+			$prefix = 'WordPress\\AI_Client\\';
+			$len    = strlen( $prefix );
+			if ( strncmp( $class, $prefix, $len ) !== 0 ) {
+				return;
+			}
+			$relative_class = substr( $class, $len );
+			$file           = __DIR__ . '/includes/' . str_replace( '\\', '/', $relative_class ) . '.php';
+			if ( file_exists( $file ) ) {
+				require $file;
+			}
+		}
+	);
+}
 
 add_action( 'init', array( WordPress\AI_Client\AI_Client::class, 'init' ) );

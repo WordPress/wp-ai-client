@@ -5,19 +5,21 @@
  * @package WordPress\AI_Client
  */
 
-/**
- * Checks whether the current WordPress version natively provides the AI client.
- *
- * @since n.e.x.t
- * @access private
- *
- * @return bool True if WordPress 7.0+ is present with a native AI client.
- */
-function wp_has_ai_client() {
-	return function_exists( 'wp_get_wp_version' ) && version_compare( wp_get_wp_version(), '7.0-alpha', '>=' );
+if ( ! function_exists( 'wp_has_ai_client' ) ) {
+	/**
+	 * Checks whether the current WordPress version natively provides the AI client.
+	 *
+	 * @since n.e.x.t
+	 * @access private
+	 *
+	 * @return bool True if WordPress 7.0+ is present with a native AI client.
+	 */
+	function wp_has_ai_client() {
+		return function_exists( 'wp_get_wp_version' ) && version_compare( wp_get_wp_version(), '7.0-alpha', '>=' );
+	}
 }
 
-if ( ! wp_has_ai_client() ) {
+if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
 	/**
 	 * Creates a new AI prompt builder for fluent API usage, returning WP_Error on errors.
 	 *

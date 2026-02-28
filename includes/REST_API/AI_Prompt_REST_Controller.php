@@ -279,7 +279,7 @@ class AI_Prompt_REST_Controller {
 	 * @phpstan-param GenerationRequestParams $params
 	 * @return Prompt_Builder_With_WP_Error The builder instance.
 	 */
-	private function create_builder_from_params( array $params ): Prompt_Builder_With_WP_Error {
+	private function create_builder_from_params( array $params ) {
 		// Messages are required by schema.
 		$messages_data = $params['messages'];
 
