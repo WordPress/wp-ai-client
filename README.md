@@ -1,5 +1,7 @@
 # WordPress AI Client
 
+> **Deprecated:** This package is deprecated in favor of the built-in AI client in WordPress 7.0+. On 7.0+, the PHP SDK infrastructure is disabled (core handles it natively), but the REST API endpoints and JavaScript API remain active since they are not yet in core. See [UPGRADE.md](./UPGRADE.md) for migration details.
+
 [_Part of the **AI Building Blocks for WordPress** initiative_](https://make.wordpress.org/ai/2025/07/17/ai-building-blocks)
 
 An AI client and API for WordPress to communicate with any generative AI models of various capabilities using a uniform API.
@@ -26,7 +28,7 @@ composer require wordpress/wp-ai-client
 
 ### 1. Initialize the Client
 
-You must initialize the client on the WordPress `init` hook. This sets up the HTTP client integration and registers the settings screen.
+You must initialize the client on the WordPress `init` hook. This sets up the HTTP client integration and registers the settings screen. If you are using this as a plugin, this is already handled for you in `plugin.php`.
 
 ```php
 add_action( 'init', array( 'WordPress\AI_Client\AI_Client', 'init' ) );
@@ -62,10 +64,12 @@ The SDK provides a fluent `Prompt_Builder` interface to construct and execute AI
 **PHP:**
 
 ```php
-use WordPress\AI_Client\AI_Client;
-
-$text = AI_Client::prompt( 'Write a haiku about WordPress.' )
+$text = wp_ai_client_prompt( 'Write a haiku about WordPress.' )
 	->generate_text();
+
+if ( is_wp_error( $text ) ) {
+	wp_die( $text->get_error_message() );
+}
 
 echo wp_kses_post( $text );
 ```
@@ -84,10 +88,12 @@ console.log( text );
 **PHP:**
 
 ```php
-use WordPress\AI_Client\AI_Client;
-
-$image_file = AI_Client::prompt( 'A futuristic WordPress logo in neon style' )
+$image_file = wp_ai_client_prompt( 'A futuristic WordPress logo in neon style' )
 	->generate_image();
+
+if ( is_wp_error( $image_file ) ) {
+	wp_die( $image_file->get_error_message() );
+}
 
 $data_uri = $image_file->getDataUri();
 
@@ -112,8 +118,6 @@ console.log( `<img src="${ dataUri }" alt="A futuristic WordPress logo in neon s
 **PHP:**
 
 ```php
-use WordPress\AI_Client\AI_Client;
-
 $schema = array(
 	'type'       => 'array',
 	'items'      => array(
@@ -126,10 +130,14 @@ $schema = array(
 	),
 );
 
-$json = AI_Client::prompt( 'List 5 popular WordPress plugins with their primary category.' )
+$json = wp_ai_client_prompt( 'List 5 popular WordPress plugins with their primary category.' )
 	->using_temperature( 0.2 ) // Lower temperature for more deterministic result.
 	->as_json_response( $schema )
 	->generate_text();
+
+if ( is_wp_error( $json ) ) {
+	wp_die( $json->get_error_message() );
+}
 
 // Output will be a JSON string adhering to the schema.
 $data = json_decode( $json, true );
@@ -164,10 +172,12 @@ const data = JSON.parse( json );
 **PHP:**
 
 ```php
-use WordPress\AI_Client\AI_Client;
-
-$images = AI_Client::prompt( 'Aerial shot of snowy plains, cinematic.' )
+$images = wp_ai_client_prompt( 'Aerial shot of snowy plains, cinematic.' )
 	->generate_images( 4 );
+
+if ( is_wp_error( $images ) ) {
+	wp_die( $images->get_error_message() );
+}
 
 foreach ( $images as $image_file ) {
 	echo '<img src="' . esc_url( $image_file->getDataUri() ) . '" alt="Aerial shot of snowy plains">';
@@ -190,12 +200,15 @@ for ( const imageFile of images ) {
 **PHP:**
 
 ```php
-use WordPress\AI_Client\AI_Client;
 use WordPress\AiClient\Messages\Enums\ModalityEnum;
 
-$result = AI_Client::prompt( 'Create a recipe for a chocolate cake and include photos for the steps.' )
+$result = wp_ai_client_prompt( 'Create a recipe for a chocolate cake and include photos for the steps.' )
 	->as_output_modalities( ModalityEnum::text(), ModalityEnum::image() )
 	->generate_result();
+
+if ( is_wp_error( $result ) ) {
+	wp_die( $result->get_error_message() );
+}
 
 // Iterate through the message parts.
 foreach ( $result->toMessage()->getParts() as $part ) {
@@ -241,9 +254,7 @@ Pass preferences as either a model ID string, or as an array of `[ provider_id, 
 **PHP:**
 
 ```php
-use WordPress\AI_Client\AI_Client;
-
-$summary = AI_Client::prompt( 'Summarize the history of the printing press.' )
+$summary = wp_ai_client_prompt( 'Summarize the history of the printing press.' )
 	->using_temperature( 0.1 )
 	->using_model_preference(
 		'claude-sonnet-4-5',
@@ -273,10 +284,9 @@ Enforcing a single specific model using `using_model()` restricts your feature t
 **PHP:**
 
 ```php
-use WordPress\AI_Client\AI_Client;
 use WordPress\AiClient\ProviderImplementations\Anthropic\AnthropicProvider as Anthropic;
 
-$text = AI_Client::prompt( 'Explain quantum computing in simple terms.' )
+$text = wp_ai_client_prompt( 'Explain quantum computing in simple terms.' )
 	->using_model( Anthropic::model( 'claude-sonnet-4-5' ) )
 	->generate_text();
 ```
@@ -298,9 +308,7 @@ This is always recommended, but especially crucial if you require the use of a s
 **PHP:**
 
 ```php
-use WordPress\AI_Client\AI_Client;
-
-$prompt = AI_Client::prompt( 'Explain quantum computing in simple terms.' )
+$prompt = wp_ai_client_prompt( 'Explain quantum computing in simple terms.' )
 	->using_temperature( 0.2 );
 
 if ( $prompt->is_supported_for_text_generation() ) {
@@ -331,32 +339,10 @@ Generally, using `is_supported_for_text_generation()` (or `is_supported_for_imag
 
 ## Error Handling
 
-In PHP, the SDK offers two ways to handle errors.
-
-### 1. Exception Based
-
-`AI_Client::prompt()` throws exceptions on failure.
-
-**PHP:**
+The `wp_ai_client_prompt()` function returns `WP_Error` on failure, following WordPress conventions.
 
 ```php
-try {
-	$text = AI_Client::prompt( 'Hello' )->generate_text();
-} catch ( \Exception $e ) {
-	wp_die( $e->getMessage() );
-}
-
-echo wp_kses_post( $text );
-```
-
-### 2. `WP_Error` Based
-
-`AI_Client::prompt_with_wp_error()` returns a `WP_Error` object on failure.
-
-> **Note:** This error handling mechanism is experimental. We are gathering feedback to decide whether the SDK should primarily focus on exceptions or `WP_Error` objects.
-
-```php
-$text = AI_Client::prompt_with_wp_error( 'Hello' )
+$text = wp_ai_client_prompt( 'Hello' )
 	->generate_text();
 
 if ( is_wp_error( $text ) ) {
@@ -366,11 +352,28 @@ if ( is_wp_error( $text ) ) {
 echo wp_kses_post( $text );
 ```
 
+### Exception-based (advanced)
+
+If you prefer exceptions, use `AI_Client::prompt()` directly.
+
+```php
+use WordPress\AI_Client\AI_Client;
+
+try {
+	$text = AI_Client::prompt( 'Hello' )->generate_text();
+} catch ( \Exception $e ) {
+	wp_die( $e->getMessage() );
+}
+
+echo wp_kses_post( $text );
+```
+
 ## Architecture
 
 This library is a WordPress-specific wrapper around the [PHP AI Client](https://github.com/WordPress/php-ai-client).
 
-*   **`WordPress\AI_Client\AI_Client`**: The main entry point.
+*   **`wp_ai_client_prompt()`**: The recommended entry point function. Returns a `Prompt_Builder_With_WP_Error`.
+*   **`WordPress\AI_Client\AI_Client`**: The class-based entry point (for advanced use cases).
 *   **`WordPress\AI_Client\Builders\Prompt_Builder`**: A fluent builder for constructing AI requests. It maps WordPress-style `snake_case` methods to the underlying SDK's `camelCase` methods.
 *   **`WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error`**: A wrapper around `Prompt_Builder` that catches exceptions and returns `WP_Error` objects.
 
