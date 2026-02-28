@@ -44,16 +44,16 @@ jobs:
         - '7.4'
         - '8.0'
         - '8.4'
-        wordpress: [ 'trunk' ]
+        wordpress: [ '6.9' ]
         multisite: [ false, true ]
         experimental: [false]
         include:
           - php: '8.4'
-            wordpress: 'trunk'
+            wordpress: '6.9'
             multisite: false
             experimental: true
           - php: '8.4'
-            wordpress: 'trunk'
+            wordpress: '6.9'
             multisite: true
             experimental: true
     env:
