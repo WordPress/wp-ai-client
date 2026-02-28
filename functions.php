@@ -1,6 +1,6 @@
 <?php
 /**
- * Global functions for the WordPress AI Client plugin.
+ * Global functions for the WordPress AI Client package.
  *
  * @package WordPress\AI_Client
  */
