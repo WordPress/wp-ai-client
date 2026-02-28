@@ -277,6 +277,29 @@ const summary = await wp.aiClient.prompt( 'Summarize the history of the printing
 	.generateText();
 ```
 
+### Setting max tokens
+
+Control the maximum number of tokens the AI model can generate in its response. Higher values allow for longer, more detailed outputs, while lower values help keep responses concise and reduce API costs.
+
+**PHP:**
+
+```php
+use WordPress\AI_Client\AI_Client;
+
+$text = AI_Client::prompt( 'Explain quantum computing in complicated terms.' )
+	->using_max_tokens( 8000 )
+	->generate_text();
+```
+
+**JavaScript:**
+
+```javascript
+const text = await wp.aiClient
+	.prompt("Explain quantum computing in complicated terms.")
+	.usingMaxTokens(8000)
+	.generateText();
+```
+
 ### Using a Specific Model
 
 Enforcing a single specific model using `using_model()` restricts your feature to sites that have that specific provider configured. For most scenarios, this is unnecessarily opinionated. Only use this approach if you really only want to offer the feature in combination with that model.
