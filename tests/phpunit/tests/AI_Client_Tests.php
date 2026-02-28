@@ -34,7 +34,14 @@ class AI_Client_Tests extends Test_Case {
 		// First init call.
 		AI_Client::init();
 		$this->assertTrue( $initialized_property->getValue() );
-		$this->assertHasAction( 'admin_menu' );
+
+		// On < 7.0, API_Credentials_Manager adds an admin_menu action.
+		// On 7.0+, SDK infrastructure is skipped (core handles it).
+		if ( wp_has_ai_client() ) {
+			$this->assertNotHasAction( 'admin_menu' );
+		} else {
+			$this->assertHasAction( 'admin_menu' );
+		}
 
 		// Now we remove the added action again to verify that the second init call does not add it again.
 		remove_all_actions( 'admin_menu' );

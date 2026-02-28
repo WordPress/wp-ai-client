@@ -80,7 +80,7 @@ class AI_Prompt_REST_Controller_Tests extends Test_Case {
 		$response = $controller->process_generate_request( $request );
 
 		if ( is_wp_error( $response ) ) {
-			$this->assertEquals( 'ai_generate_error', $response->get_error_code() );
+			$this->assertEquals( 'prompt_builder_error', $response->get_error_code() );
 		} else {
 			$this->assertEquals( 200, $response->get_status() );
 		}
@@ -150,7 +150,7 @@ class AI_Prompt_REST_Controller_Tests extends Test_Case {
 
 		$builder = $method->invoke( $controller, $params );
 
-		$this->assertInstanceOf( 'WordPress\AI_Client\Builders\Prompt_Builder', $builder );
+		$this->assertInstanceOf( 'WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error', $builder );
 
 		// Verify internal state.
 		$inner_builder = $this->get_private_property( $builder, 'builder' );
@@ -196,7 +196,7 @@ class AI_Prompt_REST_Controller_Tests extends Test_Case {
 
 		$builder = $method->invoke( $controller, $params );
 
-		$this->assertInstanceOf( 'WordPress\AI_Client\Builders\Prompt_Builder', $builder );
+		$this->assertInstanceOf( 'WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error', $builder );
 
 		// Verify internal state.
 		$inner_builder   = $this->get_private_property( $builder, 'builder' );
@@ -239,7 +239,7 @@ class AI_Prompt_REST_Controller_Tests extends Test_Case {
 
 		$builder = $method->invoke( $controller, $params );
 
-		$this->assertInstanceOf( 'WordPress\AI_Client\Builders\Prompt_Builder', $builder );
+		$this->assertInstanceOf( 'WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error', $builder );
 
 		// Verify internal state.
 		$inner_builder = $this->get_private_property( $builder, 'builder' );
@@ -258,8 +258,15 @@ class AI_Prompt_REST_Controller_Tests extends Test_Case {
 	 */
 	private function get_private_property( $obj, $property ) {
 		$reflection = new ReflectionClass( $obj );
-		$prop       = $reflection->getProperty( $property );
-		$prop->setAccessible( true );
-		return $prop->getValue( $obj );
+		while ( $reflection ) {
+			if ( $reflection->hasProperty( $property ) ) {
+				$prop = $reflection->getProperty( $property );
+				$prop->setAccessible( true );
+				return $prop->getValue( $obj );
+			}
+			$reflection = $reflection->getParentClass();
+		}
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Test-only helper.
+		throw new \ReflectionException( "Property {$property} does not exist on " . get_class( $obj ) . ' or its parents.' );
 	}
 }

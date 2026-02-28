@@ -19,6 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/autoload.php';
 
 add_action( 'init', array( WordPress\AI_Client\AI_Client::class, 'init' ) );

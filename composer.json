@@ -21,6 +21,9 @@
         "source": "https://github.com/WordPress/wp-ai-client"
     },
     "autoload": {
+        "files": [
+            "functions.php"
+        ],
         "psr-4": {
             "WordPress\\AI_Client\\": "includes/"
         }
@@ -35,9 +38,8 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "nyholm/psr7": "^1.5",
         "psr/simple-cache": "^1.0",
-        "wordpress/php-ai-client": "^1.0"
+        "wordpress/php-ai-client": "^1.2"
     },
     "require-dev": {
         "automattic/vipwpcs": "^3.0",

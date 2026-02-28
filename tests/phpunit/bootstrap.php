@@ -7,8 +7,6 @@
 
 define( 'WP_AI_CLIENT_PROJECT_DIR', dirname( dirname( __DIR__ ) ) );
 
-require_once WP_AI_CLIENT_PROJECT_DIR . '/vendor/autoload.php';
-
 // Detect where to load the WordPress tests environment from.
 if ( false !== getenv( 'WP_TESTS_DIR' ) ) {
 	$wp_ai_client_test_root = getenv( 'WP_TESTS_DIR' );
@@ -19,6 +17,14 @@ if ( false !== getenv( 'WP_TESTS_DIR' ) ) {
 } else { // Fallback.
 	$wp_ai_client_test_root = '/tmp/wordpress-tests-lib';
 }
+
+/*
+ * Do not load the vendor autoloader here. plugin.php handles it conditionally:
+ * on < 7.0 it loads the full Composer autoloader, on 7.0+ it registers a
+ * minimal PSR-4 autoloader for only this plugin's own classes (to avoid PSR
+ * scoping conflicts with core's scoped dependencies). No plugin classes are
+ * needed before the WordPress test bootstrap activates the plugin below.
+ */
 
 // Force empty test plugin containing the library to be active.
 $GLOBALS['wp_tests_options'] = array( // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
