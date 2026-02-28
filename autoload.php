@@ -13,7 +13,13 @@ require_once __DIR__ . '/functions.php';
 if ( ! wp_has_ai_client() ) {
 	// On < 7.0, load the full Composer autoloader (PHP AI Client SDK, PSR
 	// packages, and this plugin's own classes).
-	require_once __DIR__ . '/vendor/autoload.php';
+	if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+		// Load autoload.php file from this package.
+		require_once __DIR__ . '/vendor/autoload.php';
+	} else {
+		// Load autoload.php file from parent package that bundles this one.
+		require_once dirname( __DIR__, 2 ) . '/autoload.php';
+	}
 } else {
 	// On 7.0+, only autoload this plugin's own classes. Core provides the
 	// AI client SDK natively with scoped PSR dependencies; loading this
