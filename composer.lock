@@ -535,16 +535,16 @@
         },
         {
             "name": "wordpress/php-ai-client",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/php-ai-client.git",
-                "reference": "eb1241fa10e580726e49ae800afd18da16864ec0"
+                "reference": "30a1506c39fe268d7842e53456b98f05554e3c52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/php-ai-client/zipball/eb1241fa10e580726e49ae800afd18da16864ec0",
-                "reference": "eb1241fa10e580726e49ae800afd18da16864ec0",
+                "url": "https://api.github.com/repos/WordPress/php-ai-client/zipball/30a1506c39fe268d7842e53456b98f05554e3c52",
+                "reference": "30a1506c39fe268d7842e53456b98f05554e3c52",
                 "shasum": ""
             },
             "require": {
@@ -609,7 +609,7 @@
                 "issues": "https://github.com/WordPress/php-ai-client/issues",
                 "source": "https://github.com/WordPress/php-ai-client"
             },
-            "time": "2026-02-27T02:45:23+00:00"
+            "time": "2026-02-28T19:50:44+00:00"
         }
     ],
     "packages-dev": [
@@ -3543,16 +3543,16 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4",
         "ext-json": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
