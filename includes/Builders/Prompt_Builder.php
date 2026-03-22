@@ -114,7 +114,7 @@ class Prompt_Builder {
 	 * @param Prompt           $prompt   Optional initial prompt content.
 	 */
 	public function __construct( ProviderRegistry $registry, $prompt = null ) {
-		$this->builder = new PromptBuilder( $registry, $prompt );
+		$this->builder = new PromptBuilder( $registry, $prompt, \WordPress\AiClient\AiClient::getEventDispatcher() );
 
 		/**
 		 * Filters the default request timeout in seconds for AI Client HTTP requests.
