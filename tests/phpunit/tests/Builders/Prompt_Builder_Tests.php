@@ -142,6 +142,28 @@ class Prompt_Builder_Tests extends Test_Case {
 	}
 
 	/**
+	 * Ensures the wrapped SDK PromptBuilder receives the global event dispatcher after AI_Client initializes.
+	 *
+	 * Regression test for lifecycle hooks (wp_ai_client_before_generate_result / wp_ai_client_after_generate_result).
+	 *
+	 * @since n.e.x.t
+	 *
+	 * @return void
+	 */
+	public function test_wrapped_prompt_builder_receives_global_event_dispatcher(): void {
+		$this->assertNotNull(
+			AiClient::getEventDispatcher(),
+			'AI_Client::init() should have registered an event dispatcher in the test environment.'
+		);
+
+		$prompt_builder   = new Prompt_Builder( AiClient::defaultRegistry() );
+		$inner_dispatcher = $this->get_wrapped_prompt_builder_property_value( $prompt_builder, 'eventDispatcher' );
+
+		$this->assertNotNull( $inner_dispatcher );
+		$this->assertSame( AiClient::getEventDispatcher(), $inner_dispatcher );
+	}
+
+	/**
 	 * Test that the constructor sets the default request timeout.
 	 */
 	public function test_constructor_sets_default_request_timeout(): void {
